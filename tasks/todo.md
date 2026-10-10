@@ -12,14 +12,18 @@
   - Criterio: PRD aprobado; D-1 a D-4 resueltas y anotadas en el PRD; alcance Out-of-Scope confirmado.
 - [x] **T-001 (M)** — Inicializar repositorio Next.js (App Router, TypeScript) con Tailwind CSS y Lucide Icons; ESLint + Prettier; scripts npm.
   - Criterio: `npm run dev` levanta la app; `build` y `lint` en verde; README con comandos.
-- [ ] **T-002 (S)** — Crear proyecto Supabase (dev) y conectar clientes server/browser; documentar `.env.local.example`. **Estado 2026-10-10:** proyecto creado y conexión verificada (clave válida); clientes SSR + ruta `/api/supabase-health` implementados y probados. Pendiente: aplicar el esquema y validar contra tabla real.
+- [x] **T-002 (S)** — Crear proyecto Supabase (dev) y conectar clientes server/browser; documentar `.env.local.example`. **Estado 2026-10-10:** conexión verificada; `supabase-health` responde `schemaReady:true` contra la tabla real. Completa.
   - Criterio: página de humo consulta una tabla de prueba; cero secretos en el repo.
 - [x] **T-003 (M)** — Setup de TDD: Vitest (unitarias) + Playwright (E2E) + scripts `test` / `test:e2e` y CI.
   - Criterio: un test unitario y un E2E de humo pasan en local y en CI (GitHub Actions). **Estado 2026-10-10:** local ✔ y CI verde en GitHub (run sobre `79e0297`); T-003 completa.
-- [ ] **T-004 (M)** — Esquema de base de datos v1 por migraciones SQL: clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles.
-  - Criterio: migración aplicada en dev; constraints e índices básicos; script de reversión disponible. Depende: T-002. **Estado 2026-10-10:** `0001_schema.sql` + rollback escritos y revisados (fix de orden en rollback aplicado); pendiente: aplicar en Supabase.
-- [ ] **T-005 (M)** — RLS base por rol (operativo / gerencial) y políticas por tabla.
-  - Criterio: pruebas automatizadas: el operativo no lee agregados financieros ni tablas restringidas; el gerencial sí (RF-19). Depende: T-004. **Estado 2026-10-10:** `0002_rls.sql` listo y revisado por inspección; pendiente: aplicar y probar con usuarios reales.
+- [x] **T-004 (M)** — Esquema de base de datos v1 por migraciones SQL: clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles.
+  - Criterio: migración aplicada en dev; constraints e índices básicos; script de reversión disponible. Depende: T-002. **Estado 2026-10-10:** `0001` aplicada en dev (9 tablas verificadas vía API); rollback disponible.
+- [-] **T-005 (M)** — RLS base por rol (operativo / gerencial) y políticas por tabla.
+  - Criterio: pruebas automatizadas: el operativo no lee agregados financieros ni tablas restringidas; el gerencial sí (RF-19). Depende: T-004. **Estado 2026-10-10:** `0002` aplicado; verificado con usuarios reales vía API: cada uno lee su rol; operativo bloqueado al escribir tasas/servicios (42501); gerencial con ciclo completo insertar/leer/borrar. Suite repetible y test de `auditoria` se codifican en T-005b.
+
+- [-] **T-005b (M)** — Autenticación base y perfiles (RF-18, D-1): login con Supabase Auth, middleware de sesión, logout, y seed de 2 usuarios de prueba (operativo/gerencial) + pruebas de rol que cierran el criterio de T-005.
+  - Criterio: E2E: sin sesión redirige a `/login`; login válido entra y muestra el rol; pruebas de API por rol: operativo bloqueado en tasas/plantillas/auditoría, gerencial permitido.
+  - **Estado 2026-10-10:** implementación completa (login, `proxy.ts` de sesión, logout, home con rol) con lint/tipos/build/16 tests/e2e de redirección en verde; usuarios y roles verificados por API. Pendiente: suite `verify:roles` repetible y E2E de login con credenciales (Oleada B).
 
 ## Fase 1 — Registro, cobranza y comanda (Semanas 1–2)
 
