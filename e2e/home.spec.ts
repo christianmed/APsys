@@ -1,9 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-test("la página principal carga con el contenido inicial", async ({ page }) => {
-  const response = await page.goto("/");
+test("sin sesión, la raíz redirige al login", async ({ page }) => {
+  await page.goto("/");
 
-  expect(response?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/login$/);
   await expect(page).toHaveTitle(/APSys/);
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(page.getByLabel("Correo electrónico")).toBeVisible();
+  await expect(page.getByLabel("Contraseña")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: /iniciar sesión/i }),
+  ).toBeVisible();
 });

@@ -20,10 +20,8 @@ function requireEnv(name: string, value: string | undefined): string {
  * requests dejaría respuestas sin las cabeceras de sesión correctas.
  *
  * `setAll` escribe las cookies renovadas; desde un Server Component el runtime
- * no permite escribir cookies durante el render y se ignora. TODO(auth): añadir
- * el middleware de sesión (patrón oficial @supabase/ssr) cuando se active el
- * login por perfiles (decisión D-1). Mientras tanto la app opera sin sesión de
- * usuario, es decir, con el rol `anon`.
+ * no permite escribir cookies durante el render y se ignora; el refresco de
+ * sesión en cada request vive en `proxy.ts` (patrón oficial @supabase/ssr).
  */
 export async function createClient() {
   const cookieStore = await cookies(); // En Next.js 15+ la API es asíncrona.
