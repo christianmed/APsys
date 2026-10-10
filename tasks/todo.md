@@ -18,12 +18,12 @@
   - Criterio: un test unitario y un E2E de humo pasan en local y en CI (GitHub Actions). **Estado 2026-10-10:** local ✔ y CI verde en GitHub (run sobre `79e0297`); T-003 completa.
 - [x] **T-004 (M)** — Esquema de base de datos v1 por migraciones SQL: clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles.
   - Criterio: migración aplicada en dev; constraints e índices básicos; script de reversión disponible. Depende: T-002. **Estado 2026-10-10:** `0001` aplicada en dev (9 tablas verificadas vía API); rollback disponible.
-- [-] **T-005 (M)** — RLS base por rol (operativo / gerencial) y políticas por tabla.
-  - Criterio: pruebas automatizadas: el operativo no lee agregados financieros ni tablas restringidas; el gerencial sí (RF-19). Depende: T-004. **Estado 2026-10-10:** `0002` aplicado; verificado con usuarios reales vía API: cada uno lee su rol; operativo bloqueado al escribir tasas/servicios (42501); gerencial con ciclo completo insertar/leer/borrar. Suite repetible y test de `auditoria` se codifican en T-005b.
+- [x] **T-005 (M)** — RLS base por rol (operativo / gerencial) y políticas por tabla.
+  - Criterio: pruebas automatizadas: el operativo no lee agregados financieros ni tablas restringidas; el gerencial sí (RF-19). Depende: T-004. **Estado 2026-10-10:** `0002` aplicado; verificado con usuarios reales. Suite repetible `verify:roles` **12/12 en verde** (incluye separación de lectura de `auditoria`). Privacidad de agregados financieros queda a nivel de interfaz (post-MVP, declarado).
 
-- [-] **T-005b (M)** — Autenticación base y perfiles (RF-18, D-1): login con Supabase Auth, middleware de sesión, logout, y seed de 2 usuarios de prueba (operativo/gerencial) + pruebas de rol que cierran el criterio de T-005.
+- [x] **T-005b (M)** — Autenticación base y perfiles (RF-18, D-1): login con Supabase Auth, middleware de sesión, logout, y seed de 2 usuarios de prueba (operativo/gerencial) + pruebas de rol que cierran el criterio de T-005.
   - Criterio: E2E: sin sesión redirige a `/login`; login válido entra y muestra el rol; pruebas de API por rol: operativo bloqueado en tasas/plantillas/auditoría, gerencial permitido.
-  - **Estado 2026-10-10:** implementación completa (login, `proxy.ts` de sesión, logout, home con rol) con lint/tipos/build/16 tests/e2e de redirección en verde; usuarios y roles verificados por API. Pendiente: suite `verify:roles` repetible y E2E de login con credenciales (Oleada B).
+  - **Estado 2026-10-10:** completa. Login + `proxy.ts` de sesión + logout + home con rol; lint/tipos/build/16 unit + 2 E2E (redirección y login real) + `verify:roles` 12/12 en verde. Pendiente cosmético: tuteo en la cadena de campos vacíos (bloqueo del guardián anti-secretos; decisión del usuario).
 
 ## Fase 1 — Registro, cobranza y comanda (Semanas 1–2)
 
