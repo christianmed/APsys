@@ -1,4 +1,18 @@
+import { readFileSync } from "node:fs";
 import { defineConfig, devices } from "@playwright/test";
+
+// Carga credenciales de prueba desde .env.local (si existe) para el E2E de login.
+// En CI no hay archivo: los tests que requieren credenciales se omiten solos.
+try {
+  for (const linea of readFileSync(".env.local", "utf8").split(/\r?\n/)) {
+    const coincidencia = linea.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
+    if (coincidencia && process.env[coincidencia[1]] === undefined) {
+      process.env[coincidencia[1]] = coincidencia[2].replace(/^["']|["']$/g, "");
+    }
+  }
+} catch {
+  // Sin .env.local: continuar sin credenciales.
+}
 
 export default defineConfig({
   testDir: "./e2e",
