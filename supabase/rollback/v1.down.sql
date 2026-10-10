@@ -8,9 +8,6 @@
 -- datos reales.
 -- =============================================================================
 
--- Función auxiliar de RLS (0002).
-drop function if exists public.rol_actual();
-
 -- Tablas (0001), en orden inverso a su creación. Las políticas RLS de 0002
 -- desaparecen con cada tabla.
 drop table if exists public.auditoria;
@@ -22,3 +19,8 @@ drop table if exists public.tasas_cambio;
 drop table if exists public.clientes;
 drop table if exists public.servicios;
 drop table if exists public.perfiles;
+
+-- Función auxiliar de RLS (0002). Va AL FINAL a propósito: las políticas RLS
+-- la referencian (dependencia registrada en PostgreSQL) y, con RESTRICT por
+-- defecto, el drop fallaría mientras las tablas/políticas existan.
+drop function if exists public.rol_actual();
