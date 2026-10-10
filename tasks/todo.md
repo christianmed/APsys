@@ -12,14 +12,14 @@
   - Criterio: PRD aprobado; D-1 a D-4 resueltas y anotadas en el PRD; alcance Out-of-Scope confirmado.
 - [x] **T-001 (M)** — Inicializar repositorio Next.js (App Router, TypeScript) con Tailwind CSS y Lucide Icons; ESLint + Prettier; scripts npm.
   - Criterio: `npm run dev` levanta la app; `build` y `lint` en verde; README con comandos.
-- [ ] **T-002 (S)** — Crear proyecto Supabase (dev) y conectar clientes server/browser; documentar `.env.local.example`. **⏳ Acción del usuario:** crear el proyecto Supabase (dev) y pegar URL + anon key en `.env.local`.
+- [ ] **T-002 (S)** — Crear proyecto Supabase (dev) y conectar clientes server/browser; documentar `.env.local.example`. **Estado 2026-10-10:** proyecto creado y conexión verificada (clave válida); clientes SSR + ruta `/api/supabase-health` implementados y probados. Pendiente: aplicar el esquema y validar contra tabla real.
   - Criterio: página de humo consulta una tabla de prueba; cero secretos en el repo.
 - [x] **T-003 (M)** — Setup de TDD: Vitest (unitarias) + Playwright (E2E) + scripts `test` / `test:e2e` y CI.
   - Criterio: un test unitario y un E2E de humo pasan en local y en CI (GitHub Actions). **Estado 2026-10-10:** local ✔ y CI verde en GitHub (run sobre `79e0297`); T-003 completa.
 - [ ] **T-004 (M)** — Esquema de base de datos v1 por migraciones SQL: clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles.
-  - Criterio: migración aplicada en dev; constraints e índices básicos; script de reversión disponible. Depende: T-002.
+  - Criterio: migración aplicada en dev; constraints e índices básicos; script de reversión disponible. Depende: T-002. **Estado 2026-10-10:** `0001_schema.sql` + rollback escritos y revisados (fix de orden en rollback aplicado); pendiente: aplicar en Supabase.
 - [ ] **T-005 (M)** — RLS base por rol (operativo / gerencial) y políticas por tabla.
-  - Criterio: pruebas automatizadas: el operativo no lee agregados financieros ni tablas restringidas; el gerencial sí (RF-19). Depende: T-004.
+  - Criterio: pruebas automatizadas: el operativo no lee agregados financieros ni tablas restringidas; el gerencial sí (RF-19). Depende: T-004. **Estado 2026-10-10:** `0002_rls.sql` listo y revisado por inspección; pendiente: aplicar y probar con usuarios reales.
 
 ## Fase 1 — Registro, cobranza y comanda (Semanas 1–2)
 
