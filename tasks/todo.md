@@ -14,8 +14,8 @@
   - Criterio: `npm run dev` levanta la app; `build` y `lint` en verde; README con comandos.
 - [ ] **T-002 (S)** — Crear proyecto Supabase (dev) y conectar clientes server/browser; documentar `.env.local.example`. **⏳ Acción del usuario:** crear el proyecto Supabase (dev) y pegar URL + anon key en `.env.local`.
   - Criterio: página de humo consulta una tabla de prueba; cero secretos en el repo.
-- [-] **T-003 (M)** — Setup de TDD: Vitest (unitarias) + Playwright (E2E) + scripts `test` / `test:e2e` y CI.
-  - Criterio: un test unitario y un E2E de humo pasan en local y en CI (GitHub Actions). **Estado 2026-10-10:** local ✔ (lint/typecheck/build/unit/E2E en verde, revisión independiente); pendiente: push a GitHub para evidenciar CI.
+- [x] **T-003 (M)** — Setup de TDD: Vitest (unitarias) + Playwright (E2E) + scripts `test` / `test:e2e` y CI.
+  - Criterio: un test unitario y un E2E de humo pasan en local y en CI (GitHub Actions). **Estado 2026-10-10:** local ✔ y CI verde en GitHub (run sobre `79e0297`); T-003 completa.
 - [ ] **T-004 (M)** — Esquema de base de datos v1 por migraciones SQL: clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles.
   - Criterio: migración aplicada en dev; constraints e índices básicos; script de reversión disponible. Depende: T-002.
 - [ ] **T-005 (M)** — RLS base por rol (operativo / gerencial) y políticas por tabla.
