@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   Clock,
   CreditCard,
+  Flame,
   Package,
   Plus,
   Printer,
@@ -118,13 +119,23 @@ export default async function PedidosPage({ searchParams }: Props) {
             </div>
           </div>
 
-          <Link
-            href="/pedidos/nuevo"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
-          >
-            <Plus aria-hidden className="size-4" />
-            Nuevo pedido
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/taller"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+            >
+              <Flame aria-hidden className="size-4 text-amber-600" />
+              Vista de Taller
+            </Link>
+
+            <Link
+              href="/pedidos/nuevo"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
+            >
+              <Plus aria-hidden className="size-4" />
+              Nuevo pedido
+            </Link>
+          </div>
         </div>
 
         {/* BUSCADOR Y LECTURA CON ESCÁNER USB */}

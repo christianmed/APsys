@@ -1,4 +1,4 @@
-import { ClipboardList, LogOut, Tag, UserRound, Users } from "lucide-react";
+import { ClipboardList, Flame, LogOut, Tag, UserRound, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -50,9 +50,17 @@ export default async function Home() {
         </div>
 
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Base del sistema APSys lista: sesión activa y permisos por rol
-          verificados. El módulo de pedidos llega en la Fase 1.
+          Base del sistema APSys lista: gestión de pedidos, flujo de taller,
+          cobranza multimoneda y control de producción.
         </p>
+
+        <Link
+          href="/taller"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-amber-600 text-sm font-bold text-white transition hover:bg-amber-500 shadow-sm"
+        >
+          <Flame aria-hidden className="size-5" />
+          Taller y Producción (Táctil)
+        </Link>
 
         <Link
           href="/pedidos"

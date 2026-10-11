@@ -17,6 +17,46 @@ export const ESTADOS_VALIDOS: EstadoPedido[] = [
   "cancelado",
 ];
 
+export const ESTADOS_METADATA: Record<
+  EstadoPedido,
+  {
+    label: string;
+    badgeColor: string;
+    descripcion: string;
+  }
+> = {
+  recibido: {
+    label: "Recibido",
+    badgeColor:
+      "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+    descripcion: "Esperando inicio de producción en taller",
+  },
+  en_produccion: {
+    label: "En Producción",
+    badgeColor:
+      "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
+    descripcion: "En proceso de impresión o acabado",
+  },
+  listo: {
+    label: "Listo para Retiro",
+    badgeColor:
+      "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
+    descripcion: "Trabajo terminado, listo para entregar al cliente",
+  },
+  entregado: {
+    label: "Entregado",
+    badgeColor:
+      "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+    descripcion: "Orden retirada y entregada al cliente",
+  },
+  cancelado: {
+    label: "Cancelado",
+    badgeColor:
+      "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
+    descripcion: "Orden anulada con motivo justificado",
+  },
+};
+
 const TRANSICIONES_PERMITIDAS: Record<EstadoPedido, EstadoPedido[]> = {
   recibido: ["en_produccion", "cancelado"],
   en_produccion: ["listo", "recibido", "cancelado"],
