@@ -1,6 +1,7 @@
 import {
   Bell,
   ClipboardList,
+  FileText,
   Flame,
   LogOut,
   Tag,
@@ -76,6 +77,14 @@ export default async function Home() {
         >
           <Bell aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
           Recordatorios (48–72 h)
+        </Link>
+
+        <Link
+          href="/plantillas"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white text-sm font-medium text-zinc-900 transition hover:bg-zinc-50 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:hover:bg-zinc-800"
+        >
+          <FileText aria-hidden className="size-4 text-zinc-500" />
+          Plantillas de Mensajes
         </Link>
 
         <Link
