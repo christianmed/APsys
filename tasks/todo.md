@@ -57,5 +57,13 @@
   - [x] Paso 3: Reestructurar el layout con `grid-cols-1 lg:grid-cols-2` (50% y 50% en escritorio; Sincronización arriba e Histórico abajo en móvil).
   - [x] Paso 4: Validación visual en navegador en resoluciones Desktop (1536x826) y Móvil (390x844).
   - [x] Paso 5: Verificación DoD completada (144 tests en Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+- [x] **Fase 12: Unificación de Shell en Página de Inicio (Tasa EUR Homogénea)**
+  - [x] Paso 1: Migrar `app/page.tsx` para usar `AuthenticatedShell` en lugar de la llamada directa a `AppShell`.
+  - [x] Paso 2: Eliminar consulta manual redundante a `tasas_cambio` en `app/page.tsx` (centralizada en `AuthenticatedShell`).
+  - [x] Paso 3: Asegurar carga simultánea y homogénea de tasa USD y tasa EUR en el sidebar y header móvil en Inicio.
+  - [x] Paso 4: Verificación visual en navegador de Inicio con widget de tasas completas.
+  - [x] Paso 5: Verificación DoD completada (144 tests Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+
+
 
 

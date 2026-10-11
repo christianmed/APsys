@@ -17,9 +17,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { AppShell } from "@/components/shell/app-shell";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { createClient } from "@/lib/supabase/server";
-import { cerrarSesion } from "./actions";
 
 export const instant = false;
 
@@ -46,16 +45,6 @@ export default async function Home() {
   const rol: string = perfil?.rol ?? "operativo";
   const esGerencial = rol === "gerencial";
 
-  // Consultar tasa vigente más reciente
-  const { data: tasaData } = await supabase
-    .from("tasas_cambio")
-    .select("valor_bs_por_usd")
-    .order("vigente_desde", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  const valorTasa = Number(tasaData?.valor_bs_por_usd) || 40.0;
-
   // Consultar métricas operativas en vivo
   const { data: pedidosRaw } = await supabase
     .from("pedidos")
@@ -76,12 +65,7 @@ export default async function Home() {
   });
 
   return (
-    <AppShell
-      usuarioEmail={user.email ?? "operador@apsys"}
-      usuarioRol={rol}
-      tasaHoy={valorTasa}
-      accionCerrarSesion={cerrarSesion}
-    >
+    <AuthenticatedShell>
       <div className="space-y-8">
         {/* =========================================================================
             1. BANNER DE BIENVENIDA Y ACCIONES RÁPIDAS
@@ -500,6 +484,6 @@ export default async function Home() {
           </div>
         </footer>
       </div>
-    </AppShell>
+    </AuthenticatedShell>
   );
 }
