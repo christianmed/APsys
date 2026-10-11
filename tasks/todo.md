@@ -57,8 +57,9 @@
 - [x] **T-014 (S)** — Vista de taller optimizada para tablet/móvil: cambio de estado en ≤ 2 toques.
   - Criterio: checklist de usabilidad aplicado en dispositivo real (RF-07).
   - **Estado 2026-10-10:** completa. 78 unit verdes; ruta dedicada `/taller` optimizada para tablets y smartphones de operarios en taller, tarjetas de orden táctiles con especificaciones de material y medidas visibles, pestañas de filtrado con conteos reactivos, buscador integrado para lectores USB de comanda, avance de estado en 1 toque directo (`Iniciar Producción` / `¡Listo para Retiro!` / `Entregar al Cliente`) con opción de reapertura/reversión operativa, accesos directos desde home (`/`) y `/pedidos`, y suite E2E (`e2e/taller.spec.ts`).
-- [ ] **T-015 (M)** — Aviso de retiro por WhatsApp: plantilla con N° de orden, cliente y saldo ($/Bs); acción "Avisar" desde el pedido.
+- [x] **T-015 (M)** — Aviso de retiro por WhatsApp: plantilla con N° de orden, cliente y saldo ($/Bs); acción "Avisar" desde el pedido.
   - Criterio: E2E: el enlace generado contiene el mensaje con saldo correcto y abre WhatsApp (RF-08, D-2). Depende: T-013.
+  - **Estado 2026-10-10:** completa (T-015a + T-015b). 86 unit verdes; módulo `whatsapp.ts` con normalización internacional y formatos nacionales de Venezuela (`04XX` a `584XX`), generador de plantilla oficial con saldo en USD y conversión en Bs a tasa referencial congelada (o indicador de 100% Pagado), componente interactivo `BotonAvisoWhatsApp` integrado en `/pedidos` y `/taller` cuando la orden pasa a 'Listo para Retiro', enlace directo a `wa.me` en un clic y suite E2E (`e2e/whatsapp-aviso.spec.ts`).
 - [ ] **T-016 (M)** — Panel de recordatorios 48–72 h: pedidos listos sin retirar, ordenados por antigüedad, envío a un clic.
   - Criterio: E2E con pedidos en distintos umbrales de tiempo (RF-09). Depende: T-013.
 - [ ] **T-017 (S)** — Editor de plantillas de mensajes con variables validadas.
