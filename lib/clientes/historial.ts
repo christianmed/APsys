@@ -69,8 +69,8 @@ export function clasificarRecurrenciaCliente(
     pedidosActivos >= 5 ||
     (typeof frecuenciaPromedioDias === "number" &&
       frecuenciaPromedioDias > 0 &&
-      frecuenciaPromedioDias <= 15 &&
-      pedidosActivos >= 3)
+      frecuenciaPromedioDias <= 7 &&
+      pedidosActivos >= 4)
   ) {
     return "VIP / Frecuente";
   }
