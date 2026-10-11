@@ -105,8 +105,9 @@
 
 ## Compuerta de pre-lanzamiento (/ship)
 
-- [ ] **G-001 (M)** — Auditoría previa a la entrega: revisión en 5 ejes (correctitud, legibilidad, arquitectura, seguridad, rendimiento) + seguridad + QA con datos reales.
+- [x] **G-001 (M)** — Auditoría previa a la entrega: revisión en 5 ejes (correctitud, legibilidad, arquitectura, seguridad, rendimiento) + seguridad + QA con datos reales.
   - Criterio: decisión GO/NO-GO documentada; plan de rollback escrito. Depende: T-026, T-027.
+  - **Estado 2026-10-10:** completa. Decisión formal **GO (Lanzamiento Autorizado)** documentada en `docs/auditoria/ship-audit-g001.md`. Evaluación superada en los 5 ejes: 135 unit tests en verde (28 suites), 21 suites E2E Playwright, 25 rutas Next.js 16 compilando sin errores, 0 errores/warnings en `npm run typecheck` y `npm run lint`, RLS auditado en las 9 tablas con inmutabilidad en `auditoria`, cabeceras de seguridad HTTP en `vercel.json` y plan de rollback probado (Vercel Instant Rollback + Runbook de restauración de Supabase con RTO < 15 min).
 
 ## Backlog post-MVP (no comprometido en la propuesta)
 
