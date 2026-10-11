@@ -17,6 +17,7 @@ import Link from "next/link";
 import { useState, useTransition } from "react";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
+import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
 import {
   ESTADOS_METADATA,
   type EstadoPedido,
@@ -44,6 +45,9 @@ export type PedidoTaller = {
   listo_en: string | null;
   entregado_en: string | null;
   anulado: boolean;
+  total_usd?: number;
+  saldo_usd?: number;
+  tasa_bs?: number;
   clientes?: {
     nombre: string;
     telefono: string | null;
@@ -425,7 +429,16 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                   )}
 
                   {pedido.estado === "listo" && (
-                    <div className="space-y-1.5">
+                    <div className="space-y-2">
+                      <BotonAvisoWhatsApp
+                        telefono={pedido.clientes?.telefono}
+                        nombreCliente={pedido.clientes?.nombre ?? "Cliente"}
+                        numeroOrden={pedido.numero_orden}
+                        totalUsd={pedido.total_usd ?? 0}
+                        saldoUsd={pedido.saldo_usd ?? 0}
+                        tasaBsPorUsd={pedido.tasa_bs}
+                        variante="full"
+                      />
                       <button
                         type="button"
                         disabled={cargandoEste}

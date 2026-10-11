@@ -36,6 +36,7 @@ export default async function TallerPage() {
       id,
       numero_orden,
       estado,
+      total_usd,
       creado_en,
       listo_en,
       entregado_en,
@@ -44,6 +45,13 @@ export default async function TallerPage() {
       clientes (
         nombre,
         telefono
+      ),
+      pagos (
+        monto,
+        moneda
+      ),
+      tasas_cambio (
+        valor_bs_por_usd
       ),
       pedido_items (
         id,
@@ -77,6 +85,19 @@ export default async function TallerPage() {
       ? p.clientes[0]
       : (p.clientes as unknown as { nombre: string; telefono: string | null } | null);
 
+    const tasaObj = p.tasas_cambio as { valor_bs_por_usd?: number | string } | null;
+    const tasaValor = Number(tasaObj?.valor_bs_por_usd) || 40.0;
+    const listaPagos = (p.pagos as unknown as Array<{ monto: number | string; moneda: string }>) ?? [];
+
+    const totalPagadoUsd = listaPagos.reduce((acc, pago) => {
+      const monto = Number(pago.monto) || 0;
+      if (pago.moneda === "USD") return acc + monto;
+      return acc + monto / tasaValor;
+    }, 0);
+
+    const totalUsd = Number(p.total_usd) || 0;
+    const saldoUsd = Math.max(0, Math.round((totalUsd - totalPagadoUsd) * 100) / 100);
+
     return {
       id: p.id,
       numero_orden: p.numero_orden,
@@ -85,6 +106,9 @@ export default async function TallerPage() {
       listo_en: p.listo_en,
       entregado_en: p.entregado_en,
       anulado: p.anulado,
+      total_usd: totalUsd,
+      saldo_usd: saldoUsd,
+      tasa_bs: tasaValor,
       clientes: clienteObj,
       items: rawItems,
     };

@@ -14,6 +14,7 @@ import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { type EstadoPedido } from "@/lib/pedidos/estados";
 import { createClient } from "@/lib/supabase/server";
 import { EstadoControl } from "./estado-control";
+import { BotonAvisoWhatsApp } from "./boton-aviso-whatsapp";
 import { PedidosBuscador } from "./pedidos-buscador";
 
 export const instant = false;
@@ -287,7 +288,18 @@ export default async function PedidosPage({ searchParams }: Props) {
                         </span>
                       )}
 
-                      <div className="mt-2">
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        {pedido.estado === "listo" && (
+                          <BotonAvisoWhatsApp
+                            telefono={clienteData?.telefono}
+                            nombreCliente={clienteData?.nombre ?? "Cliente"}
+                            numeroOrden={pedido.numero_orden}
+                            totalUsd={totalUsd}
+                            saldoUsd={saldoUsd}
+                            tasaBsPorUsd={tasaValor}
+                          />
+                        )}
+
                         <Link
                           href={`/comanda/${pedido.id}`}
                           className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
