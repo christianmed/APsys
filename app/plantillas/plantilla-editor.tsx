@@ -91,10 +91,16 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Cabecera */}
+      {/* Cabecera unificada */}
       <PageHeader
         title="Gestión de Plantillas de Mensajes"
         description="Personalización de avisos y recordatorios de WhatsApp con variables automáticas (RF-10)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+            <MessageCircle className="size-3.5" />
+            <span>WhatsApp & Automatización</span>
+          </span>
+        }
         actions={
           !esGerencial ? (
             <div className="flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">

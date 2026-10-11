@@ -3,6 +3,7 @@
 import {
   AlertCircle,
   AlertTriangle,
+  Bell,
   Clock,
   ExternalLink,
   MessageCircle,
@@ -64,10 +65,16 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Cabecera */}
+      {/* Cabecera unificada */}
       <PageHeader
         title="Recordatorios (48–72 h)"
         description="Seguimiento a pedidos listos sin retirar para incentivar cobranza y despacho oportuno (RF-09)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-amber-700 dark:text-amber-400">
+            <Bell className="size-3.5" />
+            <span>Cobranzas & Alertas</span>
+          </span>
+        }
         actions={
           <div className="relative w-full sm:w-64">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />

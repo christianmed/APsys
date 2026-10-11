@@ -89,6 +89,12 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       <PageHeader
         title="Cuentas por Cobrar"
         description="Control de saldos pendientes de clientes, tramos de vencimiento y gestión activa de cobro (RF-12)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-rose-700 dark:text-rose-400">
+            <Wallet className="size-3.5" />
+            <span>Saldos & Cobranzas</span>
+          </span>
+        }
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Link

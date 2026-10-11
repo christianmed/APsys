@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { Layers, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -60,6 +60,12 @@ export default async function ServiciosPage() {
         <PageHeader
           title="Catálogo de Servicios"
           description="Servicios de impresión, acabados y orden en comandas de taller."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-purple-700 dark:text-purple-400">
+              <Layers className="size-3.5" />
+              <span>Catálogo de Servicios</span>
+            </span>
+          }
           actions={
             esGerencial ? (
               <div className="flex flex-wrap items-center gap-2">

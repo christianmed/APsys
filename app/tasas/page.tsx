@@ -1,4 +1,5 @@
 import {
+  Banknote,
   CheckCircle,
   Clock,
   History,
@@ -100,6 +101,12 @@ export default async function TasasPage() {
         <PageHeader
           title="Tasa de Cambio Referencial"
           description="Configuración y vigencia de la tasa referencial Bs/USD. Los pedidos previos retienen su tasa histórica (RF-15)."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <Banknote className="size-3.5" />
+              <span>Divisas & BCV</span>
+            </span>
+          }
           actions={
             <Link
               href="/pedidos"

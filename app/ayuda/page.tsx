@@ -43,6 +43,12 @@ export default async function AyudaPage() {
         <PageHeader
           title="Guía Rápida de Uso"
           description="Manual operativo por perfil para el personal del taller de imprenta."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-indigo-700 dark:text-indigo-400">
+              <HelpCircle className="size-3.5" />
+              <span>Soporte & Manual</span>
+            </span>
+          }
         />
 
         {/* Banner de perfil actual */}

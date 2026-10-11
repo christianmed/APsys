@@ -82,10 +82,16 @@ export function DashboardView({
 
   return (
     <div className="space-y-6">
-      {/* Cabecera */}
+      {/* Cabecera unificada */}
       <PageHeader
         title="Dashboard Gerencial de Ingresos"
         description="Consolidación de ingresos reales recaudados en USD y Bolívares (RF-11)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-blue-700 dark:text-blue-400">
+            <TrendingUp className="size-3.5" />
+            <span>Finanzas & Facturación</span>
+          </span>
+        }
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Link

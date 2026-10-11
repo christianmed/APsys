@@ -1,4 +1,4 @@
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -67,6 +67,12 @@ export default async function ClientesPage({
         <PageHeader
           title="Directorio de Clientes"
           description="Búsqueda rápida por nombre o teléfono, WhatsApp y resumen de compras."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <Users className="size-3.5" />
+              <span>Directorio de Clientes</span>
+            </span>
+          }
           actions={
             <Link
               href="/clientes/nuevo"

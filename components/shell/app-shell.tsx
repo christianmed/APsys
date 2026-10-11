@@ -91,27 +91,27 @@ export function AppShell({
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                {/* Bloque USD */}
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-2 dark:border-emerald-900/60 dark:bg-emerald-950/30">
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-                    <Banknote className="size-3 text-emerald-600 dark:text-emerald-400" />
+              <div className="space-y-1.5">
+                {/* Renglón USD */}
+                <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/80 px-2.5 py-1.5 dark:border-emerald-900/60 dark:bg-emerald-950/30">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                    <Banknote className="size-3.5 text-emerald-600 dark:text-emerald-400" />
                     <span>USD</span>
                   </div>
-                  <p className="mt-0.5 font-mono text-xs font-black text-emerald-950 dark:text-emerald-100">
+                  <span className="font-mono text-xs font-black text-emerald-950 dark:text-emerald-100">
                     Bs. {tasaHoy.toFixed(2)}
-                  </p>
+                  </span>
                 </div>
 
-                {/* Bloque EUR */}
-                <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-2 dark:border-indigo-900/60 dark:bg-indigo-950/30">
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-indigo-700 dark:text-indigo-300">
-                    <Euro className="size-3 text-indigo-600 dark:text-indigo-400" />
+                {/* Renglón EUR */}
+                <div className="flex items-center justify-between rounded-xl border border-indigo-200 bg-indigo-50/80 px-2.5 py-1.5 dark:border-indigo-900/60 dark:bg-indigo-950/30">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-800 dark:text-indigo-300">
+                    <Euro className="size-3.5 text-indigo-600 dark:text-indigo-400" />
                     <span>EUR</span>
                   </div>
-                  <p className="mt-0.5 font-mono text-xs font-black text-indigo-950 dark:text-indigo-100">
+                  <span className="font-mono text-xs font-black text-indigo-950 dark:text-indigo-100">
                     {tasaEurHoy ? `Bs. ${tasaEurHoy.toFixed(2)}` : "—"}
-                  </p>
+                  </span>
                 </div>
               </div>
             </Link>

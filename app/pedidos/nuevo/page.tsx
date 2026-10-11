@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
@@ -47,6 +48,12 @@ export default async function NuevoPedidoPage() {
         <PageHeader
           title="Nueva Orden de Trabajo"
           description="Registra los detalles del cliente, servicios, medidas y cobranza inicial."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <Plus className="size-3.5" />
+              <span>Registro de Orden</span>
+            </span>
+          }
           backHref="/pedidos"
           backLabel="Volver a Pedidos"
         />

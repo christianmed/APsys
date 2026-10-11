@@ -1,4 +1,5 @@
 import {
+  ClipboardList,
   Clock,
   CreditCard,
   Package,
@@ -107,6 +108,12 @@ export default async function PedidosPage({ searchParams }: Props) {
         <PageHeader
           title="Gestión de Pedidos"
           description="Órdenes de trabajo, búsqueda rápida por escáner USB y comanda de taller."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-blue-700 dark:text-blue-400">
+              <ClipboardList className="size-3.5" />
+              <span>Órdenes de Trabajo</span>
+            </span>
+          }
           actions={
             <Link
               href="/pedidos/nuevo"

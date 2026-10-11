@@ -2,6 +2,7 @@
 
 import {
   AlertCircle,
+  BarChart3,
   Calendar,
   DollarSign,
   Flame,
@@ -82,6 +83,12 @@ export function RotacionServiciosView({
       <PageHeader
         title="Rotación y Demanda por Servicio"
         description="Análisis de los productos y servicios con mayor y menor demanda, volumen producido y facturación (RF-13)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-indigo-700 dark:text-indigo-400">
+            <BarChart3 className="size-3.5" />
+            <span>Demanda & Producción</span>
+          </span>
+        }
         backHref="/dashboard"
         backLabel="Volver al Dashboard"
         actions={

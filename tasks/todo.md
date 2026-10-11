@@ -33,3 +33,10 @@
   - [x] Paso 4: Eliminar redundancia del Euro en la tarjeta hero principal de `/tasas`.
   - [x] Paso 5: Resaltar la información del Euro en el Sidebar y Header móvil de `components/shell/app-shell.tsx` con igual peso que el USD.
   - [x] Paso 6: Verificación completa (`test`, `typecheck`, `lint`, `build`).
+- [x] **Fase 8: Estandarización de Retorno, Cabeceras con Badges, Tasas Verticales y Auditoría**
+  - [x] Paso 1: Estandarizar botón de retorno `PageHeader` alineado al lado del título (a la izquierda en la misma línea visual) en lugar de encima.
+  - [x] Paso 2: Unificar cabecera de `app/taller/taller-tablero.tsx` con el `PageHeader` universal oficial y botón `Volver a Pedidos`.
+  - [x] Paso 3: Reorganizar widget de tasas en Sidebar con disposición vertical (Dólar arriba y Euro debajo en filas completas de ancho entero).
+  - [x] Paso 4: Agregar badges temáticos a las cabeceras de Recordatorios, Plantillas, Dashboard de Ingresos, Cuentas por Cobrar, Rotación y Ayuda.
+  - [x] Paso 5: Auditoría exhaustiva de componentes, mapeo de reutilización y verificación de cero código huérfano.
+  - [x] Paso 6: Verificación completa DoD (`tsc`, `test`, `lint`, `build`).
