@@ -45,8 +45,9 @@
 - [x] **T-011 (M)** — Comanda imprimible `/comanda/[id]` con QR (que abre la orden) y código de barras; estilos de impresión A4 y ticket.
   - Criterio: E2E imprimir → escanear QR → abre el pedido correcto; prueba en PDF/impresora (RF-03, D-4). Depende: T-009, T-010.
   - **Estado 2026-10-10:** completa (T-011a + T-011b). 62 unit verdes; generadores vectoriales nativos en TypeScript para Code 39 (`barcode.ts`) y QR (`qr.ts`), ruta dedicada `/comanda/[id]`, selector dinámico entre Hoja A4 y Ticket 80mm, CSS `@media print` optimizado para impresión física sin distracciones, enlace directo desde el listado de pedidos y suite E2E (`e2e/comanda.spec.ts`).
-- [ ] **T-012 (S)** — Búsqueda de pedidos por número y lectura con escáner USB (captura de entrada de teclado).
+- [x] **T-012 (S)** — Búsqueda de pedidos por número y lectura con escáner USB (captura de entrada de teclado).
   - Criterio: escanear la comanda de prueba abre el pedido en < 2 s en pantalla de taller (RF-06).
+  - **Estado 2026-10-10:** completa (T-012a + T-012b). 69 unit verdes; módulo `busqueda.ts` con saneamiento de códigos Code 39 (`ORD-XXXX`, `*ORD-XXXX*`, `#XXXX`), componente `PedidosBuscador` con atajo de teclado `/` y soporte para lectores USB HID keyboard wedge, filtrado en servidor por correlativo y cliente, respuesta en < 2 s y suite E2E (`e2e/pedidos-busqueda.spec.ts`). Cierra la Fase 1 del MVP.
 
 ## Fase 2 — Taller y notificaciones (Semana 3)
 
