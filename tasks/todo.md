@@ -33,8 +33,9 @@
 - [x] **T-007 (S)** — Catálogo de servicios administrable con seed inicial (pendones, viniles, backing, microperforado, etiquetas…).
   - Criterio: alta/baja/edición de servicios sin tocar código (RF-04).
   - **Estado 2026-10-10:** completa (T-007a + T-007b). 34 unit verdes; E2E 4/4 (alta → edición → baja lógica). Revisión independiente: 0 bloqueantes / 0 importantes; 2 NITs menores anotados (parseInt con «1.5» vía POST directo; un solo error visible a la vez). Pendiente del usuario: aplicar `0003_seed_servicios.sql` (5 servicios) en el SQL Editor.
-- [ ] **T-008 (M)** — Formulario de registro de pedido: servicios, dimensiones, acabados y notas.
+- [x] **T-008 (M)** — Formulario de registro de pedido: servicios, dimensiones, acabados y notas.
   - Criterio: E2E registra un pedido completo; validaciones de campos (RF-01). Depende: T-004, T-006, T-007.
+  - **Estado 2026-10-10:** completa (T-008a + T-008b). 42 unit verdes; formulario reactivo `/pedidos/nuevo` con selector de clientes y servicios, desglose dinámico de renglones, cálculo en tiempo real de subtotales y total USD, persistencia de cabecera (`pedidos`) e ítems (`pedido_items`), vista `/pedidos` con estados y badges, y suite E2E (`e2e/pedidos.spec.ts`).
 - [ ] **T-009 (M)** — Cobranza inicial: total, abono (USD/Bs), referencia y saldo automático; persistencia en `pagos`.
   - Criterio: unitarias de casos borde (abono 0 / parcial / total, doble moneda); E2E con saldo correcto (RF-02). Depende: T-008.
 - [ ] **T-010 (S)** — Numeración de órdenes y estado inicial (Recibido) con marcas de tiempo.
@@ -98,4 +99,4 @@
 
 ---
 
-*Actualizar este archivo al cerrar cada tarea. Ejecución en el orden listado; las dependencias no obvias están indicadas en cada tarea.*
+_Actualizar este archivo al cerrar cada tarea. Ejecución en el orden listado; las dependencias no obvias están indicadas en cada tarea._
