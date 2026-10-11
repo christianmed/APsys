@@ -51,8 +51,9 @@
 
 ## Fase 2 — Taller y notificaciones (Semana 3)
 
-- [ ] **T-013 (M)** — Máquina de estados (Recibido → En Producción → Listo para Retiro → Entregado; Cancelado con reglas) con permisos por perfil.
+- [x] **T-013 (M)** — Máquina de estados (Recibido → En Producción → Listo para Retiro → Entregado; Cancelado con reglas) con permisos por perfil.
   - Criterio: unitarias de transiciones válidas/inválidas; E2E del flujo completo (RF-05). Depende: T-005.
+  - **Estado 2026-10-10:** completa (T-013a + T-013b). 75 unit verdes; máquina de estados centralizada en `estados.ts` con transiciones progresivas y retrocesos operativos controlados, sellado automático de marcas de tiempo (`listo_en`, `entregado_en`), regla de anulación con motivo reservada estrictamente para perfil gerencial, Server Action `cambiarEstadoPedido`, componente interactivo `EstadoControl` en UI de pedidos con botones de 1 toque y modal de cancelación, y suite E2E (`e2e/pedidos-estados.spec.ts`).
 - [ ] **T-014 (S)** — Vista de taller optimizada para tablet/móvil: cambio de estado en ≤ 2 toques.
   - Criterio: checklist de usabilidad aplicado en dispositivo real (RF-07).
 - [ ] **T-015 (M)** — Aviso de retiro por WhatsApp: plantilla con N° de orden, cliente y saldo ($/Bs); acción "Avisar" desde el pedido.
