@@ -66,8 +66,9 @@
 - [x] **T-017 (S)** — Editor de plantillas de mensajes con variables validadas.
   - Criterio: cambiar la plantilla se refleja en el mensaje generado; unitarias de render de variables (RF-10).
   - **Estado 2026-10-10:** completa (T-017a + T-017b). 97 unit verdes; motor `plantillas.ts` con interpolación de variables seguras (`{cliente}`, `{orden}`, `{total}`, `{saldo}`, `{saldo_bs}`, `{tasa}`, `{dias}`, `{horas}`), validación de sintaxis para rechazar variables no permitidas, Server Action `guardarPlantilla` protegida por RLS para perfil gerencial, interfaz interactiva `/plantillas` con chips de inserción rápida, simulador visual de WhatsApp en vivo y suite E2E (`e2e/plantillas.spec.ts`).
-- [ ] **T-018 (M)** — Escaneo con cámara móvil (`BarcodeDetector` con fallback) en la vista de taller.
+- [x] **T-018 (M)** — Escaneo con cámara móvil (`BarcodeDetector` con fallback) en la vista de taller.
   - Criterio: escaneo funcional en Android/iOS reales sobre la comanda impresa (RF-06).
+  - **Estado 2026-10-10:** completa (T-018a + T-018b). 101 unit verdes; módulo `escaner.ts` con extracción resiliente de órdenes desde Code 39 y QR de comanda, modal táctil `CamaraEscanerModal` con acceso a cámara trasera (`facingMode: "environment"`), aceleración por `BarcodeDetector` nativo, control de flash/antorcha, marco de encuadre visual con feedback háptico/óptico, fallback para entrada manual/lector USB y suite E2E (`e2e/camara-escaner.spec.ts`). Cierra la Fase 2 completa del MVP.
 
 ## Fase 3 — Métricas, despliegue y capacitación (Semana 4)
 
