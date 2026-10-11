@@ -1,4 +1,4 @@
-import { ArrowLeft, Clock, CreditCard, Package, Plus } from "lucide-react";
+import { ArrowLeft, Clock, CreditCard, Package, Plus, Printer } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -233,6 +233,16 @@ export default async function PedidosPage() {
                           <CreditCard className="size-3" /> Saldo pendiente
                         </span>
                       )}
+
+                      <div className="mt-2">
+                        <Link
+                          href={`/comanda/${pedido.id}`}
+                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                        >
+                          <Printer className="size-3.5" />
+                          Comanda
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
