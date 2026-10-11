@@ -1,4 +1,5 @@
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, UserRound, Users } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { cerrarSesion } from "./actions";
@@ -52,6 +53,14 @@ export default async function Home() {
           Base del sistema APSys lista: sesión activa y permisos por rol
           verificados. El módulo de pedidos llega en la Fase 1.
         </p>
+
+        <Link
+          href="/clientes"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
+        >
+          <Users aria-hidden className="size-4" />
+          Clientes
+        </Link>
 
         <form action={cerrarSesion}>
           <button
