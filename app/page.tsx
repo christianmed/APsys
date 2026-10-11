@@ -1,6 +1,7 @@
 import {
   Banknote,
   Bell,
+  BookOpen,
   ClipboardList,
   FileText,
   Flame,
@@ -136,6 +137,14 @@ export default async function Home() {
         >
           <Tag aria-hidden className="size-4" />
           Servicios
+        </Link>
+
+        <Link
+          href="/ayuda"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50/50 text-sm font-medium text-indigo-900 transition-colors hover:bg-indigo-100 focus-visible:ring-2 focus-visible:ring-indigo-900 focus-visible:outline-none dark:border-indigo-800 dark:bg-indigo-950/30 dark:text-indigo-200"
+        >
+          <BookOpen aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
+          Guía y Ayuda Rápida
         </Link>
 
         <form action={cerrarSesion}>
