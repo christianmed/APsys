@@ -14,7 +14,7 @@ import {
   type TasaHistorica,
 } from "@/lib/tasas/tasas";
 import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { BcvSyncPanel } from "./bcv-sync-panel";
@@ -48,21 +48,11 @@ function formatoFechaCompleta(iso: string): string {
  * formulario para nueva tasa (gerencial) y el histórico inmutable de vigencias.
  */
 export default async function TasasPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const esGerencial = perfil?.rol === "gerencial";
 

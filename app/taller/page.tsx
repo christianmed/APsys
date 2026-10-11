@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { type EstadoPedido } from "@/lib/pedidos/estados";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { PedidoTaller, TallerTablero } from "./taller-tablero";
 
 export const instant = false;
@@ -11,21 +11,11 @@ export const instant = false;
  * Permite cambiar el estado de las órdenes en <= 2 toques (1 toque directo para avanzar).
  */
 export default async function TallerPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 

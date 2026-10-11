@@ -93,6 +93,12 @@
   - [x] Paso 6: Mostrar indicador en el Sidebar/Header cuando exista una tasa programada para el día siguiente.
   - [x] Paso 7: Verificación completa de calidad DoD (153 tests Vitest en verde, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
 
+- [x] **Fase 17: Ergonomía del Sidebar (Espaciado Vertical) y Eliminación de Parpadeo en Navegación**
+  - [x] Paso 1: Aumentar el espaciado vertical entre botones del sidebar a `space-y-1.5` (6px) en escritorio y móvil para evitar colisión visual en estados activo y hover.
+  - [x] Paso 2: Eliminar pantallas esqueleto de ruta (`loading.tsx`) que provocaban el desmontaje y parpadeo del sidebar en cada clic de navegación.
+  - [x] Paso 3: Implementar `obtenerUsuarioSesion()` con `React.cache()` y paralelizar consultas de tasas en `AuthenticatedShell` con `Promise.all`.
+  - [x] Paso 4: Verificación completa de calidad DoD (`vitest`, `tsc`, `eslint`, `next build`).
+
 
 
 

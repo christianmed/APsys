@@ -143,11 +143,11 @@ export function AppShell({
             if (itemsFiltrados.length === 0) return null;
 
             return (
-              <div key={grupo.title} className="space-y-1">
-                <h3 className="px-3 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+              <div key={grupo.title} className="space-y-1.5">
+                <h3 className="px-3 pb-0.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
                   {grupo.title}
                 </h3>
-                <div className="space-y-0.5">
+                <div className="space-y-1.5">
                   {itemsFiltrados.map((item) => {
                     const activa = estaRutaActiva(item.href, item.exactMatch);
                     const Icono = item.icon;
@@ -156,10 +156,10 @@ export function AppShell({
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-colors ${
+                        className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 ${
                           activa
                             ? "bg-zinc-900 text-white font-semibold shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
-                            : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                            : "text-zinc-600 hover:bg-zinc-100/90 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -298,11 +298,11 @@ export function AppShell({
                 if (itemsFiltrados.length === 0) return null;
 
                 return (
-                  <div key={grupo.title} className="space-y-1">
-                    <h3 className="px-2 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
+                  <div key={grupo.title} className="space-y-1.5">
+                    <h3 className="px-2 pb-0.5 text-[11px] font-bold uppercase tracking-wider text-zinc-400">
                       {grupo.title}
                     </h3>
-                    <div className="space-y-0.5">
+                    <div className="space-y-1.5">
                       {itemsFiltrados.map((item) => {
                         const activa = estaRutaActiva(item.href, item.exactMatch);
                         const Icono = item.icon;
@@ -311,7 +311,7 @@ export function AppShell({
                             key={item.href}
                             href={item.href}
                             onClick={() => setMenuMovilAbierto(false)}
-                            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium ${
+                            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-all duration-150 ${
                               activa
                                 ? "bg-zinc-900 text-white font-semibold dark:bg-zinc-100 dark:text-zinc-900"
                                 : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
