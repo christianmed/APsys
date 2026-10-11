@@ -141,17 +141,22 @@ export async function crearPedido(
     };
   }
 
-  // Obtener el siguiente número de orden correlativo (T-010 lo formaliza con lock/secuencia)
-  const { data: ultimoPedido } = await supabase
-    .from("pedidos")
-    .select("numero_orden")
-    .order("numero_orden", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  // Obtener número de orden secuencial sin huecos (RF-05 / T-010)
+  const { data: numeroRpc } = await supabase.rpc("siguiente_numero_orden");
 
-  const siguienteNumero = (ultimoPedido?.numero_orden ?? 1000) + 1;
+  let siguienteNumero = numeroRpc ? Number(numeroRpc) : null;
+  if (!siguienteNumero) {
+    const { data: ultimoPedido } = await supabase
+      .from("pedidos")
+      .select("numero_orden")
+      .order("numero_orden", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-  // 1. Insertar cabecera de pedido
+    siguienteNumero = (ultimoPedido?.numero_orden ?? 1000) + 1;
+  }
+
+  // 1. Insertar cabecera de pedido (estado inicial 'recibido' y marcas limpias)
   const { data: pedidoCreado, error: errorPedido } = await supabase
     .from("pedidos")
     .insert({
@@ -162,7 +167,7 @@ export async function crearPedido(
       notas: datosPedido.notas,
       estado: "recibido",
     })
-    .select("id, numero_orden")
+    .select("id, numero_orden, estado, creado_en")
     .single();
 
   if (errorPedido || !pedidoCreado) {
