@@ -1,9 +1,23 @@
-import { ArrowLeft, Clock, CreditCard, Package, Plus, Printer } from "lucide-react";
+import {
+  ArrowLeft,
+  Clock,
+  CreditCard,
+  Package,
+  Plus,
+  Printer,
+  SearchX,
+} from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { createClient } from "@/lib/supabase/server";
+import { PedidosBuscador } from "./pedidos-buscador";
 
 export const instant = false;
+
+type Props = {
+  searchParams: Promise<{ q?: string }>;
+};
 
 const ESTADO_BADGES: Record<
   string,
@@ -37,11 +51,10 @@ const ESTADO_BADGES: Record<
 };
 
 /**
- * Listado de pedidos y balance financiero (RF-01 / RF-02 / T-008 / T-009).
- * Muestra el resumen de órdenes con cliente, número de orden, estado,
- * total en USD, abonos registrados y saldo pendiente.
+ * Listado de pedidos, búsqueda por número/escáner y cobranza (RF-01, RF-02, RF-06 / T-012).
  */
-export default async function PedidosPage() {
+export default async function PedidosPage({ searchParams }: Props) {
+  const { q } = await searchParams;
   const supabase = await createClient();
 
   const {
@@ -52,7 +65,9 @@ export default async function PedidosPage() {
     redirect("/login");
   }
 
-  const { data: pedidos } = await supabase
+  const busqueda = sanearTerminoBusquedaOrden(q);
+
+  let query = supabase
     .from("pedidos")
     .select(
       `
@@ -62,6 +77,7 @@ export default async function PedidosPage() {
       total_usd,
       creado_en,
       anulado,
+      cliente_id,
       clientes (
         nombre,
         telefono
@@ -77,6 +93,28 @@ export default async function PedidosPage() {
     )
     .order("numero_orden", { ascending: false });
 
+  // Si se buscó un número de orden específico (o escaneó un código de barras)
+  if (busqueda.esNumeroOrden && busqueda.numeroOrden !== null) {
+    query = query.eq("numero_orden", busqueda.numeroOrden);
+  } else if (busqueda.terminoLimpio !== "") {
+    // Si se buscó por nombre o teléfono de cliente
+    const { data: clientesCoincidentes } = await supabase
+      .from("clientes")
+      .select("id")
+      .or(
+        `nombre.ilike.%${busqueda.terminoLimpio}%,telefono.ilike.%${busqueda.terminoLimpio}%`,
+      );
+
+    const clientIds = clientesCoincidentes?.map((c) => c.id) ?? [];
+    if (clientIds.length > 0) {
+      query = query.in("cliente_id", clientIds);
+    } else {
+      // Forzar resultado vacío si ningún cliente coincide
+      query = query.eq("numero_orden", -1);
+    }
+  }
+
+  const { data: pedidos } = await query;
   const lista = pedidos ?? [];
 
   return (
@@ -96,7 +134,7 @@ export default async function PedidosPage() {
                 Pedidos
               </h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Gestión de órdenes, comanda y cobranza multimoneda.
+                Gestión de órdenes, comanda y lectura de escáner USB.
               </p>
             </div>
           </div>
@@ -110,24 +148,51 @@ export default async function PedidosPage() {
           </Link>
         </div>
 
+        {/* BUSCADOR Y LECTURA CON ESCÁNER USB */}
+        <section aria-label="Búsqueda de pedidos">
+          <PedidosBuscador valorInicial={q ?? ""} />
+        </section>
+
         {lista.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-              <Package className="size-6" />
-            </div>
-            <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-              No hay pedidos registrados
-            </h3>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Comienza registrando la primera orden de trabajo.
-            </p>
-            <Link
-              href="/pedidos/nuevo"
-              className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-            >
-              <Plus className="size-4" />
-              Crear pedido
-            </Link>
+            {q ? (
+              <>
+                <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                  <SearchX className="size-6" />
+                </div>
+                <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                  No se encontraron pedidos
+                </h3>
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                  No hay órdenes que coincidan con el criterio &quot;{q}&quot;.
+                </p>
+                <Link
+                  href="/pedidos"
+                  className="mt-5 inline-flex h-9 items-center justify-center rounded-lg border border-zinc-300 px-3.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                >
+                  Ver todos los pedidos
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                  <Package className="size-6" />
+                </div>
+                <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                  No hay pedidos registrados
+                </h3>
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                  Comienza registrando la primera orden de trabajo.
+                </p>
+                <Link
+                  href="/pedidos/nuevo"
+                  className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                >
+                  <Plus className="size-4" />
+                  Crear pedido
+                </Link>
+              </>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
@@ -149,7 +214,6 @@ export default async function PedidosPage() {
                 ? pedido.clientes[0]
                 : pedido.clientes;
 
-              // Calcular total pagado y saldo pendiente
               const tasaObj = pedido.tasas_cambio as {
                 valor_bs_por_usd?: number | string;
               } | null;
