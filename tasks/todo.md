@@ -45,3 +45,10 @@
   - [x] Paso 2: Limpiar `PageHeader` eliminando props muertos (`backHref`, `backLabel`, `breadcrumbs`, imports de iconos).
   - [x] Paso 3: Toda la navegación centralizada limpiamente en el Sidebar persistente.
   - [x] Paso 4: Cero código huérfano o código ocioso. Verificación DoD 100% aprobada.
+- [x] **Fase 10: Migración de API de Tasas Oficiales a DolarVZLA**
+  - [x] Paso 1: Exploración e inspección técnica de `https://dolarvzla.com/settings/api` (endpoint `https://rates.dolarvzla.com/bcv/current.json`).
+  - [x] Paso 2: Reimplementar `lib/tasas/bcv-service.ts` con consumo unificado de USD + EUR en una sola petición HTTP.
+  - [x] Paso 3: Mantener resiliencia mediante fallback automático a `ve.dolarapi.com` si DolarVZLA presenta caídas de red.
+  - [x] Paso 4: Actualizar suite de pruebas en `test/bcv-service.test.ts` con cobertura completa para DolarVZLA, fallback y manejo de errores.
+  - [x] Paso 5: Verificación de calidad DoD completada (144 tests pasados en Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+

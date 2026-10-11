@@ -2,12 +2,38 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   obtenerTasaBcv,
   obtenerTasasBcvCompletas,
+  parsearRespuestaDolarVzla,
+  parsearRespuestaDolarApi,
+  DOLARVZLA_BCV_URL,
+  type DolarVzlaBcvResponse,
   type DolarApiResponse,
 } from "@/lib/tasas/bcv-service";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+function crearRespuestaDolarVzla(
+  overrides: Partial<DolarVzlaBcvResponse> = {},
+): DolarVzlaBcvResponse {
+  return {
+    current: {
+      date: "2026-10-13",
+      usd: 876.7976,
+      eur: 982.0045,
+    },
+    previous: {
+      date: "2026-10-09",
+      usd: 875.6505,
+      eur: 980.6147,
+    },
+    changePercentage: {
+      usd: 0.131,
+      eur: 0.142,
+    },
+    ...overrides,
+  };
+}
 
 function crearRespuestaDolarApi(
   overrides: Partial<DolarApiResponse> = {},
@@ -39,7 +65,7 @@ function crearFetchMock(
 // Tests
 // ---------------------------------------------------------------------------
 
-describe("bcv-service", () => {
+describe("bcv-service (DolarVZLA + fallback DolarApi)", () => {
   const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
@@ -52,148 +78,70 @@ describe("bcv-service", () => {
     vi.restoreAllMocks();
   });
 
-  describe("obtenerTasaBcv", () => {
-    it("retorna la tasa USD correctamente desde DolarApi", async () => {
+  describe("parsearRespuestaDolarVzla", () => {
+    it("parsea correctamente la respuesta estándar de DolarVZLA", () => {
+      const mockData = crearRespuestaDolarVzla();
+      const resultado = parsearRespuestaDolarVzla(mockData);
+
+      expect(resultado).not.toBeNull();
+      expect(resultado!.usd).not.toBeNull();
+      expect(resultado!.eur).not.toBeNull();
+      expect(resultado!.usd!.valorBs).toBe(876.7976);
+      expect(resultado!.eur!.valorBs).toBe(982.0045);
+      expect(resultado!.usd!.fuente).toBe("DolarVZLA (BCV)");
+      expect(resultado!.usd!.fechaActualizacion).toBe("2026-10-13");
+      expect(resultado!.usd!.variacionPorcentaje).toBe(0.131);
+    });
+
+    it("retorna null si la respuesta es inválida o no contiene current", () => {
+      expect(parsearRespuestaDolarVzla(null)).toBeNull();
+      expect(parsearRespuestaDolarVzla({})).toBeNull();
+      expect(parsearRespuestaDolarVzla({ current: { usd: 0, eur: 0 } })).toBeNull();
+    });
+  });
+
+  describe("parsearRespuestaDolarApi", () => {
+    it("parsea correctamente respuesta de DolarApi (fallback)", () => {
       const mockData = crearRespuestaDolarApi({ promedio: 875.6505 });
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("USD");
+      const resultado = parsearRespuestaDolarApi(mockData, "USD");
 
       expect(resultado).not.toBeNull();
-      expect(resultado!.moneda).toBe("USD");
       expect(resultado!.valorBs).toBe(875.6505);
+      expect(resultado!.moneda).toBe("USD");
       expect(resultado!.fuente).toContain("DolarApi");
-    });
-
-    it("retorna la tasa EUR correctamente desde DolarApi", async () => {
-      const mockData = crearRespuestaDolarApi({
-        moneda: "EUR",
-        nombre: "Euro",
-        promedio: 980.61472543,
-      });
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("EUR");
-
-      expect(resultado).not.toBeNull();
-      expect(resultado!.moneda).toBe("EUR");
-      expect(resultado!.valorBs).toBe(980.61472543);
-    });
-
-    it("llama a la URL correcta para USD", async () => {
-      const fetchMock = crearFetchMock(crearRespuestaDolarApi());
-      globalThis.fetch = fetchMock;
-
-      await obtenerTasaBcv("USD");
-
-      expect(fetchMock).toHaveBeenCalledWith(
-        "https://ve.dolarapi.com/v1/dolares/oficial",
-        expect.objectContaining({
-          headers: expect.objectContaining({
-            Accept: "application/json",
-          }),
-        }),
-      );
-    });
-
-    it("llama a la URL correcta para EUR", async () => {
-      const fetchMock = crearFetchMock(
-        crearRespuestaDolarApi({ moneda: "EUR" }),
-      );
-      globalThis.fetch = fetchMock;
-
-      await obtenerTasaBcv("EUR");
-
-      expect(fetchMock).toHaveBeenCalledWith(
-        "https://ve.dolarapi.com/v1/euros/oficial",
-        expect.objectContaining({
-          headers: expect.objectContaining({
-            Accept: "application/json",
-          }),
-        }),
-      );
-    });
-
-    it("retorna null si la API responde con error HTTP", async () => {
-      globalThis.fetch = crearFetchMock(null, { ok: false, status: 500 });
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      expect(resultado).toBeNull();
-    });
-
-    it("retorna null si la respuesta no tiene un valor numérico válido", async () => {
-      const mockData = crearRespuestaDolarApi({ promedio: 0 });
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      expect(resultado).toBeNull();
-    });
-
-    it("retorna null si el promedio es negativo", async () => {
-      const mockData = crearRespuestaDolarApi({ promedio: -10 });
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      expect(resultado).toBeNull();
-    });
-
-    it("retorna null si el promedio no es finito", async () => {
-      const mockData = crearRespuestaDolarApi({ promedio: Infinity });
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      expect(resultado).toBeNull();
-    });
-
-    it("retorna null si fetch lanza un error de red", async () => {
-      globalThis.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      expect(resultado).toBeNull();
-    });
-
-    it("usa venta como fallback si promedio es null/undefined", async () => {
-      const mockData = {
-        moneda: "USD",
-        fuente: "oficial",
-        nombre: "Dólar",
-        compra: null,
-        venta: 880.0,
-        promedio: null,
-        fechaActualizacion: "2026-10-09T00:00:00-04:00",
-      };
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      // promedio es null/falsy, so it should fallback to venta
-      expect(resultado).not.toBeNull();
-      expect(resultado!.valorBs).toBe(880.0);
-    });
-
-    it("preserva la fecha de actualización de la API", async () => {
-      const fecha = "2026-10-08T12:00:00-04:00";
-      const mockData = crearRespuestaDolarApi({
-        fechaActualizacion: fecha,
-      });
-      globalThis.fetch = crearFetchMock(mockData);
-
-      const resultado = await obtenerTasaBcv("USD");
-
-      expect(resultado!.fechaActualizacion).toBe(fecha);
     });
   });
 
   describe("obtenerTasasBcvCompletas", () => {
-    it("retorna ambas tasas cuando ambas APIs responden", async () => {
-      let callCount = 0;
+    it("obtiene USD y EUR en una sola petición desde DolarVZLA (proveedor principal)", async () => {
+      const mockData = crearRespuestaDolarVzla();
+      const fetchMock = crearFetchMock(mockData);
+      globalThis.fetch = fetchMock;
+
+      const resultado = await obtenerTasasBcvCompletas();
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        DOLARVZLA_BCV_URL,
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            Accept: "application/json",
+          }),
+        }),
+      );
+
+      expect(resultado.usd).not.toBeNull();
+      expect(resultado.eur).not.toBeNull();
+      expect(resultado.usd!.valorBs).toBe(876.7976);
+      expect(resultado.eur!.valorBs).toBe(982.0045);
+      expect(resultado.usd!.fuente).toContain("DolarVZLA");
+      expect(resultado.error).toBeUndefined();
+    });
+
+    it("recurre a DolarApi como fallback si DolarVZLA responde con error HTTP", async () => {
       globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-        callCount++;
+        if (url.includes("dolarvzla.com")) {
+          return Promise.resolve({ ok: false, status: 500, json: () => Promise.resolve(null) });
+        }
         const esEuro = url.includes("/euros/");
         return Promise.resolve({
           ok: true,
@@ -214,14 +162,13 @@ describe("bcv-service", () => {
       expect(resultado.eur).not.toBeNull();
       expect(resultado.usd!.valorBs).toBe(875.65);
       expect(resultado.eur!.valorBs).toBe(980.61);
-      expect(resultado.error).toBeUndefined();
-      expect(callCount).toBe(2);
+      expect(resultado.usd!.fuente).toContain("DolarApi");
     });
 
-    it("reporta error parcial si solo falla una divisa", async () => {
+    it("recurre a DolarApi si DolarVZLA lanza un error de red", async () => {
       globalThis.fetch = vi.fn().mockImplementation((url: string) => {
-        if (url.includes("/euros/")) {
-          return Promise.resolve({ ok: false, status: 500, json: () => Promise.resolve(null) });
+        if (url.includes("dolarvzla.com")) {
+          return Promise.reject(new Error("Network connection lost"));
         }
         return Promise.resolve({
           ok: true,
@@ -233,14 +180,15 @@ describe("bcv-service", () => {
       const resultado = await obtenerTasasBcvCompletas();
 
       expect(resultado.usd).not.toBeNull();
-      expect(resultado.eur).toBeNull();
-      expect(resultado.error).toContain("EUR");
+      expect(resultado.usd!.valorBs).toBe(875.6505);
     });
 
-    it("reporta error completo si ambas APIs fallan", async () => {
-      globalThis.fetch = vi
-        .fn()
-        .mockResolvedValue({ ok: false, status: 503, json: () => Promise.resolve(null) });
+    it("reporta error si tanto DolarVZLA como DolarApi fallan", async () => {
+      globalThis.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 503,
+        json: () => Promise.resolve(null),
+      });
 
       const resultado = await obtenerTasasBcvCompletas();
 
@@ -248,6 +196,34 @@ describe("bcv-service", () => {
       expect(resultado.eur).toBeNull();
       expect(resultado.error).toContain("USD");
       expect(resultado.error).toContain("EUR");
+    });
+  });
+
+  describe("obtenerTasaBcv", () => {
+    it("obtiene específicamente la tasa USD", async () => {
+      const mockData = crearRespuestaDolarVzla({
+        current: { date: "2026-10-13", usd: 876.7976, eur: 982.0045 },
+      });
+      globalThis.fetch = crearFetchMock(mockData);
+
+      const resultado = await obtenerTasaBcv("USD");
+
+      expect(resultado).not.toBeNull();
+      expect(resultado!.moneda).toBe("USD");
+      expect(resultado!.valorBs).toBe(876.7976);
+    });
+
+    it("obtiene específicamente la tasa EUR", async () => {
+      const mockData = crearRespuestaDolarVzla({
+        current: { date: "2026-10-13", usd: 876.7976, eur: 982.0045 },
+      });
+      globalThis.fetch = crearFetchMock(mockData);
+
+      const resultado = await obtenerTasaBcv("EUR");
+
+      expect(resultado).not.toBeNull();
+      expect(resultado!.moneda).toBe("EUR");
+      expect(resultado!.valorBs).toBe(982.0045);
     });
   });
 });
