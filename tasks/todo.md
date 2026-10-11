@@ -54,8 +54,9 @@
 - [x] **T-013 (M)** — Máquina de estados (Recibido → En Producción → Listo para Retiro → Entregado; Cancelado con reglas) con permisos por perfil.
   - Criterio: unitarias de transiciones válidas/inválidas; E2E del flujo completo (RF-05). Depende: T-005.
   - **Estado 2026-10-10:** completa (T-013a + T-013b). 75 unit verdes; máquina de estados centralizada en `estados.ts` con transiciones progresivas y retrocesos operativos controlados, sellado automático de marcas de tiempo (`listo_en`, `entregado_en`), regla de anulación con motivo reservada estrictamente para perfil gerencial, Server Action `cambiarEstadoPedido`, componente interactivo `EstadoControl` en UI de pedidos con botones de 1 toque y modal de cancelación, y suite E2E (`e2e/pedidos-estados.spec.ts`).
-- [ ] **T-014 (S)** — Vista de taller optimizada para tablet/móvil: cambio de estado en ≤ 2 toques.
+- [x] **T-014 (S)** — Vista de taller optimizada para tablet/móvil: cambio de estado en ≤ 2 toques.
   - Criterio: checklist de usabilidad aplicado en dispositivo real (RF-07).
+  - **Estado 2026-10-10:** completa. 78 unit verdes; ruta dedicada `/taller` optimizada para tablets y smartphones de operarios en taller, tarjetas de orden táctiles con especificaciones de material y medidas visibles, pestañas de filtrado con conteos reactivos, buscador integrado para lectores USB de comanda, avance de estado en 1 toque directo (`Iniciar Producción` / `¡Listo para Retiro!` / `Entregar al Cliente`) con opción de reapertura/reversión operativa, accesos directos desde home (`/`) y `/pedidos`, y suite E2E (`e2e/taller.spec.ts`).
 - [ ] **T-015 (M)** — Aviso de retiro por WhatsApp: plantilla con N° de orden, cliente y saldo ($/Bs); acción "Avisar" desde el pedido.
   - Criterio: E2E: el enlace generado contiene el mensaje con saldo correcto y abre WhatsApp (RF-08, D-2). Depende: T-013.
 - [ ] **T-016 (M)** — Panel de recordatorios 48–72 h: pedidos listos sin retirar, ordenados por antigüedad, envío a un clic.
