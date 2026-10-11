@@ -78,8 +78,9 @@
 - [x] **T-020 (M)** — Cuentas por cobrar: vista consolidada de saldos pendientes y antigüedad.
   - Criterio: E2E: pedidos con saldo aparecen con montos correctos por moneda (RF-12).
   - **Estado 2026-10-10:** completa (T-020a + T-020b). 111 unit verdes; módulo `lib/cobranzas/cuentas-por-cobrar.ts` con cálculo exacto de saldos en USD y Bs equivalente a tasa congelada, clasificación en 4 tramos de antigüedad (`0 a 7 días`, `8 a 15 días`, `16 a 30 días`, `más de 30 días`), resumen ejecutivo de cartera morosa, interfaz gerencial `/cuentas-por-cobrar` con barra de distribución proporcional visual, selector de filtros y orden, botón de recordatorio formal de cobro a WhatsApp (`wa.me`) con mensaje personalizado y suite E2E (`e2e/cuentas-por-cobrar.spec.ts`).
-- [ ] **T-021 (S)** — Métricas de rotación por servicio (mayor/menor demanda, período seleccionable).
+- [x] **T-021 (S)** — Métricas de rotación por servicio (mayor/menor demanda, período seleccionable).
   - Criterio: gráfico/tabla verificable contra dataset de prueba (RF-13).
+  - **Estado 2026-10-10:** completa (T-021a + T-021b). 114 unit verdes; módulo `lib/dashboard/rotacion-servicios.ts` con agregación de pedidos por ítem del catálogo, cálculo de frecuencias de orden, cantidad producida, facturación generada e identificación automática de líderes en facturación y volumen así como servicios sin rotación; vista interactiva `/dashboard/rotacion` con selectores de período (`hoy`, `esta_semana`, `este_mes`, `todo` y personalizado), barras proporcionales de participación, ranking ordenable por 5 criterios, alertas de catálogo, accesos desde el dashboard gerencial y catálogo de servicios, y suite E2E (`e2e/rotacion-servicios.spec.ts`).
 - [ ] **T-022 (S)** — Historial por cliente: compras, montos y recurrencia.
   - Criterio: búsqueda por cliente muestra el historial completo ordenado (RF-14).
 - [ ] **T-023 (M)** — Tasa de cambio: captura, vigencia por fecha y aplicación; históricos congelados por pedido.
