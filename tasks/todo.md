@@ -75,8 +75,9 @@
 - [x] **T-019 (M)** — Dashboard gerencial: ingresos por moneda (USD/Bs) con filtros por fecha.
   - Criterio: totales cuadran al centavo con `pagos` en dataset de prueba (RF-11).
   - **Estado 2026-10-10:** completa (T-019a + T-019b). 106 unit verdes; módulo `lib/dashboard/ingresos.ts` con cálculo exacto al centavo sin distorsión de coma flotante para cobros en USD directo, Bs directo y equivalente combinado USD, selectores de período (`hoy`, `esta_semana`, `este_mes`, `todo` y rango personalizado), protección estricta de privacidad (RF-18 / RLS: perfil operativo bloqueado con aviso explicativo; solo gerencial autorizado), vista interactiva `/dashboard` con tarjetas de KPI, desglose de operaciones, tabla de pagos auditables y suite E2E (`e2e/dashboard.spec.ts`).
-- [ ] **T-020 (M)** — Cuentas por cobrar: vista consolidada de saldos pendientes y antigüedad.
+- [x] **T-020 (M)** — Cuentas por cobrar: vista consolidada de saldos pendientes y antigüedad.
   - Criterio: E2E: pedidos con saldo aparecen con montos correctos por moneda (RF-12).
+  - **Estado 2026-10-10:** completa (T-020a + T-020b). 111 unit verdes; módulo `lib/cobranzas/cuentas-por-cobrar.ts` con cálculo exacto de saldos en USD y Bs equivalente a tasa congelada, clasificación en 4 tramos de antigüedad (`0 a 7 días`, `8 a 15 días`, `16 a 30 días`, `más de 30 días`), resumen ejecutivo de cartera morosa, interfaz gerencial `/cuentas-por-cobrar` con barra de distribución proporcional visual, selector de filtros y orden, botón de recordatorio formal de cobro a WhatsApp (`wa.me`) con mensaje personalizado y suite E2E (`e2e/cuentas-por-cobrar.spec.ts`).
 - [ ] **T-021 (S)** — Métricas de rotación por servicio (mayor/menor demanda, período seleccionable).
   - Criterio: gráfico/tabla verificable contra dataset de prueba (RF-13).
 - [ ] **T-022 (S)** — Historial por cliente: compras, montos y recurrencia.
