@@ -7,7 +7,8 @@ import { expect, test } from "@playwright/test";
 // usa scope local — app/actions.ts — sin revocación cruzada entre contextos.)
 //
 // Nota: la tabla `clientes` no permite borrar (por diseño): cada corrida deja
-// marcadores "__e2e__" con teléfono único y NO los limpia.
+// marcadores "E2E " con teléfono único y NO los limpia. (Sin `_`/`%`: el saneo
+// de la búsqueda los elimina como comodines de ilike.)
 //
 // En dev cada ruta nueva compila en el primer hit: se amplía el presupuesto y
 // cada navegación espera el contenido propio de la ruta destino (el `Link`
@@ -26,7 +27,7 @@ test("clientes: alta, búsqueda por nombre y edición de notas", async ({
   );
 
   const sufijo = `${Date.now()}`;
-  const nombre = `__e2e__ ${sufijo}`;
+  const nombre = `E2E ${sufijo}`;
   const telefono = `0414${sufijo.slice(-7)}`;
 
   // Sesión con el usuario gerencial.
