@@ -107,9 +107,6 @@ export default async function PedidosPage({ searchParams }: Props) {
         <PageHeader
           title="Gestión de Pedidos"
           description="Órdenes de trabajo, búsqueda rápida por escáner USB y comanda de taller."
-          backHref="/"
-          backLabel="Inicio"
-          breadcrumbs={[{ label: "Pedidos" }]}
           actions={
             <Link
               href="/pedidos/nuevo"
@@ -159,10 +156,10 @@ export default async function PedidosPage({ searchParams }: Props) {
                 </p>
                 <Link
                   href="/pedidos/nuevo"
-                  className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
                 >
                   <Plus className="size-4" />
-                  Crear pedido
+                  Nueva Orden
                 </Link>
               </>
             )}

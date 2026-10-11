@@ -42,11 +42,13 @@ export const NAVIGATION_GROUPS: NavGroup[] = [
         label: "Pedidos",
         href: "/pedidos",
         icon: ClipboardList,
+        exactMatch: true,
       },
       {
-        label: "Nuevo Pedido",
+        label: "Nueva Orden",
         href: "/pedidos/nuevo",
         icon: PlusCircle,
+        exactMatch: true,
       },
       {
         label: "Taller (Producción)",

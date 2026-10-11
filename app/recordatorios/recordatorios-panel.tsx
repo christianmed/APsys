@@ -68,12 +68,6 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
       <PageHeader
         title="Recordatorios (48–72 h)"
         description="Seguimiento a pedidos listos sin retirar para incentivar cobranza y despacho oportuno (RF-09)."
-        backHref="/"
-        backLabel="Inicio"
-        breadcrumbs={[
-          { label: "Operaciones" },
-          { label: "Recordatorios de Retiro" },
-        ]}
         actions={
           <div className="relative w-full sm:w-64">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />

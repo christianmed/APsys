@@ -43,20 +43,6 @@ export default async function AyudaPage() {
         <PageHeader
           title="Guía Rápida de Uso"
           description="Manual operativo por perfil para el personal del taller de imprenta."
-          backHref="/"
-          backLabel="Inicio"
-          breadcrumbs={[
-            { label: "Soporte" },
-            { label: "Guía y Ayuda" },
-          ]}
-          actions={
-            <Link
-              href="/taller"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700"
-            >
-              Ir al Taller
-            </Link>
-          }
         />
 
         {/* Banner de perfil actual */}

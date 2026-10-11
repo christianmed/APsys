@@ -86,12 +86,6 @@ export function DashboardView({
       <PageHeader
         title="Dashboard Gerencial de Ingresos"
         description="Consolidación de ingresos reales recaudados en USD y Bolívares (RF-11)."
-        backHref="/"
-        backLabel="Inicio"
-        breadcrumbs={[
-          { label: "Finanzas" },
-          { label: "Dashboard Ingresos" },
-        ]}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Link

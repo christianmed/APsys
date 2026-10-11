@@ -60,9 +60,6 @@ export default async function ServiciosPage() {
         <PageHeader
           title="Catálogo de Servicios"
           description="Servicios de impresión, acabados y orden en comandas de taller."
-          backHref="/"
-          backLabel="Inicio"
-          breadcrumbs={[{ label: "Servicios" }]}
           actions={
             esGerencial ? (
               <div className="flex flex-wrap items-center gap-2">

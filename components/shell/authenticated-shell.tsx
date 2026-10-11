@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { type ReactNode } from "react";
 import { cerrarSesion } from "@/app/actions";
 import { createClient } from "@/lib/supabase/server";
+import { obtenerTasaBcv } from "@/lib/tasas/bcv-service";
 import { AppShell } from "./app-shell";
 
 type Props = {
@@ -38,11 +39,23 @@ export async function AuthenticatedShell({ children }: Props) {
 
   const valorTasa = Number(tasaData?.valor_bs_por_usd) || 40.0;
 
+  // Consulta best-effort de tasa EUR (informativa) desde API BCV
+  let tasaEurHoy: number | undefined;
+  try {
+    const eurBcv = await obtenerTasaBcv("EUR");
+    if (eurBcv) {
+      tasaEurHoy = eurBcv.valorBs;
+    }
+  } catch {
+    // Silenciar — la consulta BCV es best-effort, no bloquea el render
+  }
+
   return (
     <AppShell
       usuarioEmail={user.email ?? "Usuario"}
       usuarioRol={perfil?.rol ?? "operativo"}
       tasaHoy={valorTasa}
+      tasaEurHoy={tasaEurHoy}
       accionCerrarSesion={cerrarSesion}
     >
       {children}

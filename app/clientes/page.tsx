@@ -67,9 +67,6 @@ export default async function ClientesPage({
         <PageHeader
           title="Directorio de Clientes"
           description="Búsqueda rápida por nombre o teléfono, WhatsApp y resumen de compras."
-          backHref="/"
-          backLabel="Inicio"
-          breadcrumbs={[{ label: "Clientes" }]}
           actions={
             <Link
               href="/clientes/nuevo"

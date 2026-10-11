@@ -21,6 +21,7 @@ type Props = {
   usuarioEmail: string;
   usuarioRol: string;
   tasaHoy?: number;
+  tasaEurHoy?: number;
   children: ReactNode;
   accionCerrarSesion: () => Promise<void>;
 };
@@ -29,6 +30,7 @@ export function AppShell({
   usuarioEmail,
   usuarioRol,
   tasaHoy,
+  tasaEurHoy,
   children,
   accionCerrarSesion,
 }: Props) {
@@ -70,22 +72,32 @@ export function AppShell({
           </span>
         </div>
 
-        {/* Badge de Tasa de Cambio del día */}
+        {/* Badge de Tasa de Cambio del día (USD + EUR informativo) */}
         {tasaHoy && (
           <div className="mx-3 mt-3">
             <Link
               href={esGerencial ? "/tasas" : "#"}
-              className={`flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/70 p-2.5 text-xs text-emerald-950 transition hover:bg-emerald-100 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200 ${
+              className={`block rounded-xl border border-emerald-200 bg-emerald-50/70 p-2.5 text-xs text-emerald-950 transition hover:bg-emerald-100 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200 ${
                 esGerencial ? "cursor-pointer" : "cursor-default"
               }`}
             >
-              <div className="flex items-center gap-1.5">
-                <Banknote className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="font-semibold">Tasa del día:</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <Banknote className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-semibold">USD:</span>
+                </div>
+                <span className="font-mono font-bold text-emerald-900 dark:text-emerald-100">
+                  Bs. {tasaHoy.toFixed(2)}
+                </span>
               </div>
-              <span className="font-mono font-bold text-emerald-900 dark:text-emerald-100">
-                Bs. {tasaHoy.toFixed(2)}
-              </span>
+              {tasaEurHoy && (
+                <div className="mt-1 flex items-center justify-between border-t border-emerald-200/60 pt-1 dark:border-emerald-900/40">
+                  <span className="text-[10px] text-emerald-700/70 dark:text-emerald-400/70">EUR (ref.):</span>
+                  <span className="font-mono text-[10px] font-semibold text-emerald-700/70 dark:text-emerald-300/70">
+                    Bs. {tasaEurHoy.toFixed(2)}
+                  </span>
+                </div>
+              )}
             </Link>
           </div>
         )}
@@ -191,9 +203,16 @@ export function AppShell({
 
         <div className="flex items-center gap-2">
           {tasaHoy && (
-            <span className="rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-mono font-bold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-              Bs. {tasaHoy.toFixed(2)}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-mono font-bold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+                Bs. {tasaHoy.toFixed(2)}
+              </span>
+              {tasaEurHoy && (
+                <span className="rounded-lg bg-indigo-50 px-1.5 py-1 text-[10px] font-mono font-semibold text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300" title={`Euro BCV: Bs. ${tasaEurHoy.toFixed(4)}`}>
+                  €{tasaEurHoy.toFixed(0)}
+                </span>
+              )}
+            </div>
           )}
 
           <button

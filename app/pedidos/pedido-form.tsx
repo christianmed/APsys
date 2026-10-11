@@ -213,9 +213,10 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
           </label>
           <Link
             href="/clientes/nuevo"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white"
           >
-            <UserPlus className="size-4" />+ Registrar nuevo cliente
+            <UserPlus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
+            Nuevo Cliente
           </Link>
         </div>
 
@@ -440,12 +441,26 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
           })}
         </div>
 
+        {servicios.length === 0 ? (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300">
+            No hay servicios activos en el catálogo.{" "}
+            <Link
+              href="/servicios/nuevo"
+              className="font-bold underline hover:text-amber-950 dark:hover:text-amber-100"
+            >
+              Registra un nuevo servicio aquí
+            </Link>{" "}
+            para poder cotizar la orden de trabajo.
+          </div>
+        ) : null}
+
         <button
           type="button"
           onClick={agregarItem}
-          className="inline-flex items-center gap-2 text-sm font-medium text-zinc-900 hover:text-zinc-700 dark:text-zinc-100 dark:hover:text-zinc-300"
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 text-xs font-semibold text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
         >
-          <Plus className="size-4" />+ Agregar otro ítem
+          <Plus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
+          Agregar otro ítem
         </button>
       </section>
 
