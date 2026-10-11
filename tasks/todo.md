@@ -51,4 +51,11 @@
   - [x] Paso 3: Mantener resiliencia mediante fallback automático a `ve.dolarapi.com` si DolarVZLA presenta caídas de red.
   - [x] Paso 4: Actualizar suite de pruebas en `test/bcv-service.test.ts` con cobertura completa para DolarVZLA, fallback y manejo de errores.
   - [x] Paso 5: Verificación de calidad DoD completada (144 tests pasados en Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+- [x] **Fase 11: Simplificación de Pantalla de Tasas (2 Columnas Equilibradas y Cero Código Huérfano)**
+  - [x] Paso 1: Eliminar sección de formulario manual en `app/tasas/page.tsx` y suprimir `app/tasas/tasa-form.tsx`.
+  - [x] Paso 2: Limpiar server actions y tipos no usados (`registrarNuevaTasa`, `EstadoFormularioTasa`) en `app/tasas/actions.ts`.
+  - [x] Paso 3: Reestructurar el layout con `grid-cols-1 lg:grid-cols-2` (50% y 50% en escritorio; Sincronización arriba e Histórico abajo en móvil).
+  - [x] Paso 4: Validación visual en navegador en resoluciones Desktop (1536x826) y Móvil (390x844).
+  - [x] Paso 5: Verificación DoD completada (144 tests en Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+
 

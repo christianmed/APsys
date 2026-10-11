@@ -16,7 +16,6 @@ import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
 import { createClient } from "@/lib/supabase/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
-import { TasaForm } from "./tasa-form";
 import { BcvSyncPanel } from "./bcv-sync-panel";
 
 export const instant = false;
@@ -163,61 +162,36 @@ export default async function TasasPage() {
           </div>
         </div>
 
-        {/* Sección de 3 columnas: Sync BCV + Form Manual + Histórico */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Columna 1: Sincronización BCV */}
-          <div className="lg:col-span-4">
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              {esGerencial ? (
-                <BcvSyncPanel
-                  tasaActualUsd={tasaVigente?.valor_bs_por_usd}
-                  tasasIniciales={tasasBcvIniciales}
-                />
-              ) : (
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
-                    Tasa BCV en Vivo
-                  </h3>
-                  <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-                    La sincronización automática con BCV está disponible únicamente para el perfil <strong>gerencial</strong>.
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Columna 2: Formulario manual */}
-          <div className="lg:col-span-3">
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <h2 className="text-sm font-bold text-zinc-900 dark:text-white">
-                Tasa Manual
-              </h2>
-              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 mb-4">
-                {esGerencial
-                  ? "Ingrese un valor personalizado para registrar una nueva vigencia."
-                  : "Acción reservada para el perfil gerencial."}
-              </p>
-
-              {esGerencial ? (
-                <TasaForm valorActual={tasaVigente?.valor_bs_por_usd} />
-              ) : (
+        {/* Sección de 2 columnas de igual ancho: Sincronización BCV en Vivo e Histórico (en móvil: Sincronización arriba, Histórico abajo) */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Columna 1: Sincronización BCV en Vivo */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            {esGerencial ? (
+              <BcvSyncPanel
+                tasaActualUsd={tasaVigente?.valor_bs_por_usd}
+                tasasIniciales={tasasBcvIniciales}
+              />
+            ) : (
+              <div className="space-y-3">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
+                  Tasa BCV en Vivo
+                </h3>
                 <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-                  Su usuario tiene perfil <strong>operativo</strong>. Puede consultar la tasa referencial para atender clientes en mostrador, pero la actualización está restringida a gerencia.
+                  La sincronización automática con BCV está disponible únicamente para el perfil <strong>gerencial</strong>.
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
-          {/* Columna 3: Histórico Inmutable de Tasas */}
-          <div className="lg:col-span-5">
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <History className="size-4 text-zinc-400" />
-                  <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
-                    Histórico ({historial.length})
-                  </h3>
-                </div>
+          {/* Columna 2: Histórico Inmutable de Tasas */}
+          <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <History className="size-4 text-zinc-400" />
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
+                  Histórico ({historial.length})
+                </h3>
+              </div>
                 <span className="text-xs text-zinc-500 dark:text-zinc-400">
                   Cronológico inverso
                 </span>
@@ -270,7 +244,6 @@ export default async function TasasPage() {
                 </div>
               )}
             </div>
-          </div>
         </div>
       </div>
     </AuthenticatedShell>
