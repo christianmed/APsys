@@ -32,10 +32,18 @@ type ServicioOpcion = {
   nombre: string;
 };
 
+type TasaInfo = {
+  id: string | null;
+  valor_bs_por_usd: number;
+  vigente_desde?: string;
+};
+
 type Props = {
   clientes: ClienteOpcion[];
   servicios: ServicioOpcion[];
   tasaCambio?: number;
+  tasaVigente?: TasaInfo;
+  tasaProgramada?: TasaInfo | null;
 };
 
 type ItemLocal = ItemPedidoEntrada & { localId: string };
@@ -56,7 +64,13 @@ const CLASES_BOTON_SECUNDARIO =
  * Permite seleccionar cliente, desglosar renglones de trabajo, calcular totales y
  * registrar abonos en moneda dual (USD / Bs) con cálculo automático del saldo pendiente.
  */
-export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
+export function PedidoForm({
+  clientes,
+  servicios,
+  tasaCambio = 40.0,
+  tasaVigente,
+  tasaProgramada,
+}: Props) {
   const formId = useId();
   const [estado, accion, pendiente] = useActionState<
     EstadoFormularioPedido,
@@ -103,6 +117,19 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
   const [abonoReferencia, setAbonoReferencia] = useState<string>(
     estado.valores?.abono_referencia ?? "",
   );
+
+  // Manejo de tasa de cambio (Hoy vs Mañana para presupuestos)
+  const [tasaElegidaTipo, setTasaElegidaTipo] = useState<"hoy" | "manana">("hoy");
+
+  const tasaActiva =
+    tasaElegidaTipo === "manana" && tasaProgramada
+      ? tasaProgramada.valor_bs_por_usd
+      : tasaVigente?.valor_bs_por_usd ?? tasaCambio;
+
+  const tasaActivaId =
+    tasaElegidaTipo === "manana" && tasaProgramada
+      ? tasaProgramada.id
+      : tasaVigente?.id ?? null;
 
   const agregarItem = () => {
     setItems((prev) => [
@@ -154,7 +181,7 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
       moneda: abonoMoneda,
       referencia: abonoReferencia,
     },
-    tasaCambio,
+    tasaActiva,
   );
 
   const errorGeneral =
@@ -176,6 +203,7 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
       ) : null}
 
       {/* Inputs ocultos con datos serializados */}
+      <input type="hidden" name="tasa_id" value={tasaActivaId ?? ""} />
       <input
         type="hidden"
         name="items_json"
@@ -466,6 +494,47 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
 
       {/* SECCIÓN COBRANZA INICIAL (RF-02 / T-009) */}
       <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        {/* Selector de tasa programada (si el BCV ya publicó para mañana) */}
+        {tasaProgramada && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-3.5 dark:border-amber-900/60 dark:bg-amber-950/20">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 dark:text-amber-200">
+                  <Banknote className="size-4 text-amber-600 dark:text-amber-400" />
+                  <span>Tasa de Cambio para esta Orden / Presupuesto</span>
+                </div>
+                <p className="mt-0.5 text-[11px] text-amber-800/80 dark:text-amber-300/80">
+                  El BCV ya emitió la tasa oficial para el siguiente día hábil. Elige con cuál cotizar:
+                </p>
+              </div>
+              <div className="inline-flex rounded-lg border border-amber-300/80 bg-white p-1 dark:border-amber-800 dark:bg-zinc-900 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setTasaElegidaTipo("hoy")}
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold transition ${
+                    tasaElegidaTipo === "hoy"
+                      ? "bg-zinc-900 text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
+                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  }`}
+                >
+                  Hoy (Bs. {(tasaVigente?.valor_bs_por_usd ?? tasaCambio).toFixed(2)})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTasaElegidaTipo("manana")}
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold transition ${
+                    tasaElegidaTipo === "manana"
+                      ? "bg-amber-600 text-white shadow-sm dark:bg-amber-500 dark:text-white"
+                      : "text-amber-800 hover:text-amber-950 dark:text-amber-300 dark:hover:text-amber-100"
+                  }`}
+                >
+                  Mañana (Bs. {tasaProgramada.valor_bs_por_usd.toFixed(2)})
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-100 pb-4 dark:border-zinc-800">
           <div className="flex items-center gap-2.5">
             <CreditCard className="size-5 text-zinc-900 dark:text-zinc-100" />
@@ -498,7 +567,7 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
                 <Banknote className="size-4" /> Tasa de cambio de referencia:
               </span>
               <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                1 USD = {tasaCambio.toFixed(2)} Bs.
+                1 USD = {tasaActiva.toFixed(2)} Bs. {tasaElegidaTipo === "manana" ? "(Tasa Mañana)" : ""}
               </span>
             </div>
 
@@ -587,7 +656,7 @@ export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
                 ${totalCalculado.toFixed(2)} USD
               </span>
               <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">
-                (~ {(totalCalculado * tasaCambio).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.)
+                (~ {(totalCalculado * tasaActiva).toLocaleString("es-VE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.)
               </span>
             </div>
           </div>

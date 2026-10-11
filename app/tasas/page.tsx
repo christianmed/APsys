@@ -10,6 +10,7 @@ import { redirect } from "next/navigation";
 import {
   formatearTasaBs,
   obtenerTasaVigenteParaFecha,
+  obtenerTasaProgramadaParaFecha,
   type TasaHistorica,
 } from "@/lib/tasas/tasas";
 import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
@@ -85,6 +86,7 @@ export default async function TasasPage() {
   );
 
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
+  const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, new Date());
 
   // Consulta inicial de tasas BCV en vivo para precargar en el panel sin requerir clic
   let tasasBcvIniciales: Awaited<ReturnType<typeof obtenerTasasBcvCompletas>> | null = null;
@@ -160,6 +162,21 @@ export default async function TasasPage() {
               </div>
             </div>
           </div>
+
+          {/* Banner de tasa futura programada (si existe) */}
+          {tasaProgramada && (
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50/90 p-4 text-xs dark:border-amber-900/60 dark:bg-amber-950/40">
+              <div className="flex items-center gap-2.5">
+                <Clock className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                <span className="text-amber-950 dark:text-amber-100">
+                  <strong>Tasa Oficial Programada para Mañana:</strong> Bs. {formatearTasaBs(tasaProgramada.valor_bs_por_usd)} / USD (vigente a partir de {formatoFechaCompleta(tasaProgramada.vigente_desde)}).
+                </span>
+              </div>
+              <span className="rounded-full bg-amber-200/80 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 dark:bg-amber-900/80 dark:text-amber-200">
+                Siguiente Día Hábil
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Sección de 2 columnas de igual ancho: Sincronización BCV en Vivo e Histórico (en móvil: Sincronización arriba, Histórico abajo) */}

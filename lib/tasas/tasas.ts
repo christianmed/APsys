@@ -100,6 +100,65 @@ export function obtenerTasaVigenteParaFecha(
 }
 
 /**
+ * Resuelve una tasa futura programada (por ejemplo, la publicada por el BCV para el día siguiente).
+ * Ordena por fecha de vigencia ascendente y selecciona la primera cuya vigencia > fechaReferencia.
+ * Si no existe ninguna tasa programada en el futuro, retorna null.
+ */
+export function obtenerTasaProgramadaParaFecha(
+  historial: TasaHistorica[],
+  fechaReferencia: Date = new Date(),
+): TasaHistorica | null {
+  if (!historial || historial.length === 0) return null;
+
+  const refTime = fechaReferencia.getTime();
+
+  // Ordenar cronológicamente ascendente para encontrar la más próxima en el futuro
+  const futuras = [...historial]
+    .filter((t) => new Date(t.vigente_desde).getTime() > refTime)
+    .sort(
+      (a, b) => new Date(a.vigente_desde).getTime() - new Date(b.vigente_desde).getTime(),
+    );
+
+  return futuras.length > 0 ? futuras[0] : null;
+}
+
+/**
+ * Convierte una fecha en formato YYYY-MM-DD (emitida por la API del BCV)
+ * a una cadena ISO con inicio de operaciones en zona horaria Venezuela (Caracas, UTC-4).
+ * Por defecto las 00:00:00 (medianoche).
+ */
+export function calcularVigenciaDesdeFechaBcv(
+  fechaBcv: string,
+  horaCaracas: string = "00:00:00",
+): string {
+  // Garantizar formato limpio YYYY-MM-DD
+  const fechaLimpia = fechaBcv.trim().slice(0, 10);
+  return `${fechaLimpia}T${horaCaracas}-04:00`;
+}
+
+/**
+ * Determina si una fecha emitida por el BCV (YYYY-MM-DD) corresponde a un día futuro
+ * comparado con la fecha actual en la zona horaria de Caracas.
+ */
+export function esTasaBcvFutura(
+  fechaBcv: string,
+  fechaReferencia: Date = new Date(),
+): boolean {
+  // Obtener la fecha YYYY-MM-DD actual en zona horaria America/Caracas (UTC-4)
+  const formateador = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Caracas",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const fechaHoyCaracas = formateador.format(fechaReferencia);
+  const fechaBcvLimpia = fechaBcv.trim().slice(0, 10);
+
+  return fechaBcvLimpia > fechaHoyCaracas;
+}
+
+/**
  * Formatea un valor de tasa referencial con separador de miles y decimales venezolanos.
  */
 export function formatearTasaBs(valor: number): string {
@@ -108,3 +167,4 @@ export function formatearTasaBs(valor: number): string {
     maximumFractionDigits: 4,
   });
 }
+

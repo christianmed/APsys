@@ -6,6 +6,10 @@ import {
   obtenerTasasBcvCompletas,
   type TasasBcvCompletas,
 } from "@/lib/tasas/bcv-service";
+import {
+  calcularVigenciaDesdeFechaBcv,
+  esTasaBcvFutura,
+} from "@/lib/tasas/tasas";
 import { createClient } from "@/lib/supabase/server";
 
 export type EstadoSincronizacionBcv = {
@@ -58,9 +62,31 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
   // Redondear a 4 decimales (esquema: numeric(16, 4))
   const valorRedondeado = Math.round(tasaBcv.valorBs * 10000) / 10000;
 
+  const esFutura = esTasaBcvFutura(tasaBcv.fechaActualizacion);
+  const fechaVigencia = esFutura
+    ? calcularVigenciaDesdeFechaBcv(tasaBcv.fechaActualizacion)
+    : new Date().toISOString();
+
+  // Verificar si ya existe una tasa registrada para esta misma fecha de vigencia
+  const { data: tasaExistente } = await supabase
+    .from("tasas_cambio")
+    .select("id, valor_bs_por_usd")
+    .eq("vigente_desde", fechaVigencia)
+    .maybeSingle();
+
+  if (tasaExistente && Number(tasaExistente.valor_bs_por_usd) === valorRedondeado) {
+    return {
+      exito: true,
+      mensaje: esFutura
+        ? `La tasa oficial de mañana (${tasaBcv.fechaActualizacion}) ya está registrada: Bs. ${valorRedondeado.toFixed(4)} / USD.`
+        : `La tasa oficial de hoy ya está al día: Bs. ${valorRedondeado.toFixed(4)} / USD.`,
+      valorSincronizado: valorRedondeado,
+    };
+  }
+
   const { error: insertError } = await supabase.from("tasas_cambio").insert({
     valor_bs_por_usd: valorRedondeado,
-    vigente_desde: new Date().toISOString(),
+    vigente_desde: fechaVigencia,
   });
 
   if (insertError) {
@@ -76,9 +102,13 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
   revalidatePath("/dashboard");
   revalidatePath("/cuentas-por-cobrar");
 
+  const mensaje = esFutura
+    ? `Tasa BCV programada para mañana (${tasaBcv.fechaActualizacion}): Bs. ${valorRedondeado.toFixed(4)} / USD. Entrará en vigor automáticamente a las 00:00 (hora Caracas), manteniendo intacta la tasa de hoy.`
+    : `Tasa BCV sincronizada para hoy: Bs. ${valorRedondeado.toFixed(4)} / USD.`;
+
   return {
     exito: true,
-    mensaje: `Tasa BCV sincronizada: Bs. ${valorRedondeado.toFixed(4)} / USD (fuente: ${tasaBcv.fuente}, actualizada: ${new Date(tasaBcv.fechaActualizacion).toLocaleDateString("es-VE")}).`,
+    mensaje,
     valorSincronizado: valorRedondeado,
   };
 }

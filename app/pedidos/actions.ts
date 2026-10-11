@@ -44,6 +44,7 @@ export async function obtenerTasaVigente(supabase: SupabaseServidor): Promise<{
   const { data: tasa } = await supabase
     .from("tasas_cambio")
     .select("id, valor_bs_por_usd")
+    .lte("vigente_desde", new Date().toISOString())
     .order("vigente_desde", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -59,6 +60,33 @@ export async function obtenerTasaVigente(supabase: SupabaseServidor): Promise<{
     id: null,
     valor_bs_por_usd: 40.0,
   };
+}
+
+/**
+ * Consulta la tasa de cambio programada en el futuro (si existe, p. ej. publicada por el BCV para mañana).
+ */
+export async function obtenerTasaProgramada(supabase: SupabaseServidor): Promise<{
+  id: string | null;
+  valor_bs_por_usd: number;
+  vigente_desde: string;
+} | null> {
+  const { data: tasa } = await supabase
+    .from("tasas_cambio")
+    .select("id, valor_bs_por_usd, vigente_desde")
+    .gt("vigente_desde", new Date().toISOString())
+    .order("vigente_desde", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (tasa && Number(tasa.valor_bs_por_usd) > 0) {
+    return {
+      id: tasa.id,
+      valor_bs_por_usd: Number(tasa.valor_bs_por_usd),
+      vigente_desde: tasa.vigente_desde,
+    };
+  }
+
+  return null;
 }
 
 /**
@@ -115,8 +143,24 @@ export async function crearPedido(
   const { errores: erroresPedido, datos: datosPedido } =
     validarDatosPedido(entradaPedido);
 
-  // Obtener tasa de cambio vigente
-  const tasaVigente = await obtenerTasaVigente(supabase);
+  // Obtener tasa de cambio (permite elegir tasa programada para presupuestos de mañana)
+  const tasaIdSeleccionada = (formData.get("tasa_id") as string | null) || null;
+  let tasaParaPedido = await obtenerTasaVigente(supabase);
+
+  if (tasaIdSeleccionada) {
+    const { data: tasaEspecifica } = await supabase
+      .from("tasas_cambio")
+      .select("id, valor_bs_por_usd")
+      .eq("id", tasaIdSeleccionada)
+      .maybeSingle();
+
+    if (tasaEspecifica && Number(tasaEspecifica.valor_bs_por_usd) > 0) {
+      tasaParaPedido = {
+        id: tasaEspecifica.id,
+        valor_bs_por_usd: Number(tasaEspecifica.valor_bs_por_usd),
+      };
+    }
+  }
 
   // Validar cobranza inicial contra el total del pedido
   const { errores: erroresCobranza, datos: datosCobranza } =
@@ -127,7 +171,7 @@ export async function crearPedido(
         moneda: abonoMoneda,
         referencia: abonoReferenciaRaw,
       },
-      tasaVigente.valor_bs_por_usd,
+      tasaParaPedido.valor_bs_por_usd,
     );
 
   const todosErrores = { ...erroresPedido, ...erroresCobranza };
@@ -168,7 +212,7 @@ export async function crearPedido(
       cliente_id: datosPedido.cliente_id,
       numero_orden: siguienteNumero,
       total_usd: datosPedido.total_usd,
-      tasa_id: tasaVigente.id,
+      tasa_id: tasaParaPedido.id,
       notas: datosPedido.notas,
       estado: "recibido",
     })
@@ -233,7 +277,7 @@ export async function crearPedido(
       monto: datosCobranza.monto,
       moneda: datosCobranza.moneda,
       referencia: datosCobranza.referencia,
-      tasa_id: tasaVigente.id,
+      tasa_id: tasaParaPedido.id,
     });
 
     if (errorPago) {

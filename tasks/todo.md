@@ -84,6 +84,15 @@
   - [x] Paso 5: Verificación completa de calidad DoD (147 tests Vitest en verde, `tsc` 0 errores, ESLint limpio, Next.js build exitoso con Partial Prerendering).
   - [x] Paso 6: Verificación de tiempos de respuesta y cero latencia de bloqueo.
 
+- [x] **Fase 16: Doble Vigencia de Tasas (Hoy vs. Siguiente Día Hábil) y Presupuestos Futuros**
+  - [x] Paso 1 (TDD - Rojo): Escribir suite de pruebas en `test/tasas-doble-vigencia.test.ts` para resolver Tasa Vigente (hoy) vs. Tasa Programada (mañana), conversión según vigencia y transición a medianoche.
+  - [x] Paso 2 (TDD - Verde): Implementar en `lib/tasas/tasas.ts` y `lib/tasas/bcv-service.ts` las funciones de detección de fecha BCV (`date > fechaHoy`) y resolución de vigencia temporal en zona horaria Caracas (UTC-4).
+  - [x] Paso 3: Actualizar consultas en `app/pedidos/actions.ts` y `components/shell/authenticated-shell.tsx` para filtrar `vigente_desde <= NOW()` asegurando que la tasa de mañana no altere los pedidos de hoy.
+  - [x] Paso 4: Actualizar `app/tasas/actions.ts` (`sincronizarTasaBcv`) para programar automáticamente la vigencia para mañana cuando la fecha del BCV sea posterior a hoy.
+  - [x] Paso 5: Integrar en `/pedidos/nuevo` (`pedido-form.tsx`) el selector opcional de cotización ("Tasa de Hoy" vs. "Tasa de Mañana") cuando exista una tasa futura programada.
+  - [x] Paso 6: Mostrar indicador en el Sidebar/Header cuando exista una tasa programada para el día siguiente.
+  - [x] Paso 7: Verificación completa de calidad DoD (153 tests Vitest en verde, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+
 
 
 

@@ -30,14 +30,31 @@ export async function AuthenticatedShell({ children }: Props) {
     .eq("usuario_id", user.id)
     .maybeSingle();
 
+  const ahoraIso = new Date().toISOString();
+
+  // Tasa vigente oficial para cobros de hoy (vigente_desde <= NOW)
   const { data: tasaData } = await supabase
     .from("tasas_cambio")
     .select("valor_bs_por_usd")
+    .lte("vigente_desde", ahoraIso)
     .order("vigente_desde", { ascending: false })
     .limit(1)
     .maybeSingle();
 
   const valorTasa = Number(tasaData?.valor_bs_por_usd) || 40.0;
+
+  // Tasa programada para el siguiente día hábil (vigente_desde > NOW)
+  const { data: tasaProgramadaData } = await supabase
+    .from("tasas_cambio")
+    .select("valor_bs_por_usd")
+    .gt("vigente_desde", ahoraIso)
+    .order("vigente_desde", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  const valorTasaProgramada = tasaProgramadaData
+    ? Number(tasaProgramadaData.valor_bs_por_usd)
+    : undefined;
 
   // Consulta best-effort de tasa EUR (informativa) desde API BCV
   let tasaEurHoy: number | undefined;
@@ -56,6 +73,7 @@ export async function AuthenticatedShell({ children }: Props) {
       usuarioRol={perfil?.rol ?? "operativo"}
       tasaHoy={valorTasa}
       tasaEurHoy={tasaEurHoy}
+      tasaSiguiente={valorTasaProgramada}
       accionCerrarSesion={cerrarSesion}
     >
       {children}

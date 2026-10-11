@@ -23,6 +23,7 @@ type Props = {
   usuarioRol: string;
   tasaHoy?: number;
   tasaEurHoy?: number;
+  tasaSiguiente?: number;
   children: ReactNode;
   accionCerrarSesion: () => Promise<void>;
 };
@@ -32,6 +33,7 @@ export function AppShell({
   usuarioRol,
   tasaHoy,
   tasaEurHoy,
+  tasaSiguiente,
   children,
   accionCerrarSesion,
 }: Props) {
@@ -113,6 +115,18 @@ export function AppShell({
                     {tasaEurHoy ? `Bs. ${tasaEurHoy.toFixed(2)}` : "—"}
                   </span>
                 </div>
+
+                {/* Indicador de Tasa Programada para Mañana (si existe) */}
+                {tasaSiguiente && (
+                  <div className="flex items-center justify-between rounded-xl border border-amber-200/90 bg-amber-50/70 px-2.5 py-1 text-[11px] dark:border-amber-900/50 dark:bg-amber-950/20">
+                    <span className="font-semibold text-amber-800 dark:text-amber-300">
+                      Mañana (BCV)
+                    </span>
+                    <span className="font-mono font-bold text-amber-950 dark:text-amber-100">
+                      Bs. {tasaSiguiente.toFixed(2)}
+                    </span>
+                  </div>
+                )}
               </div>
             </Link>
           </div>
@@ -231,6 +245,14 @@ export function AppShell({
                 >
                   <Euro className="size-3 text-indigo-600 dark:text-indigo-400" />
                   Bs. {tasaEurHoy.toFixed(2)}
+                </span>
+              )}
+              {tasaSiguiente && (
+                <span
+                  className="hidden sm:inline-flex items-center gap-1 rounded-lg border border-amber-200 bg-amber-50 px-2 py-0.5 text-[11px] font-mono font-bold text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-300"
+                  title={`Tasa BCV programada para mañana: Bs. ${tasaSiguiente.toFixed(4)}`}
+                >
+                  Mañana: Bs. {tasaSiguiente.toFixed(2)}
                 </span>
               )}
             </div>
