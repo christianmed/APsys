@@ -8,6 +8,7 @@ import {
   TrendingUp,
   UserRound,
   Users,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -86,6 +87,14 @@ export default async function Home() {
         >
           <TrendingUp aria-hidden className="size-4 text-emerald-600 dark:text-emerald-400" />
           Dashboard Gerencial (Ingresos)
+        </Link>
+
+        <Link
+          href="/cuentas-por-cobrar"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 text-sm font-bold text-rose-900 transition hover:bg-rose-100 shadow-sm dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+        >
+          <Wallet aria-hidden className="size-4 text-rose-600 dark:text-rose-400" />
+          Cuentas por Cobrar (Saldos)
         </Link>
 
         <Link

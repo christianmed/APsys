@@ -9,6 +9,7 @@ import {
   Printer,
   SearchX,
   TrendingUp,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -124,13 +125,23 @@ export default async function PedidosPage({ searchParams }: Props) {
 
           <div className="flex flex-wrap items-center gap-2">
             {rolUsuario === "gerencial" && (
-              <Link
-                href="/dashboard"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
-              >
-                <TrendingUp aria-hidden className="size-4 text-emerald-600 dark:text-emerald-400" />
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+                >
+                  <TrendingUp aria-hidden className="size-4 text-emerald-600 dark:text-emerald-400" />
+                  Dashboard
+                </Link>
+
+                <Link
+                  href="/cuentas-por-cobrar"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-rose-300 bg-rose-50 px-3.5 text-sm font-semibold text-rose-900 transition-colors hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+                >
+                  <Wallet aria-hidden className="size-4 text-rose-600 dark:text-rose-400" />
+                  Cuentas por Cobrar
+                </Link>
+              </>
             )}
 
             <Link

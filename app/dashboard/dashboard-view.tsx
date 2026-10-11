@@ -9,6 +9,7 @@ import {
   Layers,
   Receipt,
   TrendingUp,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -102,13 +103,23 @@ export function DashboardView({
           </div>
         </div>
 
-        <Link
-          href="/pedidos"
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-        >
-          <Receipt className="size-4" />
-          Ver Pedidos
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/cuentas-por-cobrar"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 text-xs font-bold text-rose-900 transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+          >
+            <Wallet className="size-4 text-rose-600 dark:text-rose-400" />
+            Cuentas por Cobrar
+          </Link>
+
+          <Link
+            href="/pedidos"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          >
+            <Receipt className="size-4" />
+            Ver Pedidos
+          </Link>
+        </div>
       </div>
 
       {/* Barra de Filtros de Período */}
