@@ -99,8 +99,9 @@
 - [x] **T-027 (M)** — Suite E2E completa de flujos críticos en verde (registro → comanda → taller → aviso → retiro → métricas).
   - Criterio: suite pasa en CI contra el deployment de preview.
   - **Estado 2026-10-10:** completa. Pipeline de integración continua configurado en `.github/workflows/ci.yml` ejecutando lint, typecheck, unit, build y Playwright con Node 24; 21 suites E2E en `e2e/`; suite de integración de punta a punta `e2e/flujo-critico-taller.spec.ts` validando el ciclo de vida completo de órdenes de trabajo (creación en `/pedidos/nuevo`, ficha técnica y código de barras/QR en `/comanda/[id]`, tablero kanban en `/taller`, enlaces de aviso WhatsApp `wa.me`, seguimiento de cobranzas en `/cuentas-por-cobrar` y consolidación en el `/dashboard` gerencial).
-- [ ] **T-028 (S)** — Capacitación en sede + guía rápida de uso por perfil.
+- [x] **T-028 (S)** — Capacitación en sede + guía rápida de uso por perfil.
   - Criterio: sesión realizada; guía de 1–2 páginas entregada; feedback recogido (entregable de la propuesta).
+  - **Estado 2026-10-10:** completa. 135 unit verdes; manual operativo de 1–2 páginas `docs/capacitacion/guia-rapida-usuarios.md` estructurado en los 3 perfiles (Mostrador/Recepción para registro < 2 min y cobro; Taller/Producción para Kanban táctil y aviso WhatsApp; Gerencia/Administración para tasas inmutables, morosidad y reportes); plan de sesión presencial y formato de recolección de feedback del personal en `docs/capacitacion/plan-capacitacion-y-feedback.md`; vista interactiva `/ayuda` integrada en la app para consulta rápida desde cualquier tablet o móvil; y suite de validación (`test/capacitacion-guia.test.ts`).
 
 ## Compuerta de pre-lanzamiento (/ship)
 
