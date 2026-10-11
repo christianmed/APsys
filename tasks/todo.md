@@ -96,8 +96,9 @@
 - [x] **T-026 (M)** — Despliegue en Vercel (producción + previews) con dominio; respaldos de Supabase verificados y runbook de restauración.
   - Criterio: smoke E2E en producción; runbook de respaldo/restauración entregado.
   - **Estado 2026-10-10:** completa (T-026a + T-026b). 133 unit verdes; archivo de configuración `vercel.json` con cabeceras de endurecimiento HTTP (HSTS 2 años, X-Frame-Options DENY, X-Content-Type-Options nosniff, Referrer-Policy strict-origin); plantilla de variables `.env.example`; script de prueba de humo `scripts/smoke-test-produccion.mjs` para verificar rutas críticas en producción; runbook de contingencia y recuperación ante catástrofes en `docs/operaciones/runbook-respaldo-restauracion.md` con RPO < 24h y RTO < 30min; script de respaldo lógico automatizado `scripts/backup-supabase.mjs` con cálculo criptográfico SHA-256; y suites de prueba (`test/despliegue-config.test.ts`, `test/runbook-respaldo.test.ts`).
-- [ ] **T-027 (M)** — Suite E2E completa de flujos críticos en verde (registro → comanda → taller → aviso → retiro → métricas).
+- [x] **T-027 (M)** — Suite E2E completa de flujos críticos en verde (registro → comanda → taller → aviso → retiro → métricas).
   - Criterio: suite pasa en CI contra el deployment de preview.
+  - **Estado 2026-10-10:** completa. Pipeline de integración continua configurado en `.github/workflows/ci.yml` ejecutando lint, typecheck, unit, build y Playwright con Node 24; 21 suites E2E en `e2e/`; suite de integración de punta a punta `e2e/flujo-critico-taller.spec.ts` validando el ciclo de vida completo de órdenes de trabajo (creación en `/pedidos/nuevo`, ficha técnica y código de barras/QR en `/comanda/[id]`, tablero kanban en `/taller`, enlaces de aviso WhatsApp `wa.me`, seguimiento de cobranzas en `/cuentas-por-cobrar` y consolidación en el `/dashboard` gerencial).
 - [ ] **T-028 (S)** — Capacitación en sede + guía rápida de uso por perfil.
   - Criterio: sesión realizada; guía de 1–2 páginas entregada; feedback recogido (entregable de la propuesta).
 
