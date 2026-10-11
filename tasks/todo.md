@@ -81,8 +81,9 @@
 - [x] **T-021 (S)** — Métricas de rotación por servicio (mayor/menor demanda, período seleccionable).
   - Criterio: gráfico/tabla verificable contra dataset de prueba (RF-13).
   - **Estado 2026-10-10:** completa (T-021a + T-021b). 114 unit verdes; módulo `lib/dashboard/rotacion-servicios.ts` con agregación de pedidos por ítem del catálogo, cálculo de frecuencias de orden, cantidad producida, facturación generada e identificación automática de líderes en facturación y volumen así como servicios sin rotación; vista interactiva `/dashboard/rotacion` con selectores de período (`hoy`, `esta_semana`, `este_mes`, `todo` y personalizado), barras proporcionales de participación, ranking ordenable por 5 criterios, alertas de catálogo, accesos desde el dashboard gerencial y catálogo de servicios, y suite E2E (`e2e/rotacion-servicios.spec.ts`).
-- [ ] **T-022 (S)** — Historial por cliente: compras, montos y recurrencia.
+- [x] **T-022 (S)** — Historial por cliente: compras, montos y recurrencia.
   - Criterio: búsqueda por cliente muestra el historial completo ordenado (RF-14).
+  - **Estado 2026-10-10:** completa (T-022a + T-022b). 117 unit verdes; módulo `lib/clientes/historial.ts` con consolidación acumulada de compras, abonos, saldos y recurrencia (clasificación en 6 perfiles: "Sin compras", "Nuevo", "Ocasional", "Recurrente", "VIP / Frecuente", "Inactivo"); panel interactivo en `/clientes/[id]` con tarjetas de KPI (Total Comprado, Saldo Pendiente, Ticket Promedio, Frecuencia en días), tabla de órdenes ordenadas cronológicamente con cobro wa.me a un clic y acceso a comandas; resumen de compras y volumen en tarjetas de `/clientes`; y suite E2E (`e2e/clientes-historial.spec.ts`).
 - [ ] **T-023 (M)** — Tasa de cambio: captura, vigencia por fecha y aplicación; históricos congelados por pedido.
   - Criterio: unitarias: cambiar la tasa no altera pedidos previos; los nuevos usan la nueva (RF-15).
 - [ ] **T-024 (M)** — Anulación/edición de pedidos con motivo obligatorio + auditoría inmutable.
