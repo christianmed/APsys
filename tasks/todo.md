@@ -84,8 +84,9 @@
 - [x] **T-022 (S)** — Historial por cliente: compras, montos y recurrencia.
   - Criterio: búsqueda por cliente muestra el historial completo ordenado (RF-14).
   - **Estado 2026-10-10:** completa (T-022a + T-022b). 117 unit verdes; módulo `lib/clientes/historial.ts` con consolidación acumulada de compras, abonos, saldos y recurrencia (clasificación en 6 perfiles: "Sin compras", "Nuevo", "Ocasional", "Recurrente", "VIP / Frecuente", "Inactivo"); panel interactivo en `/clientes/[id]` con tarjetas de KPI (Total Comprado, Saldo Pendiente, Ticket Promedio, Frecuencia en días), tabla de órdenes ordenadas cronológicamente con cobro wa.me a un clic y acceso a comandas; resumen de compras y volumen en tarjetas de `/clientes`; y suite E2E (`e2e/clientes-historial.spec.ts`).
-- [ ] **T-023 (M)** — Tasa de cambio: captura, vigencia por fecha y aplicación; históricos congelados por pedido.
+- [x] **T-023 (M)** — Tasa de cambio: captura, vigencia por fecha y aplicación; históricos congelados por pedido.
   - Criterio: unitarias: cambiar la tasa no altera pedidos previos; los nuevos usan la nueva (RF-15).
+  - **Estado 2026-10-10:** completa (T-023a + T-023b). 121 unit verdes; módulo `lib/tasas/tasas.ts` con validación numérica (hasta 4 decimales), conversión bidireccional USD/Bs al centavo, resolución temporal de tasa vigente por fecha de corte y comprobación de congelamiento inmutable por pedido; Server Action `registrarNuevaTasa` protegida por RLS para perfil gerencial; vista `/tasas` con tarjeta destacada de tasa vigente hoy, formulario de actualización, histórico inmutable ordenado cronológicamente, accesos desde inicio y dashboard gerencial, y suite E2E (`e2e/tasas-cambio.spec.ts`).
 - [ ] **T-024 (M)** — Anulación/edición de pedidos con motivo obligatorio + auditoría inmutable.
   - Criterio: anulados no cuentan en métricas; auditoría registra usuario, fecha y motivo (RF-16).
 - [ ] **T-025 (S)** — Exportación de reportes (CSV/PDF) del período seleccionado.
