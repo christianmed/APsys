@@ -59,13 +59,21 @@ export function redondearCentavos(monto: number): number {
 export function clasificarRecurrenciaCliente(
   pedidosActivos: number,
   diasDesdeUltimaCompra: number,
-  frecuenciaPromedioDias: number,
+  frecuenciaPromedioDias?: number,
 ): ClasificacionRecurrencia {
   if (pedidosActivos === 0) return "Sin compras";
   if (diasDesdeUltimaCompra > 60) return "Inactivo (> 60 días)";
   if (pedidosActivos === 1) return "Nuevo";
   if (pedidosActivos === 2) return "Ocasional";
-  if (pedidosActivos >= 5) return "VIP / Frecuente";
+  if (
+    pedidosActivos >= 5 ||
+    (typeof frecuenciaPromedioDias === "number" &&
+      frecuenciaPromedioDias > 0 &&
+      frecuenciaPromedioDias <= 15 &&
+      pedidosActivos >= 3)
+  ) {
+    return "VIP / Frecuente";
+  }
   return "Recurrente";
 }
 

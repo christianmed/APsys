@@ -47,13 +47,13 @@ export default async function ClientesPage({
   const { data: clientes } = q
     ? await supabase
         .from("clientes")
-        .select("id,nombre,telefono,notas")
+        .select("id,nombre,telefono,notas,pedidos(id,total_usd,anulado)")
         .or(`nombre.ilike.%${q}%,telefono.ilike.%${q}%`)
         .order("nombre")
         .limit(50)
     : await supabase
         .from("clientes")
-        .select("id,nombre,telefono,notas")
+        .select("id,nombre,telefono,notas,pedidos(id,total_usd,anulado)")
         .order("creado_en", { ascending: false })
         .limit(50);
 
@@ -100,28 +100,59 @@ export default async function ClientesPage({
 
         {lista.length > 0 ? (
           <ul className="space-y-3">
-            {lista.map((cliente) => (
-              <li key={cliente.id}>
-                <Link
-                  href={`/clientes/${cliente.id}`}
-                  className="block rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/60"
-                >
-                  <p className="font-medium text-zinc-900 dark:text-zinc-50">
-                    {cliente.nombre}
-                  </p>
-                  {cliente.telefono ? (
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {cliente.telefono}
-                    </p>
-                  ) : null}
-                  {cliente.notas ? (
-                    <p className="mt-1 line-clamp-2 text-sm text-zinc-500 dark:text-zinc-400">
-                      {cliente.notas}
-                    </p>
-                  ) : null}
-                </Link>
-              </li>
-            ))}
+            {lista.map((cliente) => {
+              const rawPedidos = (cliente.pedidos as unknown as Array<{ total_usd: number | string; anulado: boolean | null }>) ?? [];
+              const pedidosActivos = rawPedidos.filter((p) => !p.anulado);
+              const totalGastado = pedidosActivos.reduce(
+                (acc, p) => acc + Number(p.total_usd || 0),
+                0,
+              );
+
+              return (
+                <li key={cliente.id}>
+                  <Link
+                    href={`/clientes/${cliente.id}`}
+                    className="block rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700 dark:hover:bg-zinc-800/60"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-bold text-zinc-900 dark:text-zinc-50">
+                          {cliente.nombre}
+                        </p>
+                        {cliente.telefono ? (
+                          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                            {cliente.telefono}
+                          </p>
+                        ) : null}
+                      </div>
+
+                      <div className="text-right">
+                        {pedidosActivos.length > 0 ? (
+                          <>
+                            <span className="inline-flex rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-bold text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+                              {pedidosActivos.length} {pedidosActivos.length === 1 ? "orden" : "órdenes"}
+                            </span>
+                            <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                              ${totalGastado.toFixed(2)}
+                            </p>
+                          </>
+                        ) : (
+                          <span className="text-[11px] text-zinc-400 italic">
+                            Sin órdenes
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {cliente.notas ? (
+                      <p className="mt-2 line-clamp-2 text-xs text-zinc-500 dark:text-zinc-400">
+                        {cliente.notas}
+                      </p>
+                    ) : null}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
