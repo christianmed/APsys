@@ -10,44 +10,15 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
+import { type EstadoPedido } from "@/lib/pedidos/estados";
 import { createClient } from "@/lib/supabase/server";
+import { EstadoControl } from "./estado-control";
 import { PedidosBuscador } from "./pedidos-buscador";
 
 export const instant = false;
 
 type Props = {
   searchParams: Promise<{ q?: string }>;
-};
-
-const ESTADO_BADGES: Record<
-  string,
-  { label: string; clases: string }
-> = {
-  recibido: {
-    label: "Recibido",
-    clases:
-      "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
-  },
-  en_produccion: {
-    label: "En Producción",
-    clases:
-      "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
-  },
-  listo: {
-    label: "Listo para Retiro",
-    clases:
-      "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
-  },
-  entregado: {
-    label: "Entregado",
-    clases:
-      "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-  },
-  cancelado: {
-    label: "Cancelado",
-    clases:
-      "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
-  },
 };
 
 /**
@@ -64,6 +35,14 @@ export default async function PedidosPage({ searchParams }: Props) {
   if (!user) {
     redirect("/login");
   }
+
+  const { data: perfil } = await supabase
+    .from("perfiles")
+    .select("rol")
+    .eq("usuario_id", user.id)
+    .maybeSingle();
+
+  const rolUsuario = perfil?.rol ?? "operativo";
 
   const busqueda = sanearTerminoBusquedaOrden(q);
 
@@ -197,8 +176,6 @@ export default async function PedidosPage({ searchParams }: Props) {
         ) : (
           <div className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
             {lista.map((pedido) => {
-              const badge =
-                ESTADO_BADGES[pedido.estado] ?? ESTADO_BADGES.recibido;
               const fecha = new Date(pedido.creado_en).toLocaleDateString(
                 "es-VE",
                 {
@@ -241,15 +218,16 @@ export default async function PedidosPage({ searchParams }: Props) {
                   className="flex flex-col gap-4 p-5 transition-colors hover:bg-zinc-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-zinc-800/40"
                 >
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2.5">
+                    <div className="flex flex-wrap items-center gap-3">
                       <span className="font-mono text-base font-bold text-zinc-900 dark:text-zinc-50">
                         #{pedido.numero_orden}
                       </span>
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${badge.clases}`}
-                      >
-                        {badge.label}
-                      </span>
+                      <EstadoControl
+                        pedidoId={pedido.id}
+                        estadoActual={pedido.estado as EstadoPedido}
+                        rolUsuario={rolUsuario}
+                        anulado={pedido.anulado}
+                      />
                     </div>
 
                     <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
