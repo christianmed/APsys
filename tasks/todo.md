@@ -63,6 +63,13 @@
   - [x] Paso 3: Asegurar carga simultánea y homogénea de tasa USD y tasa EUR en el sidebar y header móvil en Inicio.
   - [x] Paso 4: Verificación visual en navegador de Inicio con widget de tasas completas.
   - [x] Paso 5: Verificación DoD completada (144 tests Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+- [x] **Fase 13: Corrección de Consulta de Taller y Especificaciones de Ítems**
+  - [x] Paso 1: Diagnosticar causa raíz de la vista de taller vacía (columnas inexistentes `ancho`, `alto`, `notas` en `pedido_items` y `unidad_medida` en `servicios` provocaban error 42703 en Supabase).
+  - [x] Paso 2: Corregir consulta en `app/taller/page.tsx` con las columnas reales de la base de datos (`dimensiones`, `descripcion`, `acabados`, `servicios(nombre)`).
+  - [x] Paso 3: Actualizar `PedidoTallerItem` y tarjeta de `app/taller/taller-tablero.tsx` para mostrar dimensiones, acabados y descripciones de ítems.
+  - [x] Paso 4: Verificación visual con browser subagent confirmando orden `ORD-1001` visible en Taller bajo "Activos" y "En Producción".
+  - [x] Paso 5: Verificación DoD completada (144 tests Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+
 
 
 

@@ -29,13 +29,15 @@ import {
 export type PedidoTallerItem = {
   id: string;
   cantidad: number;
-  ancho: number | null;
-  alto: number | null;
-  acabados: string | null;
-  notas: string | null;
+  descripcion?: string | null;
+  dimensiones?: string | null;
+  acabados?: string | null;
+  ancho?: number | null;
+  alto?: number | null;
+  notas?: string | null;
   servicios?: {
     nombre: string;
-    unidad_medida: string;
+    unidad_medida?: string;
   } | null;
 };
 
@@ -363,7 +365,14 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                     </h3>
                     <ul className="space-y-2">
                       {pedido.items.map((item, idx) => {
-                        const tieneMedidas = item.ancho != null && item.alto != null;
+                        const tieneMedidas =
+                          Boolean(item.dimensiones) ||
+                          (item.ancho != null && item.alto != null);
+                        const textoMedidas =
+                          item.dimensiones ??
+                          (item.ancho != null && item.alto != null
+                            ? `${item.ancho} × ${item.alto} m`
+                            : null);
                         return (
                           <li
                             key={item.id ?? idx}
@@ -375,7 +384,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                               </span>
                               {tieneMedidas && (
                                 <span className="font-mono text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                                  {item.ancho} × {item.alto} m
+                                  {textoMedidas}
                                 </span>
                               )}
                             </div>
@@ -385,9 +394,9 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                                 {item.acabados}
                               </div>
                             )}
-                            {item.notas && (
+                            {(item.descripcion || item.notas) && (
                               <div className="mt-0.5 text-zinc-500 dark:text-zinc-400 italic">
-                                Nota: {item.notas}
+                                {item.descripcion || item.notas}
                               </div>
                             )}
                           </li>

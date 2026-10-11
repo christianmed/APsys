@@ -30,7 +30,7 @@ export default async function TallerPage() {
   const rolUsuario = perfil?.rol ?? "operativo";
 
   // Traer pedidos activos de taller (no anulados)
-  const { data: pedidosRaw } = await supabase
+  const { data: pedidosRaw, error: errPedidos } = await supabase
     .from("pedidos")
     .select(
       `
@@ -57,13 +57,11 @@ export default async function TallerPage() {
       pedido_items (
         id,
         cantidad,
-        ancho,
-        alto,
+        descripcion,
+        dimensiones,
         acabados,
-        notas,
         servicios (
-          nombre,
-          unidad_medida
+          nombre
         )
       )
     `,
@@ -71,15 +69,18 @@ export default async function TallerPage() {
     .eq("anulado", false)
     .order("creado_en", { ascending: true });
 
+  if (errPedidos) {
+    console.error("[taller] Error al consultar pedidos:", errPedidos);
+  }
+
   const pedidosIniciales: PedidoTaller[] = (pedidosRaw ?? []).map((p) => {
     const rawItems = (p.pedido_items as unknown as Array<{
       id: string;
       cantidad: number;
-      ancho: number | null;
-      alto: number | null;
+      descripcion: string | null;
+      dimensiones: string | null;
       acabados: string | null;
-      notas: string | null;
-      servicios: { nombre: string; unidad_medida: string } | null;
+      servicios: { nombre: string } | null;
     }>) ?? [];
 
     const clienteObj = Array.isArray(p.clientes)
