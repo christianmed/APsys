@@ -7,8 +7,10 @@ import {
   Calendar,
   CreditCard,
   DollarSign,
+  Download,
   ExternalLink,
   Layers,
+  Printer,
   Receipt,
   TrendingUp,
   Wallet,
@@ -221,6 +223,38 @@ export function DashboardView({
             Filtrar
           </button>
         </form>
+      </div>
+
+      {/* Botones de Exportación de Reportes (RF-17) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
+            Exportar reporte del período:
+          </span>
+          <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-mono font-bold text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+            {preset}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href={`/api/reportes/exportar?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
+            download
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+          >
+            <Download className="size-3.5 text-zinc-500 dark:text-zinc-400" />
+            Descargar CSV
+          </a>
+
+          <Link
+            href={`/reportes/imprimir?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
+            target="_blank"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          >
+            <Printer className="size-3.5" />
+            Imprimir / Guardar PDF
+          </Link>
+        </div>
       </div>
 
       {/* Tarjetas de Métricas Financieras Consolidadas */}
