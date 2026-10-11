@@ -36,11 +36,13 @@ export default async function ClientesPage({
 
   const { q: qCrudo } = await searchParams;
 
-  // El `or()` de PostgREST usa comas y paréntesis como sintaxis: se eliminan
-  // del término para que la búsqueda no rompa el filtro.
+  // El `or()` de PostgREST usa comas y paréntesis como sintaxis, y `%`/`_` son
+  // comodines de ilike: se eliminan del término para que la búsqueda no rompa
+  // el filtro ni amplíe coincidencias sin querer. Se limita a 80 caracteres.
   const q = (Array.isArray(qCrudo) ? qCrudo[0] : (qCrudo ?? ""))
     .trim()
-    .replace(/[,()]/g, "");
+    .replace(/[,()%_]/g, "")
+    .slice(0, 80);
 
   const { data: clientes } = q
     ? await supabase

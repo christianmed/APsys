@@ -1,13 +1,10 @@
 import { expect, test } from "@playwright/test";
 
 // Requiere TEST_USER_GERENCIAL_* en .env.local: sin credenciales se omite.
-// Se usa el usuario GERENCIAL (no el operativo) porque ambos roles leen,
-// crean y editan `clientes` (RLS 0002), y auth-login.spec.ts corre en
-// paralelo con el operativo y cierra sesión con signOut() global
-// (app/actions.ts): eso revoca TODAS las sesiones de ese usuario al
-// instante (verificado: GET /auth/v1/user con access token vigente → 403
-// tras el logout global), lo que tumbaría los requests de esta spec y la
-// devolvería a /login.
+// Se usa el usuario GERENCIAL (distinto del operativo que usa
+// auth-login.spec.ts): ambos roles leen, crean y editan `clientes` (RLS 0002)
+// y así las specs paralelas no comparten sesión. (El `cerrarSesion` de la app
+// usa scope local — app/actions.ts — sin revocación cruzada entre contextos.)
 //
 // Nota: la tabla `clientes` no permite borrar (por diseño): cada corrida deja
 // marcadores "__e2e__" con teléfono único y NO los limpia.
