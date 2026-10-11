@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { type ReactNode } from "react";
 import { cerrarSesion } from "@/app/actions";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
@@ -14,6 +15,7 @@ type Props = {
  * de forma paralela y optimizada para máxima velocidad de respuesta.
  */
 export async function AuthenticatedShell({ children }: Props) {
+  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
