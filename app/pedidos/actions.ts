@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
+  validarCambioEstado,
+  type EstadoPedido,
+} from "@/lib/pedidos/estados";
+import {
   validarCobranzaInicial,
   type MonedaCobranza,
 } from "./cobranza";
@@ -257,4 +261,93 @@ export async function crearPedido(
 
   revalidatePath("/pedidos");
   redirect("/pedidos");
+}
+
+/**
+ * Cambia el estado de un pedido aplicando la máquina de estados,
+ * permisos por rol y marcas de tiempo correspondientes (RF-05 / T-013).
+ */
+export async function cambiarEstadoPedido(
+  pedidoId: string,
+  nuevoEstado: EstadoPedido,
+  motivoCancelacion?: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Obtener rol del usuario actual
+  const { data: perfil } = await supabase
+    .from("perfiles")
+    .select("id, rol")
+    .eq("usuario_id", user.id)
+    .maybeSingle();
+
+  const rol = perfil?.rol ?? "operativo";
+
+  // Consultar estado actual del pedido
+  const { data: pedido, error: errorPedido } = await supabase
+    .from("pedidos")
+    .select("id, estado, listo_en, entregado_en, anulado")
+    .eq("id", pedidoId)
+    .maybeSingle();
+
+  if (errorPedido || !pedido) {
+    return { ok: false, error: "El pedido solicitado no existe." };
+  }
+
+  // Validar transición con la máquina de estados
+  const validacion = validarCambioEstado({
+    estadoActual: pedido.estado as EstadoPedido,
+    nuevoEstado,
+    rolUsuario: rol,
+    motivoCancelacion,
+  });
+
+  if (!validacion.valido) {
+    return { ok: false, error: validacion.error };
+  }
+
+  const updates: {
+    estado: EstadoPedido;
+    listo_en?: string | null;
+    entregado_en?: string | null;
+    anulado?: boolean;
+    motivo_anulacion?: string | null;
+  } = {
+    estado: nuevoEstado,
+  };
+
+  const ahora = new Date().toISOString();
+
+  if (nuevoEstado === "listo" && !pedido.listo_en) {
+    updates.listo_en = ahora;
+  } else if (nuevoEstado === "entregado" && !pedido.entregado_en) {
+    updates.entregado_en = ahora;
+  } else if (nuevoEstado === "cancelado") {
+    updates.anulado = true;
+    updates.motivo_anulacion = validacion.motivoLimpio;
+  }
+
+  const { error: errorUpdate } = await supabase
+    .from("pedidos")
+    .update(updates)
+    .eq("id", pedidoId);
+
+  if (errorUpdate) {
+    return {
+      ok: false,
+      error: "No se pudo actualizar el estado del pedido. Intenta nuevamente.",
+    };
+  }
+
+  revalidatePath("/pedidos");
+  revalidatePath(`/comanda/${pedidoId}`);
+
+  return { ok: true };
 }
