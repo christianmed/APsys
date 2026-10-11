@@ -8,6 +8,7 @@ import {
   Plus,
   Printer,
   SearchX,
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -122,6 +123,16 @@ export default async function PedidosPage({ searchParams }: Props) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            {rolUsuario === "gerencial" && (
+              <Link
+                href="/dashboard"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+              >
+                <TrendingUp aria-hidden className="size-4 text-emerald-600 dark:text-emerald-400" />
+                Dashboard
+              </Link>
+            )}
+
             <Link
               href="/taller"
               className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
