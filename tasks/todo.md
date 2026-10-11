@@ -72,8 +72,9 @@
 
 ## Fase 3 — Métricas, despliegue y capacitación (Semana 4)
 
-- [ ] **T-019 (M)** — Dashboard gerencial: ingresos por moneda (USD/Bs) con filtros por fecha.
+- [x] **T-019 (M)** — Dashboard gerencial: ingresos por moneda (USD/Bs) con filtros por fecha.
   - Criterio: totales cuadran al centavo con `pagos` en dataset de prueba (RF-11).
+  - **Estado 2026-10-10:** completa (T-019a + T-019b). 106 unit verdes; módulo `lib/dashboard/ingresos.ts` con cálculo exacto al centavo sin distorsión de coma flotante para cobros en USD directo, Bs directo y equivalente combinado USD, selectores de período (`hoy`, `esta_semana`, `este_mes`, `todo` y rango personalizado), protección estricta de privacidad (RF-18 / RLS: perfil operativo bloqueado con aviso explicativo; solo gerencial autorizado), vista interactiva `/dashboard` con tarjetas de KPI, desglose de operaciones, tabla de pagos auditables y suite E2E (`e2e/dashboard.spec.ts`).
 - [ ] **T-020 (M)** — Cuentas por cobrar: vista consolidada de saldos pendientes y antigüedad.
   - Criterio: E2E: pedidos con saldo aparecen con montos correctos por moneda (RF-12).
 - [ ] **T-021 (S)** — Métricas de rotación por servicio (mayor/menor demanda, período seleccionable).
