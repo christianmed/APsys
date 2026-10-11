@@ -27,8 +27,9 @@
 
 ## Fase 1 — Registro, cobranza y comanda (Semanas 1–2)
 
-- [ ] **T-006 (M)** — Módulo de clientes: alta rápida, búsqueda por nombre/teléfono, prevención de duplicados.
+- [x] **T-006 (M)** — Módulo de clientes: alta rápida, búsqueda por nombre/teléfono, prevención de duplicados.
   - Criterio: E2E crear → buscar → editar cliente (RF-01).
+  - **Estado 2026-10-10:** completa (T-006a + T-006b). 26 unit verdes; E2E 3/3. Revisión independiente: 0 bloqueantes / 0 importantes. Aplicados: logout local (`cc7b5ca`), saneo de comodines `,()%_` + límite 80 car. (`f1c49ba`), marcador E2E sin `_` (`e606366`). NIT pendiente de pulido: longitudes máximas en validaciones (nombre/notas). Filas `E2E …` quedan en dev por diseño (sin delete).
 - [ ] **T-007 (S)** — Catálogo de servicios administrable con seed inicial (pendones, viniles, backing, microperforado, etiquetas…).
   - Criterio: alta/baja/edición de servicios sin tocar código (RF-04).
 - [ ] **T-008 (M)** — Formulario de registro de pedido: servicios, dimensiones, acabados y notas.
