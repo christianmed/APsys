@@ -19,6 +19,8 @@ import { createClient } from "@/lib/supabase/server";
 import { EstadoControl } from "./estado-control";
 import { BotonAvisoWhatsApp } from "./boton-aviso-whatsapp";
 import { PedidosBuscador } from "./pedidos-buscador";
+import { AnularPedidoModal } from "./anular-pedido-modal";
+import { AuditoriaModal } from "./auditoria-modal";
 
 export const instant = false;
 
@@ -61,6 +63,7 @@ export default async function PedidosPage({ searchParams }: Props) {
       total_usd,
       creado_en,
       anulado,
+      motivo_anulacion,
       cliente_id,
       clientes (
         nombre,
@@ -286,6 +289,13 @@ export default async function PedidosPage({ searchParams }: Props) {
                       <Clock className="size-3.5" />
                       {fecha}
                     </p>
+
+                    {pedido.anulado && pedido.motivo_anulacion ? (
+                      <p className="inline-block rounded-md bg-rose-50 px-2.5 py-1 text-xs text-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
+                        <span className="font-semibold">Motivo de anulación:</span>{" "}
+                        {pedido.motivo_anulacion}
+                      </p>
+                    ) : null}
                   </div>
 
                   {/* Resumen financiero del pedido */}
@@ -320,7 +330,7 @@ export default async function PedidosPage({ searchParams }: Props) {
                       )}
 
                       <div className="mt-2 flex flex-wrap items-center gap-2">
-                        {pedido.estado === "listo" && (
+                        {pedido.estado === "listo" && !pedido.anulado && (
                           <BotonAvisoWhatsApp
                             telefono={clienteData?.telefono}
                             nombreCliente={clienteData?.nombre ?? "Cliente"}
@@ -338,6 +348,22 @@ export default async function PedidosPage({ searchParams }: Props) {
                           <Printer className="size-3.5" />
                           Comanda
                         </Link>
+
+                        {rolUsuario === "gerencial" && (
+                          <>
+                            <AuditoriaModal
+                              pedidoId={pedido.id}
+                              numeroOrden={pedido.numero_orden}
+                            />
+
+                            {!pedido.anulado && (
+                              <AnularPedidoModal
+                                pedidoId={pedido.id}
+                                numeroOrden={pedido.numero_orden}
+                              />
+                            )}
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>

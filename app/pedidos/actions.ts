@@ -7,6 +7,7 @@ import {
   validarCambioEstado,
   type EstadoPedido,
 } from "@/lib/pedidos/estados";
+import { validarMotivoAnulacion } from "@/lib/pedidos/anulacion";
 import {
   validarCobranzaInicial,
   type MonedaCobranza,
@@ -346,8 +347,139 @@ export async function cambiarEstadoPedido(
     };
   }
 
+  if (nuevoEstado === "cancelado") {
+    // Registrar traza inmutable en auditoria (RF-16 / T-024)
+    await supabase.from("auditoria").insert({
+      entidad: "pedido",
+      entidad_id: pedidoId,
+      accion: "anulacion",
+      motivo: validacion.motivoLimpio,
+      usuario_id: perfil?.id,
+      fecha: ahora,
+    });
+  }
+
   revalidatePath("/pedidos");
   revalidatePath(`/comanda/${pedidoId}`);
+  revalidatePath("/dashboard");
+  revalidatePath("/cuentas-por-cobrar");
 
   return { ok: true };
+}
+
+/**
+ * Anulación directa de pedido con motivo obligatorio y registro en auditoría (RF-16 / T-024).
+ * Solo para perfil gerencial.
+ */
+export async function anularPedidoConAuditoria(
+  pedidoId: string,
+  motivo: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { ok: false, error: "Debe iniciar sesión para realizar esta acción." };
+  }
+
+  const { data: perfil } = await supabase
+    .from("perfiles")
+    .select("id, rol")
+    .eq("usuario_id", user.id)
+    .maybeSingle();
+
+  const rol = perfil?.rol ?? "operativo";
+  if (rol !== "gerencial") {
+    return {
+      ok: false,
+      error:
+        "Solo los usuarios con perfil gerencial pueden anular pedidos (RF-16 / RF-18).",
+    };
+  }
+
+  const validacion = validarMotivoAnulacion(motivo);
+  if (!validacion.valido || !validacion.motivoLimpio) {
+    return { ok: false, error: validacion.error ?? "Motivo de anulación inválido." };
+  }
+
+  const { data: pedido } = await supabase
+    .from("pedidos")
+    .select("id, estado, anulado")
+    .eq("id", pedidoId)
+    .maybeSingle();
+
+  if (!pedido) {
+    return { ok: false, error: "Pedido no encontrado." };
+  }
+
+  if (pedido.anulado) {
+    return { ok: false, error: "El pedido ya se encuentra anulado." };
+  }
+
+  const ahora = new Date().toISOString();
+
+  // 1. Actualizar pedido a cancelado y anulado
+  const { error: errUpdate } = await supabase
+    .from("pedidos")
+    .update({
+      anulado: true,
+      motivo_anulacion: validacion.motivoLimpio,
+      estado: "cancelado",
+    })
+    .eq("id", pedidoId);
+
+  if (errUpdate) {
+    return { ok: false, error: "Error al anular el pedido en base de datos." };
+  }
+
+  // 2. Insertar traza inmutable en auditoria (RF-16 / T-024)
+  const { error: errAudit } = await supabase.from("auditoria").insert({
+    entidad: "pedido",
+    entidad_id: pedidoId,
+    accion: "anulacion",
+    motivo: validacion.motivoLimpio,
+    usuario_id: perfil?.id,
+    fecha: ahora,
+  });
+
+  if (errAudit) {
+    console.error("Error al registrar evento de auditoría:", errAudit);
+  }
+
+  revalidatePath("/pedidos");
+  revalidatePath(`/comanda/${pedidoId}`);
+  revalidatePath("/dashboard");
+  revalidatePath("/cuentas-por-cobrar");
+
+  return { ok: true };
+}
+
+/**
+ * Consulta la traza histórica de auditoría para un pedido (RF-16 / T-024).
+ * Solo usuarios gerenciales tienen acceso de lectura (RLS: auditoria_lectura_gerencial).
+ */
+export async function consultarAuditoriaPedido(pedidoId: string) {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("auditoria")
+    .select(
+      `
+      id,
+      entidad,
+      entidad_id,
+      accion,
+      motivo,
+      usuario_id,
+      fecha
+    `,
+    )
+    .eq("entidad", "pedido")
+    .eq("entidad_id", pedidoId)
+    .order("fecha", { ascending: false });
+
+  return data ?? [];
 }
