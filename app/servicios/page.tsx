@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { BarChart3, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -60,13 +60,22 @@ export default async function ServiciosPage() {
             Servicios
           </h1>
           {esGerencial ? (
-            <Link
-              href="/servicios/nuevo"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
-            >
-              <Plus aria-hidden className="size-4" />
-              Nuevo servicio
-            </Link>
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                href="/dashboard/rotacion"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-indigo-300 bg-indigo-50 px-3.5 text-sm font-semibold text-indigo-900 transition-colors hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
+              >
+                <BarChart3 aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
+                Rotación
+              </Link>
+              <Link
+                href="/servicios/nuevo"
+                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
+              >
+                <Plus aria-hidden className="size-4" />
+                Nuevo servicio
+              </Link>
+            </div>
           ) : null}
         </div>
 

@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  BarChart3,
   Calendar,
   CreditCard,
   DollarSign,
@@ -104,6 +105,14 @@ export function DashboardView({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href="/dashboard/rotacion"
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-indigo-300 bg-indigo-50 px-4 text-xs font-bold text-indigo-900 transition hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
+          >
+            <BarChart3 className="size-4 text-indigo-600 dark:text-indigo-400" />
+            Rotación por Servicio
+          </Link>
+
           <Link
             href="/cuentas-por-cobrar"
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 text-xs font-bold text-rose-900 transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"

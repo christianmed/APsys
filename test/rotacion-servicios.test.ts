@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   calcularRotacionServicios,
   filtrarPedidosPorFecha,
-  type ItemPedidoRotacion,
   type PedidoRotacionInput,
   type ServicioCatalogo,
 } from "@/lib/dashboard/rotacion-servicios";
