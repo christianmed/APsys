@@ -30,8 +30,9 @@
 - [x] **T-006 (M)** — Módulo de clientes: alta rápida, búsqueda por nombre/teléfono, prevención de duplicados.
   - Criterio: E2E crear → buscar → editar cliente (RF-01).
   - **Estado 2026-10-10:** completa (T-006a + T-006b). 26 unit verdes; E2E 3/3. Revisión independiente: 0 bloqueantes / 0 importantes. Aplicados: logout local (`cc7b5ca`), saneo de comodines `,()%_` + límite 80 car. (`f1c49ba`), marcador E2E sin `_` (`e606366`). NIT pendiente de pulido: longitudes máximas en validaciones (nombre/notas). Filas `E2E …` quedan en dev por diseño (sin delete).
-- [ ] **T-007 (S)** — Catálogo de servicios administrable con seed inicial (pendones, viniles, backing, microperforado, etiquetas…).
+- [x] **T-007 (S)** — Catálogo de servicios administrable con seed inicial (pendones, viniles, backing, microperforado, etiquetas…).
   - Criterio: alta/baja/edición de servicios sin tocar código (RF-04).
+  - **Estado 2026-10-10:** completa (T-007a + T-007b). 34 unit verdes; E2E 4/4 (alta → edición → baja lógica). Revisión independiente: 0 bloqueantes / 0 importantes; 2 NITs menores anotados (parseInt con «1.5» vía POST directo; un solo error visible a la vez). Pendiente del usuario: aplicar `0003_seed_servicios.sql` (5 servicios) en el SQL Editor.
 - [ ] **T-008 (M)** — Formulario de registro de pedido: servicios, dimensiones, acabados y notas.
   - Criterio: E2E registra un pedido completo; validaciones de campos (RF-01). Depende: T-004, T-006, T-007.
 - [ ] **T-009 (M)** — Cobranza inicial: total, abono (USD/Bs), referencia y saldo automático; persistencia en `pagos`.
