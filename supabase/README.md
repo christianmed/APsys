@@ -6,11 +6,11 @@ directorio **no contiene secretos**: la URL y la clave anon viven en `.env.local
 
 ## Contenido y orden de aplicación
 
-| Orden | Archivo | Contenido |
-| --- | --- | --- |
-| 1 | `migrations/0001_schema.sql` | Las 9 tablas (clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles), constraints, índices básicos y comentarios de decisión. |
-| 2 | `migrations/0002_rls.sql` | RLS habilitado en las 9 tablas: `anon` sin acceso; permisos por rol (`operativo`/`gerencial`) leídos desde `perfiles`. |
-| — | `rollback/v1.down.sql` | Reversión completa de v1 (elimina tablas, políticas y función auxiliar). Destructivo. |
+| Orden | Archivo                      | Contenido                                                                                                                                                                |
+| ----- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1     | `migrations/0001_schema.sql` | Las 9 tablas (clientes, servicios, pedidos, pedido_items, pagos, plantillas, tasas_cambio, auditoria, perfiles), constraints, índices básicos y comentarios de decisión. |
+| 2     | `migrations/0002_rls.sql`    | RLS habilitado en las 9 tablas: `anon` sin acceso; permisos por rol (`operativo`/`gerencial`) leídos desde `perfiles`.                                                   |
+| —     | `rollback/v1.down.sql`       | Reversión completa de v1 (elimina tablas, políticas y función auxiliar). Destructivo.                                                                                    |
 
 Estado (2026-10-10): **pendiente de aplicar** en el proyecto dev. Hasta
 entonces `GET /api/supabase-health` responde `{"reachable":true,"schemaReady":false}`
@@ -23,7 +23,7 @@ y en orden**.
 ## Vía A — SQL Editor del dashboard (disponible hoy)
 
 1. Abrir el proyecto en https://supabase.com/dashboard → **SQL Editor** →
-   *New query*.
+   _New query_.
 2. Pegar el contenido de `migrations/0001_schema.sql` y pulsar **Run**.
    Debe terminar con "Success".
 3. Repetir con `migrations/0002_rls.sql`.

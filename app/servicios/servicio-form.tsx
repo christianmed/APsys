@@ -44,7 +44,10 @@ export function ServicioForm({ modo, servicio }: Props) {
   const [estado, accion, pendiente] = useActionState<
     EstadoFormularioServicio,
     FormData
-  >(enEdicion ? actualizarServicio.bind(null, enEdicion.id) : crearServicio, {});
+  >(
+    enEdicion ? actualizarServicio.bind(null, enEdicion.id) : crearServicio,
+    {},
+  );
 
   const valores = {
     nombre: estado.valores?.nombre ?? enEdicion?.nombre ?? "",

@@ -13,7 +13,11 @@ import { validarDatosCliente } from "./validaciones";
 export type EstadoFormularioCliente = {
   errores?: Record<string, string>;
   avisoDuplicado?: string;
-  valores?: { nombre?: string; telefono?: string | null; notas?: string | null };
+  valores?: {
+    nombre?: string;
+    telefono?: string | null;
+    notas?: string | null;
+  };
 };
 
 /**

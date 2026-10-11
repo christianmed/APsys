@@ -24,7 +24,7 @@ describe("validarDatosServicio", () => {
     expect(datos.nombre).toBe("Pendones");
   });
 
-  it("orden \"3\" (texto) → 3", () => {
+  it('orden "3" (texto) → 3', () => {
     const { errores, datos } = validarDatosServicio({
       nombre: "Pendones",
       orden: "3",
@@ -44,16 +44,22 @@ describe("validarDatosServicio", () => {
     expect(nulo.datos.orden).toBe(0);
   });
 
-  it("orden \"-1\" → error de entero no negativo", () => {
-    const { errores } = validarDatosServicio({ nombre: "Pendones", orden: "-1" });
+  it('orden "-1" → error de entero no negativo', () => {
+    const { errores } = validarDatosServicio({
+      nombre: "Pendones",
+      orden: "-1",
+    });
 
     expect(errores.orden).toBe(
       "El orden debe ser un número entero mayor o igual a 0.",
     );
   });
 
-  it("orden \"abc\" → error de entero no negativo", () => {
-    const { errores } = validarDatosServicio({ nombre: "Pendones", orden: "abc" });
+  it('orden "abc" → error de entero no negativo', () => {
+    const { errores } = validarDatosServicio({
+      nombre: "Pendones",
+      orden: "abc",
+    });
 
     expect(errores.orden).toBe(
       "El orden debe ser un número entero mayor o igual a 0.",

@@ -37,7 +37,10 @@ export function mensajeDeErrorAuth(error: ErrorAuth): string {
     return "Demasiados intentos seguidos. Espera un momento e intenta de nuevo.";
   }
 
-  if (texto.includes("invalid format") || error.code === "email_address_invalid") {
+  if (
+    texto.includes("invalid format") ||
+    error.code === "email_address_invalid"
+  ) {
     return "Revisa el formato del correo electrónico.";
   }
 

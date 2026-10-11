@@ -53,7 +53,9 @@ export async function crearServicio(
 
   if (!(await esGerencial(supabase, user.id))) {
     return {
-      errores: { general: "Solo el perfil gerencial puede administrar el catálogo." },
+      errores: {
+        general: "Solo el perfil gerencial puede administrar el catálogo.",
+      },
     };
   }
 
@@ -111,7 +113,9 @@ export async function actualizarServicio(
 
   if (!(await esGerencial(supabase, user.id))) {
     return {
-      errores: { general: "Solo el perfil gerencial puede administrar el catálogo." },
+      errores: {
+        general: "Solo el perfil gerencial puede administrar el catálogo.",
+      },
     };
   }
 

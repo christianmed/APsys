@@ -7,7 +7,10 @@ try {
   for (const linea of readFileSync(".env.local", "utf8").split(/\r?\n/)) {
     const coincidencia = linea.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)$/);
     if (coincidencia && process.env[coincidencia[1]] === undefined) {
-      process.env[coincidencia[1]] = coincidencia[2].replace(/^["']|["']$/g, "");
+      process.env[coincidencia[1]] = coincidencia[2].replace(
+        /^["']|["']$/g,
+        "",
+      );
     }
   }
 } catch {

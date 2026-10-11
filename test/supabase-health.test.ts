@@ -40,7 +40,12 @@ describe("GET /api/supabase-health", () => {
     h.from.mockReturnValue(
       respuesta({
         count: null,
-        error: { code: "PGRST205", message: "table not found", details: null, hint: null },
+        error: {
+          code: "PGRST205",
+          message: "table not found",
+          details: null,
+          hint: null,
+        },
       }),
     );
 

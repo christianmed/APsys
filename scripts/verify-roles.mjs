@@ -65,7 +65,10 @@ function comprobar(nombre, condicion, detalle = "") {
   return ok;
 }
 
-async function peticion(ruta, { token, metodo = "GET", cuerpo, extra = {} } = {}) {
+async function peticion(
+  ruta,
+  { token, metodo = "GET", cuerpo, extra = {} } = {},
+) {
   const cabeceras = {
     apikey: CLAVE_ANON,
     "Content-Type": "application/json",
@@ -90,10 +93,13 @@ async function peticion(ruta, { token, metodo = "GET", cuerpo, extra = {} } = {}
 }
 
 async function iniciarSesion(email, clave) {
-  const { status, datos } = await peticion("/auth/v1/token?grant_type=password", {
-    metodo: "POST",
-    cuerpo: { email, password: clave },
-  });
+  const { status, datos } = await peticion(
+    "/auth/v1/token?grant_type=password",
+    {
+      metodo: "POST",
+      cuerpo: { email, password: clave },
+    },
+  );
   return { status, token: datos?.access_token ?? null };
 }
 
@@ -199,7 +205,8 @@ const altaAuditoria = await peticion("/rest/v1/auditoria", {
     entidad: "__verify_roles__",
     entidad_id: idAuditoria,
     accion: "test_t005",
-    motivo: "Fila marcada de npm run verify:roles (append-only: queda por diseño)",
+    motivo:
+      "Fila marcada de npm run verify:roles (append-only: queda por diseño)",
   },
 });
 comprobar(
