@@ -36,8 +36,9 @@
 - [x] **T-008 (M)** — Formulario de registro de pedido: servicios, dimensiones, acabados y notas.
   - Criterio: E2E registra un pedido completo; validaciones de campos (RF-01). Depende: T-004, T-006, T-007.
   - **Estado 2026-10-10:** completa (T-008a + T-008b). 42 unit verdes; formulario reactivo `/pedidos/nuevo` con selector de clientes y servicios, desglose dinámico de renglones, cálculo en tiempo real de subtotales y total USD, persistencia de cabecera (`pedidos`) e ítems (`pedido_items`), vista `/pedidos` con estados y badges, y suite E2E (`e2e/pedidos.spec.ts`).
-- [ ] **T-009 (M)** — Cobranza inicial: total, abono (USD/Bs), referencia y saldo automático; persistencia en `pagos`.
+- [x] **T-009 (M)** — Cobranza inicial: total, abono (USD/Bs), referencia y saldo automático; persistencia en `pagos`.
   - Criterio: unitarias de casos borde (abono 0 / parcial / total, doble moneda); E2E con saldo correcto (RF-02). Depende: T-008.
+  - **Estado 2026-10-10:** completa (T-009a + T-009b). 53 unit verdes; cálculo multimoneda con tasa referencial congelada por pedido (`tasa_id`), casos borde (abono 0/parcial/total/excedente) cubiertos en unitarias, persistencia en `pagos`, desglose interactivo de abonos y saldos en `/pedidos/nuevo`, balance financiero con saldos en `/pedidos` y suite E2E (`e2e/pedidos.spec.ts`).
 - [ ] **T-010 (S)** — Numeración de órdenes y estado inicial (Recibido) con marcas de tiempo.
   - Criterio: numeración secuencial sin huecos ni duplicados ante concurrencia (RF-05).
 - [ ] **T-011 (M)** — Comanda imprimible `/comanda/[id]` con QR (que abre la orden) y código de barras; estilos de impresión A4 y ticket.
