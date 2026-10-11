@@ -14,7 +14,9 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
@@ -84,13 +86,51 @@ function formatoTiempo(fechaIso: string): string {
 }
 
 export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
+  const router = useRouter();
   const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
   const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
+  const [prevPedidosIniciales, setPrevPedidosIniciales] = useState(pedidosIniciales);
   const [pedidos, setPedidos] = useState<PedidoTaller[]>(pedidosIniciales);
   const [idEnProceso, setIdEnProceso] = useState<string | null>(null);
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  // Sincronizar reactivamente cuando el Server Component revalida y entrega nuevos pedidosIniciales
+  if (pedidosIniciales !== prevPedidosIniciales) {
+    setPrevPedidosIniciales(pedidosIniciales);
+    setPedidos(pedidosIniciales);
+  }
+
+  // Suscripción automática en tiempo real: cuando se crea o actualiza un pedido en Supabase,
+  // la pantalla de taller se actualiza inmediatamente sin necesidad de recargar manualmente.
+  useEffect(() => {
+    const supabase = createClient();
+    const canal = supabase
+      .channel("taller-realtime-pedidos")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "pedidos",
+        },
+        () => {
+          router.refresh();
+        },
+      )
+      .subscribe();
+
+    // Sondeo de respaldo cada 5 segundos para actualización continua en taller
+    const temporizador = setInterval(() => {
+      router.refresh();
+    }, 5000);
+
+    return () => {
+      supabase.removeChannel(canal);
+      clearInterval(temporizador);
+    };
+  }, [router]);
 
   // Conteo reactivo por estado
   const conteoRecibido = pedidos.filter((p) => p.estado === "recibido").length;

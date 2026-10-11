@@ -69,6 +69,14 @@
   - [x] Paso 3: Actualizar `PedidoTallerItem` y tarjeta de `app/taller/taller-tablero.tsx` para mostrar dimensiones, acabados y descripciones de ítems.
   - [x] Paso 4: Verificación visual con browser subagent confirmando orden `ORD-1001` visible en Taller bajo "Activos" y "En Producción".
   - [x] Paso 5: Verificación DoD completada (144 tests Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+- [x] **Fase 14: Sincronización en Tiempo Real y Actualización Automática en Taller**
+  - [x] Paso 1: Incorporar `revalidatePath("/taller")` en `crearPedido`, `cambiarEstadoPedido` y `anularPedidoConAuditoria` en `app/pedidos/actions.ts`.
+  - [x] Paso 2: Implementar suscripción activa Supabase Realtime a la tabla `pedidos` en `app/taller/taller-tablero.tsx` con refresco automático instantáneo.
+  - [x] Paso 3: Implementar sincronización reactiva de props durante el render (patrón oficial React) evitando warnings de `useEffect`.
+  - [x] Paso 4: Añadir sondeo de respaldo continuo de 5 segundos para actualización desatendida en pantallas de taller.
+  - [x] Paso 5: Verificación completa E2E en navegador creando nueva orden y constatando aparición inmediata sin recargar.
+  - [x] Paso 6: Verificación DoD completada (144 tests Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+
 
 
 
