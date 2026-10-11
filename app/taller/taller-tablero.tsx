@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  Camera,
   CheckCircle2,
   Clock,
   ExternalLink,
@@ -18,6 +19,7 @@ import { useState, useTransition } from "react";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
+import { CamaraEscanerModal } from "./camara-escaner-modal";
 import {
   ESTADOS_METADATA,
   type EstadoPedido,
@@ -82,6 +84,7 @@ function formatoTiempo(fechaIso: string): string {
 export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
   const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
+  const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
   const [pedidos, setPedidos] = useState<PedidoTaller[]>(pedidosIniciales);
   const [idEnProceso, setIdEnProceso] = useState<string | null>(null);
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
@@ -194,29 +197,49 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
           </div>
         </div>
 
-        {/* Buscador de escáner USB de alta visibilidad */}
-        <div className="relative w-full sm:w-72">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-          <input
-            type="search"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Escanear comanda o # orden..."
-            aria-label="Escanear comanda en taller"
-            className="h-11 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm font-medium text-zinc-900 transition focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-100"
-          />
-          {busqueda && (
-            <button
-              type="button"
-              onClick={() => setBusqueda("")}
-              aria-label="Limpiar búsqueda"
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-            >
-              <X className="size-4" />
-            </button>
-          )}
+        {/* Buscador de escáner USB y cámara de alta visibilidad */}
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <div className="relative flex-1 sm:w-64">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
+            <input
+              type="search"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="Escanear comanda o # orden..."
+              aria-label="Escanear comanda en taller"
+              className="h-11 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm font-medium text-zinc-900 transition focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-100"
+            />
+            {busqueda && (
+              <button
+                type="button"
+                onClick={() => setBusqueda("")}
+                aria-label="Limpiar búsqueda"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+              >
+                <X className="size-4" />
+              </button>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setModalCamaraAbierto(true)}
+            aria-label="Escanear con cámara móvil"
+            className="inline-flex size-11 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm transition hover:bg-amber-600 active:scale-95 shrink-0"
+            title="Escanear con cámara"
+          >
+            <Camera className="size-5" />
+          </button>
         </div>
       </div>
+
+      {modalCamaraAbierto && (
+        <CamaraEscanerModal
+          abierto={modalCamaraAbierto}
+          onCerrar={() => setModalCamaraAbierto(false)}
+          onOrdenDetectada={(num) => setBusqueda(String(num))}
+        />
+      )}
 
       {errorFeedback && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
