@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  Bell,
   Clock,
   CreditCard,
   Flame,
@@ -120,13 +121,21 @@ export default async function PedidosPage({ searchParams }: Props) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/taller"
               className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
             >
               <Flame aria-hidden className="size-4 text-amber-600" />
               Vista de Taller
+            </Link>
+
+            <Link
+              href="/recordatorios"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3.5 text-sm font-semibold text-indigo-900 transition-colors hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
+            >
+              <Bell aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
+              Recordatorios
             </Link>
 
             <Link

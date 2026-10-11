@@ -1,4 +1,12 @@
-import { ClipboardList, Flame, LogOut, Tag, UserRound, Users } from "lucide-react";
+import {
+  Bell,
+  ClipboardList,
+  Flame,
+  LogOut,
+  Tag,
+  UserRound,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -60,6 +68,14 @@ export default async function Home() {
         >
           <Flame aria-hidden className="size-5" />
           Taller y Producción (Táctil)
+        </Link>
+
+        <Link
+          href="/recordatorios"
+          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-indigo-200 bg-indigo-50 text-sm font-bold text-indigo-900 transition hover:bg-indigo-100 shadow-sm dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
+        >
+          <Bell aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
+          Recordatorios (48–72 h)
         </Link>
 
         <Link
