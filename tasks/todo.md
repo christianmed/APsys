@@ -76,6 +76,13 @@
   - [x] Paso 4: Añadir sondeo de respaldo continuo de 5 segundos para actualización desatendida en pantallas de taller.
   - [x] Paso 5: Verificación completa E2E en navegador creando nueva orden y constatando aparición inmediata sin recargar.
   - [x] Paso 6: Verificación DoD completada (144 tests Vitest, `tsc` 0 errores, ESLint limpio, Next.js build exitoso).
+- [x] **Fase 15: Optimización de Rendimiento, Caché Inteligente y Skeletons Instantáneos**
+  - [x] Paso 1 (TDD - Rojo): Escribir pruebas unitarias en `test/bcv-service.test.ts` para verificar la estrategia de caché con TTL, reuso en memoria y bypass para refresco forzado.
+  - [x] Paso 2 (TDD - Verde): Implementar sistema de caché con TTL e invalidación en `lib/tasas/bcv-service.ts`.
+  - [x] Paso 3: Optimizar consumo en `AuthenticatedShell` y Server Actions con bypass inteligente (`forzarRefresco: true`) para reducir latencia SSR a < 10ms.
+  - [x] Paso 4: Implementar pantallas esqueleto (`loading.tsx`) y `ShellSkeleton` con feedback visual instantáneo en `/taller`, `/pedidos`, `/tasas` y `/dashboard`.
+  - [x] Paso 5: Verificación completa de calidad DoD (147 tests Vitest en verde, `tsc` 0 errores, ESLint limpio, Next.js build exitoso con Partial Prerendering).
+  - [x] Paso 6: Verificación de tiempos de respuesta y cero latencia de bloqueo.
 
 
 

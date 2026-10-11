@@ -45,8 +45,8 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
     };
   }
 
-  // Consultar la API oficial
-  const tasaBcv = await obtenerTasaBcv("USD");
+  // Consultar la API oficial (forzando refresco para traer el dato más reciente)
+  const tasaBcv = await obtenerTasaBcv("USD", { forzarRefresco: true });
 
   if (!tasaBcv) {
     return {
@@ -88,5 +88,5 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
  * Se usa para mostrar información en tiempo real en la UI.
  */
 export async function consultarTasasBcvEnVivo(): Promise<TasasBcvCompletas> {
-  return obtenerTasasBcvCompletas();
+  return obtenerTasasBcvCompletas({ forzarRefresco: true });
 }

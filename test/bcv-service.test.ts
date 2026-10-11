@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   obtenerTasaBcv,
   obtenerTasasBcvCompletas,
+  limpiarCacheBcv,
   parsearRespuestaDolarVzla,
   parsearRespuestaDolarApi,
   DOLARVZLA_BCV_URL,
@@ -70,6 +71,7 @@ describe("bcv-service (DolarVZLA + fallback DolarApi)", () => {
 
   beforeEach(() => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
+    limpiarCacheBcv();
   });
 
   afterEach(() => {
@@ -226,4 +228,80 @@ describe("bcv-service (DolarVZLA + fallback DolarApi)", () => {
       expect(resultado!.valorBs).toBe(982.0045);
     });
   });
+
+  describe("Estrategia de Caché Inteligente (Rendimiento y Cero Latencia)", () => {
+    beforeEach(() => {
+      limpiarCacheBcv();
+    });
+
+    it("reutiliza el caché en memoria y solo realiza 1 petición HTTP en llamadas consecutivas", async () => {
+      const mockData = crearRespuestaDolarVzla();
+      const fetchMock = crearFetchMock(mockData);
+      globalThis.fetch = fetchMock;
+
+      // Primera llamada: consulta la red
+      const res1 = await obtenerTasasBcvCompletas();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(res1.usd?.valorBs).toBe(876.7976);
+
+      // Segunda llamada inmediata: debe servirse desde el caché en memoria
+      const res2 = await obtenerTasasBcvCompletas();
+      expect(fetchMock).toHaveBeenCalledTimes(1); // No debe incrementar
+      expect(res2.usd?.valorBs).toBe(876.7976);
+
+      // Tercera llamada a divisa específica: también debe servirse desde caché
+      const resEur = await obtenerTasaBcv("EUR");
+      expect(fetchMock).toHaveBeenCalledTimes(1); // Sigue en 1
+      expect(resEur?.valorBs).toBe(982.0045);
+    });
+
+    it("permite forzar el refresco omitiendo el caché cuando se solicita explícitamente", async () => {
+      const mockData1 = crearRespuestaDolarVzla({
+        current: { date: "2026-10-13", usd: 876.7976, eur: 982.0045 },
+      });
+      const mockData2 = crearRespuestaDolarVzla({
+        current: { date: "2026-10-13", usd: 880.50, eur: 990.20 },
+      });
+
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(mockData1),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(mockData2),
+        });
+
+      globalThis.fetch = fetchMock;
+
+      // Primera llamada regular
+      const res1 = await obtenerTasasBcvCompletas();
+      expect(res1.usd?.valorBs).toBe(876.7976);
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      // Segunda llamada forzando refresco: debe consultar la red
+      const res2 = await obtenerTasasBcvCompletas({ forzarRefresco: true });
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(res2.usd?.valorBs).toBe(880.50);
+    });
+
+    it("vuelve a consultar la red si se llama a limpiarCacheBcv()", async () => {
+      const mockData = crearRespuestaDolarVzla();
+      const fetchMock = crearFetchMock(mockData);
+      globalThis.fetch = fetchMock;
+
+      await obtenerTasasBcvCompletas();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      limpiarCacheBcv();
+
+      await obtenerTasasBcvCompletas();
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+    });
+  });
 });
+
