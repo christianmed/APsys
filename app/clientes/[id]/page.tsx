@@ -146,10 +146,6 @@ export default async function EditarClientePage({
           description={`${cliente.telefono ? `Teléfono: ${cliente.telefono} • ` : ""}${metricas.total_pedidos_activos} compras registradas`}
           backHref="/clientes"
           backLabel="Volver a Clientes"
-          breadcrumbs={[
-            { label: "Clientes", href: "/clientes" },
-            { label: cliente.nombre },
-          ]}
           actions={
             <Link
               href={`/pedidos/nuevo?cliente_id=${cliente.id}`}

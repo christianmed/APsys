@@ -1,7 +1,6 @@
 import {
   CheckCircle,
   Clock,
-  Euro,
   History,
   ShieldCheck,
 } from "lucide-react";
@@ -87,16 +86,10 @@ export default async function TasasPage() {
 
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
 
-  // Consulta paralela de tasas BCV en vivo (para mostrar EUR informativo en la tarjeta)
-  let tasaEurInformativa: number | null = null;
-  let fechaEurActualizacion: string | null = null;
-
+  // Consulta inicial de tasas BCV en vivo para precargar en el panel sin requerir clic
+  let tasasBcvIniciales: Awaited<ReturnType<typeof obtenerTasasBcvCompletas>> | null = null;
   try {
-    const bcvEnVivo = await obtenerTasasBcvCompletas();
-    if (bcvEnVivo.eur) {
-      tasaEurInformativa = bcvEnVivo.eur.valorBs;
-      fechaEurActualizacion = bcvEnVivo.eur.fechaActualizacion;
-    }
+    tasasBcvIniciales = await obtenerTasasBcvCompletas();
   } catch {
     // Silenciar — la consulta BCV es best-effort
   }
@@ -117,7 +110,7 @@ export default async function TasasPage() {
           }
         />
 
-        {/* Tarjeta destacada de la tasa vigente + EUR informativo */}
+        {/* Tarjeta destacada de la tasa vigente */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-emerald-950/20 sm:p-8">
           <div className="flex flex-wrap items-start justify-between gap-6">
             {/* USD principal */}
@@ -148,37 +141,8 @@ export default async function TasasPage() {
               </p>
             </div>
 
-            {/* EUR informativo */}
-            <div className="min-w-[180px]">
-              <div className="rounded-2xl border border-indigo-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-indigo-900/40 dark:bg-zinc-900/80">
-                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                  <Euro className="size-3.5" />
-                  Euro BCV (Informativa)
-                </div>
-                {tasaEurInformativa ? (
-                  <>
-                    <p className="mt-1.5 text-xl font-black text-indigo-900 dark:text-indigo-100">
-                      Bs. {tasaEurInformativa.toFixed(4)}
-                    </p>
-                    <p className="mt-0.5 text-[10px] text-indigo-500 dark:text-indigo-400">
-                      {fechaEurActualizacion
-                        ? `Actualizado: ${new Date(fechaEurActualizacion).toLocaleDateString("es-VE", { day: "2-digit", month: "short", year: "numeric" })}`
-                        : ""}
-                    </p>
-                  </>
-                ) : (
-                  <p className="mt-1.5 text-sm text-indigo-400 dark:text-indigo-500">
-                    No disponible
-                  </p>
-                )}
-                <span className="mt-1.5 inline-block rounded-full bg-indigo-100 px-2 py-0.5 text-[9px] font-bold text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">
-                  No usada para cálculos
-                </span>
-              </div>
-            </div>
-
             {/* Nota de inmutabilidad */}
-            <div className="min-w-[200px] max-w-xs">
+            <div className="min-w-[200px] max-w-sm">
               <div className="rounded-2xl border border-emerald-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-emerald-900/40 dark:bg-zinc-900/80 text-xs text-zinc-600 dark:text-zinc-300 space-y-1">
                 <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-300">
                   <ShieldCheck className="size-4 text-emerald-600" />
@@ -200,6 +164,7 @@ export default async function TasasPage() {
               {esGerencial ? (
                 <BcvSyncPanel
                   tasaActualUsd={tasaVigente?.valor_bs_por_usd}
+                  tasasIniciales={tasasBcvIniciales}
                 />
               ) : (
                 <div className="space-y-3">

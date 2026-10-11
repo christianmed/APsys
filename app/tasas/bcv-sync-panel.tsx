@@ -18,18 +18,19 @@ import type { TasasBcvCompletas } from "@/lib/tasas/bcv-service";
 
 type Props = {
   tasaActualUsd?: number;
+  tasasIniciales?: TasasBcvCompletas | null;
 };
 
 /**
  * Panel de sincronización BCV con consulta en vivo de USD y EUR,
  * y botón para aplicar la tasa USD como nueva vigencia (RF-15).
  */
-export function BcvSyncPanel({ tasaActualUsd }: Props) {
+export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
   const [consultando, iniciarConsulta] = useTransition();
   const [sincronizando, iniciarSync] = useTransition();
 
   const [tasasEnVivo, setTasasEnVivo] = useState<TasasBcvCompletas | null>(
-    null,
+    tasasIniciales ?? null,
   );
   const [resultadoSync, setResultadoSync] =
     useState<EstadoSincronizacionBcv | null>(null);

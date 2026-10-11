@@ -84,11 +84,6 @@ export function RotacionServiciosView({
         description="Análisis de los productos y servicios con mayor y menor demanda, volumen producido y facturación (RF-13)."
         backHref="/dashboard"
         backLabel="Volver al Dashboard"
-        breadcrumbs={[
-          { label: "Finanzas" },
-          { label: "Dashboard", href: "/dashboard" },
-          { label: "Rotación" },
-        ]}
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Link

@@ -29,10 +29,6 @@ export default async function NuevoClientePage() {
           description="Registra un cliente en el directorio para facturar y enviar avisos de comanda."
           backHref="/clientes"
           backLabel="Volver a Clientes"
-          breadcrumbs={[
-            { label: "Clientes", href: "/clientes" },
-            { label: "Nuevo" },
-          ]}
         />
 
         <div className="mx-auto max-w-xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

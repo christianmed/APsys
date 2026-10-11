@@ -42,10 +42,6 @@ export default async function NuevoServicioPage() {
           description="Registra una nueva categoría de trabajo en el catálogo de producción."
           backHref="/servicios"
           backLabel="Volver a Servicios"
-          breadcrumbs={[
-            { label: "Servicios", href: "/servicios" },
-            { label: "Nuevo" },
-          ]}
         />
 
         <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">

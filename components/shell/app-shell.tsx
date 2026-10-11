@@ -3,6 +3,7 @@
 import {
   Banknote,
   ClipboardList,
+  Euro,
   Flame,
   Home,
   LogOut,
@@ -72,32 +73,47 @@ export function AppShell({
           </span>
         </div>
 
-        {/* Badge de Tasa de Cambio del día (USD + EUR informativo) */}
+        {/* Widget de Tasas de Cambio del día (USD + EUR equilibrados) */}
         {tasaHoy && (
           <div className="mx-3 mt-3">
             <Link
               href={esGerencial ? "/tasas" : "#"}
-              className={`block rounded-xl border border-emerald-200 bg-emerald-50/70 p-2.5 text-xs text-emerald-950 transition hover:bg-emerald-100 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-200 ${
+              className={`block rounded-2xl border border-zinc-200/90 bg-gradient-to-b from-white to-zinc-50/80 p-2.5 text-xs shadow-sm transition hover:border-zinc-300 hover:shadow dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/60 dark:hover:border-zinc-700 ${
                 esGerencial ? "cursor-pointer" : "cursor-default"
               }`}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <Banknote className="size-4 text-emerald-600 dark:text-emerald-400" />
-                  <span className="font-semibold">USD:</span>
-                </div>
-                <span className="font-mono font-bold text-emerald-900 dark:text-emerald-100">
-                  Bs. {tasaHoy.toFixed(2)}
-                </span>
-              </div>
-              {tasaEurHoy && (
-                <div className="mt-1 flex items-center justify-between border-t border-emerald-200/60 pt-1 dark:border-emerald-900/40">
-                  <span className="text-[10px] text-emerald-700/70 dark:text-emerald-400/70">EUR (ref.):</span>
-                  <span className="font-mono text-[10px] font-semibold text-emerald-700/70 dark:text-emerald-300/70">
-                    Bs. {tasaEurHoy.toFixed(2)}
+              <div className="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                <span>Tasas Referenciales</span>
+                {esGerencial && (
+                  <span className="text-[9px] font-medium text-emerald-600 hover:underline dark:text-emerald-400">
+                    Ajustar
                   </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                {/* Bloque USD */}
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-2 dark:border-emerald-900/60 dark:bg-emerald-950/30">
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                    <Banknote className="size-3 text-emerald-600 dark:text-emerald-400" />
+                    <span>USD</span>
+                  </div>
+                  <p className="mt-0.5 font-mono text-xs font-black text-emerald-950 dark:text-emerald-100">
+                    Bs. {tasaHoy.toFixed(2)}
+                  </p>
                 </div>
-              )}
+
+                {/* Bloque EUR */}
+                <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 p-2 dark:border-indigo-900/60 dark:bg-indigo-950/30">
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-indigo-700 dark:text-indigo-300">
+                    <Euro className="size-3 text-indigo-600 dark:text-indigo-400" />
+                    <span>EUR</span>
+                  </div>
+                  <p className="mt-0.5 font-mono text-xs font-black text-indigo-950 dark:text-indigo-100">
+                    {tasaEurHoy ? `Bs. ${tasaEurHoy.toFixed(2)}` : "—"}
+                  </p>
+                </div>
+              </div>
             </Link>
           </div>
         )}
@@ -204,12 +220,17 @@ export function AppShell({
         <div className="flex items-center gap-2">
           {tasaHoy && (
             <div className="flex items-center gap-1.5">
-              <span className="rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-mono font-bold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+              <span className="inline-flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-mono font-bold text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/40 dark:text-emerald-300">
+                <Banknote className="size-3 text-emerald-600 dark:text-emerald-400" />
                 Bs. {tasaHoy.toFixed(2)}
               </span>
               {tasaEurHoy && (
-                <span className="rounded-lg bg-indigo-50 px-1.5 py-1 text-[10px] font-mono font-semibold text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300" title={`Euro BCV: Bs. ${tasaEurHoy.toFixed(4)}`}>
-                  €{tasaEurHoy.toFixed(0)}
+                <span
+                  className="inline-flex items-center gap-1 rounded-lg border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[11px] font-mono font-bold text-indigo-800 dark:border-indigo-900/50 dark:bg-indigo-950/40 dark:text-indigo-300"
+                  title={`Euro BCV Oficial: Bs. ${tasaEurHoy.toFixed(4)}`}
+                >
+                  <Euro className="size-3 text-indigo-600 dark:text-indigo-400" />
+                  Bs. {tasaEurHoy.toFixed(2)}
                 </span>
               )}
             </div>

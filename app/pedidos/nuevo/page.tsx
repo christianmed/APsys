@@ -49,10 +49,6 @@ export default async function NuevoPedidoPage() {
           description="Registra los detalles del cliente, servicios, medidas y cobranza inicial."
           backHref="/pedidos"
           backLabel="Volver a Pedidos"
-          breadcrumbs={[
-            { label: "Pedidos", href: "/pedidos" },
-            { label: "Nuevo" },
-          ]}
         />
 
         <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

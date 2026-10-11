@@ -26,3 +26,10 @@
   - [x] `npm run lint` (0 errores, 0 warnings).
   - [x] `npm run build` (compilación exitosa).
   - [x] Commit y reporte.
+- [x] **Fase 7: Consistencia Visual de Cabeceras y Mejoras de Tasas (Aprobado)**
+  - [x] Paso 1: Rediseñar `components/shell/page-header.tsx` como tarjeta unificada (`rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm`).
+  - [x] Paso 2: Limpiar `app/pedidos/nuevo/page.tsx` removiendo breadcrumbs innecesarios.
+  - [x] Paso 3: Precargar tasas BCV en `app/tasas/page.tsx` y pasarlas a `app/tasas/bcv-sync-panel.tsx` para evitar pérdida al recargar.
+  - [x] Paso 4: Eliminar redundancia del Euro en la tarjeta hero principal de `/tasas`.
+  - [x] Paso 5: Resaltar la información del Euro en el Sidebar y Header móvil de `components/shell/app-shell.tsx` con igual peso que el USD.
+  - [x] Paso 6: Verificación completa (`test`, `typecheck`, `lint`, `build`).
