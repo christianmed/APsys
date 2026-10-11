@@ -42,8 +42,9 @@
 - [x] **T-010 (S)** — Numeración de órdenes y estado inicial (Recibido) con marcas de tiempo.
   - Criterio: numeración secuencial sin huecos ni duplicados ante concurrencia (RF-05).
   - **Estado 2026-10-10:** completa. 57 unit verdes; migración `0004_numeracion_ordenes.sql` con función `siguiente_numero_orden()` protegida por `pg_advisory_xact_lock` y DEFAULT en `pedidos.numero_orden`, fallback resiliente en Server Actions, confirmación de estado inicial 'recibido' con marcas de tiempo `listo_en`/`entregado_en` limpias y pruebas unitarias de correlatividad y concurrencia.
-- [ ] **T-011 (M)** — Comanda imprimible `/comanda/[id]` con QR (que abre la orden) y código de barras; estilos de impresión A4 y ticket.
+- [x] **T-011 (M)** — Comanda imprimible `/comanda/[id]` con QR (que abre la orden) y código de barras; estilos de impresión A4 y ticket.
   - Criterio: E2E imprimir → escanear QR → abre el pedido correcto; prueba en PDF/impresora (RF-03, D-4). Depende: T-009, T-010.
+  - **Estado 2026-10-10:** completa (T-011a + T-011b). 62 unit verdes; generadores vectoriales nativos en TypeScript para Code 39 (`barcode.ts`) y QR (`qr.ts`), ruta dedicada `/comanda/[id]`, selector dinámico entre Hoja A4 y Ticket 80mm, CSS `@media print` optimizado para impresión física sin distracciones, enlace directo desde el listado de pedidos y suite E2E (`e2e/comanda.spec.ts`).
 - [ ] **T-012 (S)** — Búsqueda de pedidos por número y lectura con escáner USB (captura de entrada de teclado).
   - Criterio: escanear la comanda de prueba abre el pedido en < 2 s en pantalla de taller (RF-06).
 
