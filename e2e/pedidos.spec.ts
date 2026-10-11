@@ -7,7 +7,7 @@ const claveGerencial = process.env.TEST_USER_GERENCIAL_PASSWORD;
 
 test.setTimeout(60_000);
 
-test("pedidos: validaciones y registro de un pedido completo", async ({
+test("pedidos: validaciones, registro de orden y cobranza inicial (RF-01 / RF-02)", async ({
   page,
 }) => {
   test.skip(
@@ -16,7 +16,7 @@ test("pedidos: validaciones y registro de un pedido completo", async ({
   );
 
   const sufijo = `${Date.now()}`;
-  const nombreCliente = `Cliente Pedido ${sufijo}`;
+  const nombreCliente = `Cliente Cobranza ${sufijo}`;
 
   // 1. Iniciar sesión
   await page.goto("/login");
@@ -52,26 +52,33 @@ test("pedidos: validaciones y registro de un pedido completo", async ({
   const selectCliente = page.locator("select[name='cliente_id']");
   await selectCliente.selectOption({ label: nombreCliente });
 
-  // 6. Configurar el ítem del pedido
-  const selectServicio = page.locator("select").nth(1); // Segundo select del formulario (el del renglón 1)
+  // 6. Configurar el ítem del pedido ($30.00 USD)
+  const selectServicio = page.locator("select").nth(1);
   const opciones = await selectServicio.locator("option").all();
   if (opciones.length > 1) {
     await selectServicio.selectOption({ index: 1 });
   }
 
-  await page.getByPlaceholder("Ej: 1.20 x 0.80 m").fill("1.50 x 2.00 m");
+  await page.getByPlaceholder("Ej: 1.20 x 0.80 m").fill("2.00 x 1.00 m");
   await page
     .getByPlaceholder("Ej: Ojetes cada 50 cm, corte recto")
-    .fill("Ojetes perimetrales");
-  await page.getByPlaceholder("0.00").fill("25.00");
-  await page
-    .getByPlaceholder("Indicaciones para taller o recepción...")
-    .fill("Entrega urgente para evento corporativo");
+    .fill("Refuerzo perimetral");
+  await page.getByPlaceholder("0.00").first().fill("30.00");
 
-  // 7. Enviar formulario
+  // 7. Configurar cobranza inicial: abono parcial de $10.00 USD (RF-02)
+  await page.getByLabel("Registrar abono en recepción").check();
+  await page.getByPlaceholder("0.00").last().fill("10.00");
+  await page
+    .getByPlaceholder("Ej: Pago Móvil BDV / Efectivo / Zelle")
+    .fill("Efectivo USD");
+
+  // Verificar que el cálculo en pantalla refleje el saldo restante
+  await expect(page.getByText("$20.00 USD").first()).toBeVisible();
+
+  // 8. Enviar formulario
   await page.getByRole("button", { name: /registrar pedido/i }).click();
 
-  // 8. Verificar redirección y presencia de la orden en el listado
+  // 9. Verificar redirección y presencia de la orden en el listado con saldo correcto
   await expect(
     page.getByRole("heading", { name: "Pedidos", exact: true }),
   ).toBeVisible({ timeout: 15_000 });
@@ -79,7 +86,13 @@ test("pedidos: validaciones y registro de un pedido completo", async ({
   await expect(page.getByText(nombreCliente)).toBeVisible({
     timeout: 15_000,
   });
-  await expect(page.getByText("$25.00 USD")).toBeVisible({
+  await expect(page.getByText("$30.00 USD")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByText("Resta: $20.00")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByText("Abonado: $10.00")).toBeVisible({
     timeout: 15_000,
   });
 });

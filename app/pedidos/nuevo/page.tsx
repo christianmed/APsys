@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { obtenerTasaVigente } from "../actions";
 import { PedidoForm } from "../pedido-form";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
@@ -9,7 +10,7 @@ import { PedidoForm } from "../pedido-form";
 export const instant = false;
 
 /**
- * Pantalla de registro de nuevo pedido (RF-01 / T-008b).
+ * Pantalla de registro de nuevo pedido (RF-01 / RF-02 / T-008 / T-009).
  * Accesible tanto para el perfil operativo (recepción) como para el gerencial.
  */
 export default async function NuevoPedidoPage() {
@@ -37,6 +38,9 @@ export default async function NuevoPedidoPage() {
     .order("orden", { ascending: true })
     .order("nombre", { ascending: true });
 
+  // Cargar la tasa de cambio vigente para conversiones automáticas
+  const tasaVigente = await obtenerTasaVigente(supabase);
+
   return (
     <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
       <div className="mx-auto w-full max-w-3xl space-y-6">
@@ -53,12 +57,16 @@ export default async function NuevoPedidoPage() {
               Nuevo pedido
             </h1>
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Registra los detalles del cliente, servicios, medidas y acabados.
+              Registra los detalles del cliente, servicios, medidas y cobranza inicial.
             </p>
           </div>
         </div>
 
-        <PedidoForm clientes={clientes ?? []} servicios={servicios ?? []} />
+        <PedidoForm
+          clientes={clientes ?? []}
+          servicios={servicios ?? []}
+          tasaCambio={tasaVigente.valor_bs_por_usd}
+        />
       </div>
     </main>
   );

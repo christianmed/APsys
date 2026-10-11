@@ -1,11 +1,14 @@
-import { ArrowLeft, Clock, Package, Plus } from "lucide-react";
+import { ArrowLeft, Clock, CreditCard, Package, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 export const instant = false;
 
-const ESTADO_BADGES: Record<string, { label: string; clases: string }> = {
+const ESTADO_BADGES: Record<
+  string,
+  { label: string; clases: string }
+> = {
   recibido: {
     label: "Recibido",
     clases:
@@ -13,7 +16,8 @@ const ESTADO_BADGES: Record<string, { label: string; clases: string }> = {
   },
   en_produccion: {
     label: "En Producción",
-    clases: "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
+    clases:
+      "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
   },
   listo: {
     label: "Listo para Retiro",
@@ -22,18 +26,20 @@ const ESTADO_BADGES: Record<string, { label: string; clases: string }> = {
   },
   entregado: {
     label: "Entregado",
-    clases: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+    clases:
+      "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
   },
   cancelado: {
     label: "Cancelado",
-    clases: "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
+    clases:
+      "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
   },
 };
 
 /**
- * Listado de pedidos (RF-01 / T-008b).
- * Muestra el resumen de órdenes registradas con cliente, número de orden,
- * estado actual, total en USD y fecha de creación.
+ * Listado de pedidos y balance financiero (RF-01 / RF-02 / T-008 / T-009).
+ * Muestra el resumen de órdenes con cliente, número de orden, estado,
+ * total en USD, abonos registrados y saldo pendiente.
  */
 export default async function PedidosPage() {
   const supabase = await createClient();
@@ -59,6 +65,13 @@ export default async function PedidosPage() {
       clientes (
         nombre,
         telefono
+      ),
+      pagos (
+        monto,
+        moneda
+      ),
+      tasas_cambio (
+        valor_bs_por_usd
       )
     `,
     )
@@ -83,7 +96,7 @@ export default async function PedidosPage() {
                 Pedidos
               </h1>
               <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Gestión de órdenes, comanda y seguimiento de producción.
+                Gestión de órdenes, comanda y cobranza multimoneda.
               </p>
             </div>
           </div>
@@ -132,15 +145,36 @@ export default async function PedidosPage() {
                 },
               );
 
-              // Manejar tipado de cliente que puede venir como objeto o array según Supabase types
               const clienteData = Array.isArray(pedido.clientes)
                 ? pedido.clientes[0]
                 : pedido.clientes;
 
+              // Calcular total pagado y saldo pendiente
+              const tasaObj = pedido.tasas_cambio as {
+                valor_bs_por_usd?: number | string;
+              } | null;
+              const tasaValor = Number(tasaObj?.valor_bs_por_usd) || 40.0;
+
+              const listaPagos = Array.isArray(pedido.pagos) ? pedido.pagos : [];
+              const totalPagadoUsd = listaPagos.reduce((acc, p) => {
+                const monto = Number(p.monto) || 0;
+                if (p.moneda === "USD") return acc + monto;
+                return acc + monto / tasaValor;
+              }, 0);
+
+              const totalUsd = Number(pedido.total_usd) || 0;
+              const saldoUsd = Math.max(
+                0,
+                Math.round((totalUsd - totalPagadoUsd) * 100) / 100,
+              );
+
+              const esPagado = saldoUsd === 0 && totalUsd > 0;
+              const tieneAbonoParcial = totalPagadoUsd > 0 && saldoUsd > 0;
+
               return (
                 <div
                   key={pedido.id}
-                  className="flex flex-col gap-3 p-5 transition-colors hover:bg-zinc-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-zinc-800/40"
+                  className="flex flex-col gap-4 p-5 transition-colors hover:bg-zinc-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-zinc-800/40"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2.5">
@@ -169,10 +203,37 @@ export default async function PedidosPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between gap-4 sm:flex-col sm:items-end">
-                    <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">
-                      ${Number(pedido.total_usd).toFixed(2)} USD
-                    </span>
+                  {/* Resumen financiero del pedido */}
+                  <div className="flex items-center justify-between gap-6 sm:flex-col sm:items-end">
+                    <div className="text-left sm:text-right">
+                      <span className="block text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                        Total
+                      </span>
+                      <span className="text-base font-bold text-zinc-900 dark:text-zinc-50">
+                        ${totalUsd.toFixed(2)} USD
+                      </span>
+                    </div>
+
+                    <div className="text-right">
+                      {esPagado ? (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-500/15 dark:text-green-300">
+                          Pagado
+                        </span>
+                      ) : tieneAbonoParcial ? (
+                        <div className="space-y-0.5">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
+                            Resta: ${saldoUsd.toFixed(2)}
+                          </span>
+                          <p className="text-[10px] text-zinc-500 dark:text-zinc-400">
+                            Abonado: ${totalPagadoUsd.toFixed(2)}
+                          </p>
+                        </div>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                          <CreditCard className="size-3" /> Saldo pendiente
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

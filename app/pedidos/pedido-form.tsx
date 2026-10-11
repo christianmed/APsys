@@ -1,7 +1,11 @@
 "use client";
 
 import {
+  Banknote,
+  CheckCircle2,
   CircleAlert,
+  CreditCard,
+  DollarSign,
   LoaderCircle,
   Plus,
   Save,
@@ -11,6 +15,10 @@ import {
 import Link from "next/link";
 import { useActionState, useId, useState } from "react";
 import { crearPedido, type EstadoFormularioPedido } from "./actions";
+import {
+  calcularCobranzaInicial,
+  type MonedaCobranza,
+} from "./cobranza";
 import { type ItemPedidoEntrada } from "./validaciones";
 
 type ClienteOpcion = {
@@ -27,6 +35,7 @@ type ServicioOpcion = {
 type Props = {
   clientes: ClienteOpcion[];
   servicios: ServicioOpcion[];
+  tasaCambio?: number;
 };
 
 type ItemLocal = ItemPedidoEntrada & { localId: string };
@@ -43,11 +52,11 @@ const CLASES_BOTON_SECUNDARIO =
   "inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-zinc-300 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800";
 
 /**
- * Formulario interactivo de registro de pedidos (RF-01 / T-008b).
- * Permite seleccionar cliente, agregar múltiples servicios o ítems con dimensiones y acabados,
- * calcular subtotales y total en USD en tiempo real, y persistir la orden.
+ * Formulario interactivo de registro de pedidos y cobranza inicial (RF-01 / RF-02 / T-008 / T-009).
+ * Permite seleccionar cliente, desglosar renglones de trabajo, calcular totales y
+ * registrar abonos en moneda dual (USD / Bs) con cálculo automático del saldo pendiente.
  */
-export function PedidoForm({ clientes, servicios }: Props) {
+export function PedidoForm({ clientes, servicios, tasaCambio = 40.0 }: Props) {
   const formId = useId();
   const [estado, accion, pendiente] = useActionState<
     EstadoFormularioPedido,
@@ -80,6 +89,20 @@ export function PedidoForm({ clientes, servicios }: Props) {
       },
     ];
   });
+
+  // Estado de cobranza inicial (T-009)
+  const [registrarAbono, setRegistrarAbono] = useState<boolean>(() => {
+    return Number(estado.valores?.abono_monto ?? 0) > 0;
+  });
+  const [abonoMoneda, setAbonoMoneda] = useState<MonedaCobranza>(
+    estado.valores?.abono_moneda ?? "USD",
+  );
+  const [abonoMonto, setAbonoMonto] = useState<string>(
+    estado.valores?.abono_monto ? String(estado.valores.abono_monto) : "",
+  );
+  const [abonoReferencia, setAbonoReferencia] = useState<string>(
+    estado.valores?.abono_referencia ?? "",
+  );
 
   const agregarItem = () => {
     setItems((prev) => [
@@ -124,6 +147,16 @@ export function PedidoForm({ clientes, servicios }: Props) {
     return acc + (cant > 0 && precio >= 0 ? cant * precio : 0);
   }, 0);
 
+  const cobranzaCalculo = calcularCobranzaInicial(
+    totalCalculado,
+    {
+      monto: registrarAbono ? abonoMonto : 0,
+      moneda: abonoMoneda,
+      referencia: abonoReferencia,
+    },
+    tasaCambio,
+  );
+
   const errorGeneral =
     estado.errores?.general ??
     estado.errores?.items ??
@@ -142,7 +175,7 @@ export function PedidoForm({ clientes, servicios }: Props) {
         </div>
       ) : null}
 
-      {/* Input oculto con serialización de ítems */}
+      {/* Inputs ocultos con datos serializados */}
       <input
         type="hidden"
         name="items_json"
@@ -156,6 +189,17 @@ export function PedidoForm({ clientes, servicios }: Props) {
             precio_usd: item.precio_usd,
           })),
         )}
+      />
+      <input
+        type="hidden"
+        name="abono_monto"
+        value={registrarAbono ? abonoMonto : "0"}
+      />
+      <input type="hidden" name="abono_moneda" value={abonoMoneda} />
+      <input
+        type="hidden"
+        name="abono_referencia"
+        value={registrarAbono ? abonoReferencia : ""}
       />
 
       {/* SECCIÓN CLIENTE */}
@@ -363,23 +407,21 @@ export function PedidoForm({ clientes, servicios }: Props) {
                     <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
                       Precio unit. (USD)
                     </label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        min={0}
-                        step="0.01"
-                        placeholder="0.00"
-                        value={item.precio_usd}
-                        onChange={(e) =>
-                          actualizarItem(
-                            item.localId,
-                            "precio_usd",
-                            e.target.value,
-                          )
-                        }
-                        className={CLASES_INPUT}
-                      />
-                    </div>
+                    <input
+                      type="number"
+                      min={0}
+                      step="0.01"
+                      placeholder="0.00"
+                      value={item.precio_usd}
+                      onChange={(e) =>
+                        actualizarItem(
+                          item.localId,
+                          "precio_usd",
+                          e.target.value,
+                        )
+                      }
+                      className={CLASES_INPUT}
+                    />
                     {errPrecio ? (
                       <p className="mt-1 text-xs text-red-600 dark:text-red-400">
                         {errPrecio}
@@ -407,7 +449,175 @@ export function PedidoForm({ clientes, servicios }: Props) {
         </button>
       </section>
 
-      {/* SECCIÓN NOTAS Y TOTAL */}
+      {/* SECCIÓN COBRANZA INICIAL (RF-02 / T-009) */}
+      <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-100 pb-4 dark:border-zinc-800">
+          <div className="flex items-center gap-2.5">
+            <CreditCard className="size-5 text-zinc-900 dark:text-zinc-100" />
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+              Cobranza inicial (Abono)
+            </h2>
+          </div>
+
+          <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <input
+              type="checkbox"
+              checked={registrarAbono}
+              onChange={(e) => {
+                setRegistrarAbono(e.target.checked);
+                if (!e.target.checked) {
+                  setAbonoMonto("");
+                  setAbonoReferencia("");
+                }
+              }}
+              className="size-4 accent-zinc-900 dark:accent-zinc-50"
+            />
+            Registrar abono en recepción
+          </label>
+        </div>
+
+        {registrarAbono ? (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-zinc-50 px-3.5 py-2 text-xs text-zinc-600 dark:bg-zinc-950 dark:text-zinc-400">
+              <span className="flex items-center gap-1.5 font-medium">
+                <Banknote className="size-4" /> Tasa de cambio de referencia:
+              </span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                1 USD = {tasaCambio.toFixed(2)} Bs.
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-12">
+              {/* Selector de moneda */}
+              <div className="sm:col-span-3">
+                <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                  Moneda
+                </label>
+                <div className="grid grid-cols-2 gap-1 rounded-lg border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-950">
+                  <button
+                    type="button"
+                    onClick={() => setAbonoMoneda("USD")}
+                    className={`flex h-9 items-center justify-center gap-1 rounded-md text-xs font-semibold transition-colors ${
+                      abonoMoneda === "USD"
+                        ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                        : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    }`}
+                  >
+                    <DollarSign className="size-3.5" /> USD
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAbonoMoneda("Bs")}
+                    className={`flex h-9 items-center justify-center gap-1 rounded-md text-xs font-semibold transition-colors ${
+                      abonoMoneda === "Bs"
+                        ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                        : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    }`}
+                  >
+                    Bs.
+                  </button>
+                </div>
+              </div>
+
+              {/* Monto del abono */}
+              <div className="sm:col-span-4">
+                <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                  Monto abonado ({abonoMoneda})
+                </label>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  placeholder="0.00"
+                  value={abonoMonto}
+                  onChange={(e) => setAbonoMonto(e.target.value)}
+                  className={CLASES_INPUT}
+                />
+                {estado.errores?.monto ? (
+                  <p className="mt-1 text-xs text-red-600 dark:text-red-400">
+                    {estado.errores.monto}
+                  </p>
+                ) : null}
+              </div>
+
+              {/* Referencia */}
+              <div className="sm:col-span-5">
+                <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                  Referencia / Método de pago
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej: Pago Móvil BDV / Efectivo / Zelle"
+                  value={abonoReferencia}
+                  onChange={(e) => setAbonoReferencia(e.target.value)}
+                  className={CLASES_INPUT}
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            El pedido quedará registrado con saldo total pendiente por cobrar al momento del retiro.
+          </p>
+        )}
+
+        {/* Resumen financiero del pedido */}
+        <div className="space-y-3 rounded-xl border border-zinc-100 bg-zinc-50/70 p-4 dark:border-zinc-800/80 dark:bg-zinc-950/50">
+          <div className="flex flex-wrap items-center justify-between text-sm">
+            <span className="text-zinc-600 dark:text-zinc-400">
+              Total del contrato:
+            </span>
+            <div className="text-right">
+              <span className="font-bold text-zinc-900 dark:text-zinc-100">
+                ${totalCalculado.toFixed(2)} USD
+              </span>
+              <span className="ml-2 text-xs text-zinc-500 dark:text-zinc-400">
+                (~ {(totalCalculado * tasaCambio).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.)
+              </span>
+            </div>
+          </div>
+
+          {registrarAbono && cobranzaCalculo.tieneAbono ? (
+            <div className="flex flex-wrap items-center justify-between text-sm">
+              <span className="text-green-700 dark:text-green-400">
+                Abono inicial capturado:
+              </span>
+              <div className="text-right text-green-700 dark:text-green-400">
+                <span className="font-bold">
+                  -${cobranzaCalculo.abonoUsd.toFixed(2)} USD
+                </span>
+                <span className="ml-2 text-xs">
+                  ({cobranzaCalculo.abonoMontoOriginal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{" "}
+                  {cobranzaCalculo.abonoMoneda})
+                </span>
+              </div>
+            </div>
+          ) : null}
+
+          <div className="flex flex-wrap items-center justify-between border-t border-zinc-200/60 pt-3 dark:border-zinc-800 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                Saldo pendiente al retiro:
+              </span>
+              {cobranzaCalculo.esPagoCompleto ? (
+                <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-500/15 dark:text-green-300">
+                  <CheckCircle2 className="size-3" /> Pagado 100%
+                </span>
+              ) : null}
+            </div>
+            <div className="text-right">
+              <span className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
+                ${cobranzaCalculo.saldoUsd.toFixed(2)} USD
+              </span>
+              <span className="ml-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                (~ {cobranzaCalculo.saldoBs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.)
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECCIÓN NOTAS */}
       <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         <div>
           <label
@@ -425,15 +635,6 @@ export function PedidoForm({ clientes, servicios }: Props) {
             onChange={(e) => setNotas(e.target.value)}
             className="w-full rounded-lg border border-zinc-300 bg-white p-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
           />
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between border-t border-zinc-100 pt-4 dark:border-zinc-800">
-          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-            Total estimado del pedido
-          </span>
-          <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            ${totalCalculado.toFixed(2)} USD
-          </span>
         </div>
       </section>
 
