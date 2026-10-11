@@ -39,8 +39,9 @@
 - [x] **T-009 (M)** — Cobranza inicial: total, abono (USD/Bs), referencia y saldo automático; persistencia en `pagos`.
   - Criterio: unitarias de casos borde (abono 0 / parcial / total, doble moneda); E2E con saldo correcto (RF-02). Depende: T-008.
   - **Estado 2026-10-10:** completa (T-009a + T-009b). 53 unit verdes; cálculo multimoneda con tasa referencial congelada por pedido (`tasa_id`), casos borde (abono 0/parcial/total/excedente) cubiertos en unitarias, persistencia en `pagos`, desglose interactivo de abonos y saldos en `/pedidos/nuevo`, balance financiero con saldos en `/pedidos` y suite E2E (`e2e/pedidos.spec.ts`).
-- [ ] **T-010 (S)** — Numeración de órdenes y estado inicial (Recibido) con marcas de tiempo.
+- [x] **T-010 (S)** — Numeración de órdenes y estado inicial (Recibido) con marcas de tiempo.
   - Criterio: numeración secuencial sin huecos ni duplicados ante concurrencia (RF-05).
+  - **Estado 2026-10-10:** completa. 57 unit verdes; migración `0004_numeracion_ordenes.sql` con función `siguiente_numero_orden()` protegida por `pg_advisory_xact_lock` y DEFAULT en `pedidos.numero_orden`, fallback resiliente en Server Actions, confirmación de estado inicial 'recibido' con marcas de tiempo `listo_en`/`entregado_en` limpias y pruebas unitarias de correlatividad y concurrencia.
 - [ ] **T-011 (M)** — Comanda imprimible `/comanda/[id]` con QR (que abre la orden) y código de barras; estilos de impresión A4 y ticket.
   - Criterio: E2E imprimir → escanear QR → abre el pedido correcto; prueba en PDF/impresora (RF-03, D-4). Depende: T-009, T-010.
 - [ ] **T-012 (S)** — Búsqueda de pedidos por número y lectura con escáner USB (captura de entrada de teclado).
