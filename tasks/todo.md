@@ -63,8 +63,9 @@
 - [x] **T-016 (M)** — Panel de recordatorios 48–72 h: pedidos listos sin retirar, ordenados por antigüedad, envío a un clic.
   - Criterio: E2E con pedidos en distintos umbrales de tiempo (RF-09). Depende: T-013.
   - **Estado 2026-10-10:** completa (T-016a + T-016b). 91 unit verdes; módulo `recordatorios.ts` con clasificación de umbrales (Atención $\ge 48$ h, Urgente $\ge 72$ h) y plantillas persuasivas de solicitud de retiro con saldo pendiente, página dedicada `/recordatorios` con métricas de órdenes retenidas y saldo total por cobrar en USD, listado ordenado por mayor antigüedad con enlaces wa.me a un clic, accesos desde inicio y `/pedidos`, y suite E2E (`e2e/recordatorios.spec.ts`).
-- [ ] **T-017 (S)** — Editor de plantillas de mensajes con variables validadas.
+- [x] **T-017 (S)** — Editor de plantillas de mensajes con variables validadas.
   - Criterio: cambiar la plantilla se refleja en el mensaje generado; unitarias de render de variables (RF-10).
+  - **Estado 2026-10-10:** completa (T-017a + T-017b). 97 unit verdes; motor `plantillas.ts` con interpolación de variables seguras (`{cliente}`, `{orden}`, `{total}`, `{saldo}`, `{saldo_bs}`, `{tasa}`, `{dias}`, `{horas}`), validación de sintaxis para rechazar variables no permitidas, Server Action `guardarPlantilla` protegida por RLS para perfil gerencial, interfaz interactiva `/plantillas` con chips de inserción rápida, simulador visual de WhatsApp en vivo y suite E2E (`e2e/plantillas.spec.ts`).
 - [ ] **T-018 (M)** — Escaneo con cámara móvil (`BarcodeDetector` con fallback) en la vista de taller.
   - Criterio: escaneo funcional en Android/iOS reales sobre la comanda impresa (RF-06).
 
