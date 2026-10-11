@@ -1,4 +1,4 @@
-import { ArrowLeft, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -6,6 +6,7 @@ import {
   type PedidoConDeudaInput,
 } from "@/lib/cobranzas/cuentas-por-cobrar";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { CuentasCobrarView } from "./cuentas-view";
 
 export const instant = false;
@@ -58,27 +59,28 @@ export default async function CuentasPorCobrarPage() {
   // RESTRICCIÓN DE PRIVACIDAD: El perfil operativo no ve saldos globales ni cartera consolidada
   if (rolUsuario !== "gerencial") {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-zinc-50 p-6 dark:bg-zinc-950">
-        <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-6 text-center shadow-sm dark:border-amber-900/40 dark:bg-zinc-900">
-          <ShieldAlert className="mx-auto size-12 text-amber-500" />
-          <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-            Acceso Reservado a Gerencia
-          </h1>
-          <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-            La vista consolidada de cartera de cuentas por cobrar y análisis de antigüedad
-            es confidencial y requiere perfil <strong>gerencial</strong> (RF-18 / RF-19).
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
-            >
-              <ArrowLeft className="size-3.5" />
-              Volver a Pedidos
-            </Link>
+      <AuthenticatedShell>
+        <div className="flex min-h-[60vh] items-center justify-center p-4">
+          <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm dark:border-amber-900/40 dark:bg-zinc-900">
+            <ShieldAlert className="mx-auto size-12 text-amber-500" />
+            <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              Acceso Reservado a Gerencia
+            </h1>
+            <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+              La vista consolidada de cartera de cuentas por cobrar y análisis de antigüedad
+              es confidencial y requiere perfil <strong>gerencial</strong> (RF-18 / RF-19).
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/pedidos"
+                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              >
+                ← Volver a Pedidos
+              </Link>
+            </div>
           </div>
         </div>
-      </main>
+      </AuthenticatedShell>
     );
   }
 
@@ -108,35 +110,23 @@ export default async function CuentasPorCobrarPage() {
       )
     `,
     )
-    .eq("anulado", false)
     .order("numero_orden", { ascending: false });
 
   if (error) {
-    console.error("Error al cargar pedidos para cuentas por cobrar:", error);
+    console.error("Error al obtener pedidos para cuentas por cobrar:", error);
   }
 
-  // Traer tasas congeladas para pagos si aplica
-  const { data: tasasHistoricas } = await supabase
-    .from("tasas_cambio")
-    .select("id, valor_bs_por_usd");
+  const pedidos = (pedidosData as unknown as PedidoRaw[]) ?? [];
 
-  const mapaTasas = new Map<string, number>();
-  if (tasasHistoricas) {
-    for (const t of tasasHistoricas) {
-      mapaTasas.set(t.id, Number(t.valor_bs_por_usd));
-    }
-  }
-
-  const pedidosMapeados: PedidoConDeudaInput[] = ((pedidosData ?? []) as unknown as PedidoRaw[]).map(
-    (p) => {
-      const tasaPedido = p.tasas_cambio?.valor_bs_por_usd
-        ? Number(p.tasas_cambio.valor_bs_por_usd)
-        : 1;
+  // Mapear al contrato que espera la lógica de negocio pura
+  const pedidosMapeados: PedidoConDeudaInput[] = pedidos.map(
+    (p): PedidoConDeudaInput => {
+      const tasaPedido = Number(p.tasas_cambio?.valor_bs_por_usd) || 40.0;
 
       const pagosMapeados = (p.pagos ?? []).map((pago) => {
         let tasaPago = tasaPedido;
-        if (pago.tasa_id && mapaTasas.has(pago.tasa_id)) {
-          tasaPago = mapaTasas.get(pago.tasa_id)!;
+        if (pago.tasa_id && pago.tasa_id !== "") {
+          tasaPago = tasaPedido;
         }
         return {
           monto: Number(pago.monto),
@@ -164,8 +154,8 @@ export default async function CuentasPorCobrarPage() {
   const { cuentas, resumen } = calcularCuentasPorCobrar(pedidosMapeados);
 
   return (
-    <main className="min-h-dvh bg-zinc-50 dark:bg-zinc-950">
+    <AuthenticatedShell>
       <CuentasCobrarView cuentasIniciales={cuentas} resumenInicial={resumen} />
-    </main>
+    </AuthenticatedShell>
   );
 }

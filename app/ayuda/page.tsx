@@ -1,6 +1,4 @@
 import {
-  ArrowLeft,
-  BookOpen,
   CheckCircle2,
   Clock,
   Flame,
@@ -12,6 +10,8 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 
 export const instant = false;
 
@@ -38,29 +38,26 @@ export default async function AyudaPage() {
   const rol = perfil?.rol ?? "operativo";
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
+    <AuthenticatedShell>
       <div className="mx-auto w-full max-w-4xl space-y-6">
-        {/* Cabecera */}
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Volver al inicio"
-            className="inline-flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-600 transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <BookOpen className="size-5 text-indigo-600 dark:text-indigo-400" />
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                Guía Rápida de Uso de APSys
-              </h1>
-            </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Manual operativo por perfil para el personal del taller de gráfica.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Guía Rápida de Uso"
+          description="Manual operativo por perfil para el personal del taller de imprenta."
+          backHref="/"
+          backLabel="Inicio"
+          breadcrumbs={[
+            { label: "Soporte" },
+            { label: "Guía y Ayuda" },
+          ]}
+          actions={
+            <Link
+              href="/taller"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-amber-700"
+            >
+              Ir al Taller
+            </Link>
+          }
+        />
 
         {/* Banner de perfil actual */}
         <div className="flex items-center justify-between rounded-2xl border border-indigo-200 bg-indigo-50/60 p-4 dark:border-indigo-900/50 dark:bg-indigo-950/30">
@@ -190,6 +187,6 @@ export default async function AyudaPage() {
           </p>
         </div>
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

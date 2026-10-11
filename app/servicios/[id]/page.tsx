@@ -1,5 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { ServicioForm } from "../servicio-form";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
@@ -50,21 +52,31 @@ export default async function EditarServicioPage({
   }
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
-      <section className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Editar servicio
-        </h1>
-        <ServicioForm
-          modo="editar"
-          servicio={{
-            id: servicio.id,
-            nombre: servicio.nombre,
-            orden: servicio.orden,
-            activo: servicio.activo,
-          }}
+    <AuthenticatedShell>
+      <div className="mx-auto max-w-xl space-y-6">
+        <PageHeader
+          title={servicio.nombre}
+          description="Modifica los parámetros y disponibilidad del servicio."
+          backHref="/servicios"
+          backLabel="Volver a Servicios"
+          breadcrumbs={[
+            { label: "Servicios", href: "/servicios" },
+            { label: servicio.nombre },
+          ]}
         />
-      </section>
-    </main>
+
+        <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">
+          <ServicioForm
+            modo="editar"
+            servicio={{
+              id: servicio.id,
+              nombre: servicio.nombre,
+              orden: servicio.orden,
+              activo: servicio.activo,
+            }}
+          />
+        </section>
+      </div>
+    </AuthenticatedShell>
   );
 }

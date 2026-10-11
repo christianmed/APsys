@@ -2,7 +2,6 @@
 
 import {
   AlertTriangle,
-  ArrowLeft,
   Clock,
   ExternalLink,
   MessageCircle,
@@ -23,6 +22,7 @@ import {
   type ResumenCuentasPorCobrar,
   type TramoAntiguedad,
 } from "@/lib/cobranzas/cuentas-por-cobrar";
+import { PageHeader } from "@/components/shell/page-header";
 
 type Props = {
   cuentasIniciales: CuentaPorCobrar[];
@@ -85,40 +85,33 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
   }, [cuentasIniciales, tramoSeleccionado, busqueda, ordenarPor]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Encabezado */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            href="/dashboard"
-            className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-          >
-            <ArrowLeft className="size-3.5" />
-            Volver al Dashboard
-          </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
-            Cuentas por Cobrar
-          </h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Control de saldos pendientes de clientes, tramos de vencimiento y gestión activa de cobro.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/pedidos"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
-          >
-            Ver Pedidos
-          </Link>
-          <Link
-            href="/recordatorios"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 text-xs font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
-          >
-            Recordatorios Retiro
-          </Link>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Cuentas por Cobrar"
+        description="Control de saldos pendientes de clientes, tramos de vencimiento y gestión activa de cobro (RF-12)."
+        backHref="/"
+        backLabel="Inicio"
+        breadcrumbs={[
+          { label: "Finanzas" },
+          { label: "Cuentas por Cobrar" },
+        ]}
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/recordatorios"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 text-xs font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+            >
+              Recordatorios Retiro
+            </Link>
+            <Link
+              href="/pedidos"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              Ver Pedidos
+            </Link>
+          </div>
+        }
+      />
 
       {/* Tarjetas KPI de resumen */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

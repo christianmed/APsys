@@ -1,18 +1,15 @@
 import {
-  ArrowLeft,
-  Bell,
   Clock,
   CreditCard,
-  Flame,
   Package,
   Plus,
   Printer,
   SearchX,
-  TrendingUp,
-  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { type EstadoPedido } from "@/lib/pedidos/estados";
 import { createClient } from "@/lib/supabase/server";
@@ -105,73 +102,24 @@ export default async function PedidosPage({ searchParams }: Props) {
   const lista = pedidos ?? [];
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
-      <div className="mx-auto w-full max-w-4xl space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              aria-label="Volver al inicio"
-              className="inline-flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-            >
-              <ArrowLeft className="size-5" />
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                Pedidos
-              </h1>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                Gestión de órdenes, comanda y lectura de escáner USB.
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {rolUsuario === "gerencial" && (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3.5 text-sm font-semibold text-emerald-900 transition-colors hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
-                >
-                  <TrendingUp aria-hidden className="size-4 text-emerald-600 dark:text-emerald-400" />
-                  Dashboard
-                </Link>
-
-                <Link
-                  href="/cuentas-por-cobrar"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-rose-300 bg-rose-50 px-3.5 text-sm font-semibold text-rose-900 transition-colors hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
-                >
-                  <Wallet aria-hidden className="size-4 text-rose-600 dark:text-rose-400" />
-                  Cuentas por Cobrar
-                </Link>
-              </>
-            )}
-
-            <Link
-              href="/taller"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3.5 text-sm font-semibold text-amber-900 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
-            >
-              <Flame aria-hidden className="size-4 text-amber-600" />
-              Vista de Taller
-            </Link>
-
-            <Link
-              href="/recordatorios"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3.5 text-sm font-semibold text-indigo-900 transition-colors hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
-            >
-              <Bell aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
-              Recordatorios
-            </Link>
-
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Gestión de Pedidos"
+          description="Órdenes de trabajo, búsqueda rápida por escáner USB y comanda de taller."
+          backHref="/"
+          backLabel="Inicio"
+          breadcrumbs={[{ label: "Pedidos" }]}
+          actions={
             <Link
               href="/pedidos/nuevo"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
-              <Plus aria-hidden className="size-4" />
-              Nuevo pedido
+              <Plus className="size-4" />
+              Nueva Orden
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* BUSCADOR Y LECTURA CON ESCÁNER USB */}
         <section aria-label="Búsqueda de pedidos">
@@ -373,6 +321,6 @@ export default async function PedidosPage({ searchParams }: Props) {
           </div>
         )}
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

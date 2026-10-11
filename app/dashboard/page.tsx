@@ -1,4 +1,4 @@
-import { ArrowLeft, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -7,6 +7,7 @@ import {
   type PresetFecha,
 } from "@/lib/dashboard/ingresos";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { DashboardView } from "./dashboard-view";
 
 export const instant = false;
@@ -48,27 +49,28 @@ export default async function DashboardPage({ searchParams }: Props) {
   // RESTRICCIÓN DE PRIVACIDAD: El perfil operativo no tiene acceso a cifras financieras globales
   if (rolUsuario !== "gerencial") {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-zinc-50 p-6 dark:bg-zinc-950">
-        <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-6 shadow-sm dark:border-amber-900/40 dark:bg-zinc-900 text-center">
-          <ShieldAlert className="mx-auto size-12 text-amber-500" />
-          <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-            Acceso Reservado a Gerencia
-          </h1>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-            Las cifras consolidadas de facturación, ingresos por moneda y métricas globales
-            del negocio son privadas y requieren perfil <strong>gerencial</strong> (RF-18).
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/pedidos"
-              className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
-            >
-              <ArrowLeft className="size-4" />
-              Volver a Pedidos
-            </Link>
+      <AuthenticatedShell>
+        <div className="flex min-h-[60vh] items-center justify-center p-4">
+          <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm dark:border-amber-900/40 dark:bg-zinc-900">
+            <ShieldAlert className="mx-auto size-12 text-amber-500" />
+            <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              Acceso Reservado a Gerencia
+            </h1>
+            <p className="text-sm text-zinc-500 leading-relaxed dark:text-zinc-400">
+              Las cifras consolidadas de facturación, ingresos por moneda y métricas globales
+              del negocio son privadas y requieren perfil <strong>gerencial</strong> (RF-18).
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/pedidos"
+                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              >
+                ← Volver a Pedidos
+              </Link>
+            </div>
           </div>
         </div>
-      </main>
+      </AuthenticatedShell>
     );
   }
 
@@ -150,8 +152,8 @@ export default async function DashboardPage({ searchParams }: Props) {
   });
 
   return (
-    <main className="min-h-dvh bg-zinc-50 p-4 sm:p-8 dark:bg-zinc-950">
-      <div className="mx-auto max-w-6xl">
+    <AuthenticatedShell>
+      <div className="space-y-6">
         <DashboardView
           pagos={pagosMapeados}
           presetInicial={preset}
@@ -159,6 +161,6 @@ export default async function DashboardPage({ searchParams }: Props) {
           hastaInicial={hastaQuery?.slice(0, 10)}
         />
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

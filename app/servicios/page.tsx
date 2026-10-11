@@ -1,6 +1,8 @@
-import { BarChart3, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { createClient } from "@/lib/supabase/server";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
@@ -53,31 +55,34 @@ export default async function ServiciosPage() {
   const lista = servicios ?? [];
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
-      <div className="mx-auto w-full max-w-2xl space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-            Servicios
-          </h1>
-          {esGerencial ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <Link
-                href="/dashboard/rotacion"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-indigo-300 bg-indigo-50 px-3.5 text-sm font-semibold text-indigo-900 transition-colors hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
-              >
-                <BarChart3 aria-hidden className="size-4 text-indigo-600 dark:text-indigo-400" />
-                Rotación
-              </Link>
-              <Link
-                href="/servicios/nuevo"
-                className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
-              >
-                <Plus aria-hidden className="size-4" />
-                Nuevo servicio
-              </Link>
-            </div>
-          ) : null}
-        </div>
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Catálogo de Servicios"
+          description="Servicios de impresión, acabados y orden en comandas de taller."
+          backHref="/"
+          backLabel="Inicio"
+          breadcrumbs={[{ label: "Servicios" }]}
+          actions={
+            esGerencial ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <Link
+                  href="/dashboard/rotacion"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 text-xs sm:text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                >
+                  Rotación
+                </Link>
+                <Link
+                  href="/servicios/nuevo"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                >
+                  <Plus className="size-4" />
+                  Nuevo Servicio
+                </Link>
+              </div>
+            ) : null
+          }
+        />
 
         {esGerencial ? null : (
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -132,6 +137,6 @@ export default async function ServiciosPage() {
           </p>
         )}
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

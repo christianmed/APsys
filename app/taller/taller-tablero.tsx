@@ -177,9 +177,10 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
           <Link
             href="/pedidos"
             aria-label="Volver a pedidos"
-            className="inline-flex size-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition hover:bg-zinc-100 active:scale-95 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 active:scale-95 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
           >
-            <ArrowLeft className="size-5" />
+            <ArrowLeft className="size-4" />
+            <span>Pedidos</span>
           </Link>
           <div>
             <div className="flex items-center gap-2">

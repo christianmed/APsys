@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { createClient } from "@/lib/supabase/server";
 import { ClienteForm } from "../cliente-form";
 
@@ -20,13 +22,23 @@ export default async function NuevoClientePage() {
   }
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
-      <section className="mx-auto w-full max-w-md space-y-6 rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Nuevo cliente
-        </h1>
-        <ClienteForm modo="crear" />
-      </section>
-    </main>
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Nuevo Cliente"
+          description="Registra un cliente en el directorio para facturar y enviar avisos de comanda."
+          backHref="/clientes"
+          backLabel="Volver a Clientes"
+          breadcrumbs={[
+            { label: "Clientes", href: "/clientes" },
+            { label: "Nuevo" },
+          ]}
+        />
+
+        <div className="mx-auto max-w-xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <ClienteForm modo="crear" />
+        </div>
+      </div>
+    </AuthenticatedShell>
   );
 }

@@ -2,16 +2,13 @@
 
 import {
   AlertCircle,
-  ArrowLeft,
   Bell,
   CheckCircle2,
-  FileText,
   Lock,
   MessageCircle,
   RotateCcw,
   Save,
 } from "lucide-react";
-import Link from "next/link";
 import { useState, useTransition } from "react";
 import {
   DESCRIPCION_VARIABLES,
@@ -21,6 +18,7 @@ import {
   validarVariablesPlantilla,
   VARIABLES_PERMITIDAS,
 } from "@/lib/notificaciones/plantillas";
+import { PageHeader } from "@/components/shell/page-header";
 import { guardarPlantilla } from "./actions";
 
 type Props = {
@@ -94,38 +92,24 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
   return (
     <div className="space-y-6">
       {/* Cabecera */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/pedidos"
-            aria-label="Volver a pedidos"
-            className="inline-flex size-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <FileText className="size-5 text-indigo-600 dark:text-indigo-400" />
-              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                Gestión de Plantillas de Mensajes
-              </h1>
-              <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                {rolUsuario}
-              </span>
+      <PageHeader
+        title="Gestión de Plantillas de Mensajes"
+        description="Personalización de avisos y recordatorios de WhatsApp con variables automáticas (RF-10)."
+        backHref="/"
+        backLabel="Inicio"
+        breadcrumbs={[
+          { label: "Soporte" },
+          { label: "Plantillas de Mensajes" },
+        ]}
+        actions={
+          !esGerencial ? (
+            <div className="flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
+              <Lock className="size-3.5" />
+              Solo lectura (Gerencial requerido para guardar)
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Personalización de avisos de WhatsApp con variables automáticas (RF-10).
-            </p>
-          </div>
-        </div>
-
-        {!esGerencial && (
-          <div className="flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-            <Lock className="size-3.5" />
-            Solo lectura (Gerencial requerido para guardar)
-          </div>
-        )}
-      </div>
+          ) : undefined
+        }
+      />
 
       {mensajeExito && (
         <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">

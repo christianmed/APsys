@@ -1,4 +1,4 @@
-import { ArrowLeft, ShieldAlert } from "lucide-react";
+import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -12,6 +12,7 @@ import {
   type ServicioCatalogo,
 } from "@/lib/dashboard/rotacion-servicios";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { RotacionServiciosView } from "./rotacion-view";
 
 export const instant = false;
@@ -71,27 +72,28 @@ export default async function RotacionServiciosPage({ searchParams }: Props) {
   // RESTRICCIÓN DE PRIVACIDAD OPERATIVA
   if (rolUsuario !== "gerencial") {
     return (
-      <main className="flex min-h-dvh items-center justify-center bg-zinc-50 p-6 dark:bg-zinc-950">
-        <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-6 text-center shadow-sm dark:border-amber-900/40 dark:bg-zinc-900">
-          <ShieldAlert className="mx-auto size-12 text-amber-500" />
-          <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-            Acceso Reservado a Gerencia
-          </h1>
-          <p className="text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-            Las estadísticas de demanda, rotación de servicios y rentabilidad agregada
-            requieren rol <strong>gerencial</strong> (RF-18 / RF-19).
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
-            >
-              <ArrowLeft className="size-3.5" />
-              Volver a Pedidos
-            </Link>
+      <AuthenticatedShell>
+        <div className="flex min-h-[60vh] items-center justify-center p-4">
+          <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm dark:border-amber-900/40 dark:bg-zinc-900">
+            <ShieldAlert className="mx-auto size-12 text-amber-500" />
+            <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              Acceso Reservado a Gerencia
+            </h1>
+            <p className="text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+              Las estadísticas de demanda, rotación de servicios y rentabilidad agregada
+              requieren rol <strong>gerencial</strong> (RF-18 / RF-19).
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/pedidos"
+                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              >
+                ← Volver a Pedidos
+              </Link>
+            </div>
           </div>
         </div>
-      </main>
+      </AuthenticatedShell>
     );
   }
 
@@ -113,29 +115,30 @@ export default async function RotacionServiciosPage({ searchParams }: Props) {
     fechaHasta = rangoCalc.hasta;
   }
 
+  // Criterio de ordenación inicial
   const criterioOrden: CriterioOrdenRotacion =
     ordenQuery === "mayor_demanda" ||
     ordenQuery === "menor_demanda" ||
-    ordenQuery === "menor_ingreso" ||
-    ordenQuery === "nombre"
+    ordenQuery === "mayor_ingreso" ||
+    ordenQuery === "menor_ingreso"
       ? ordenQuery
-      : "mayor_ingreso";
+      : "mayor_demanda";
 
-  // 1. Consultar catálogo de servicios
-  const { data: serviciosData } = await supabase
+  // Cargar catálogo de servicios completo
+  const { data: serviciosRaw } = await supabase
     .from("servicios")
     .select("id, nombre, activo, orden")
-    .order("orden", { ascending: true });
+    .order("nombre", { ascending: true });
 
-  const catalogo: ServicioCatalogo[] = (serviciosData ?? []).map((s) => ({
+  const catalogo: ServicioCatalogo[] = (serviciosRaw ?? []).map((s) => ({
     id: s.id,
     nombre: s.nombre,
     activo: Boolean(s.activo),
     orden: Number(s.orden) || 0,
   }));
 
-  // 2. Consultar pedidos con sus renglones de pedido_items
-  let queryPedidos = supabase
+  // Consultar pedidos y sus ítems dentro del rango
+  let query = supabase
     .from("pedidos")
     .select(
       `
@@ -149,23 +152,19 @@ export default async function RotacionServiciosPage({ searchParams }: Props) {
       )
     `,
     )
-    .eq("anulado", false);
+    .order("creado_en", { ascending: false });
 
   if (fechaDesde) {
-    queryPedidos = queryPedidos.gte("creado_en", fechaDesde);
+    query = query.gte("creado_en", fechaDesde);
   }
   if (fechaHasta) {
-    queryPedidos = queryPedidos.lte("creado_en", fechaHasta);
+    query = query.lte("creado_en", fechaHasta);
   }
 
-  const { data: pedidosData, error } = await queryPedidos;
-
-  if (error) {
-    console.error("Error al consultar pedidos para rotación:", error);
-  }
+  const { data: pedidosRaw } = await query;
 
   const pedidosMapeados: PedidoRotacionInput[] = (
-    (pedidosData ?? []) as unknown as PedidoRaw[]
+    (pedidosRaw as unknown as PedidoRaw[]) ?? []
   ).map((p) => ({
     id: p.id,
     anulado: Boolean(p.anulado),
@@ -184,7 +183,7 @@ export default async function RotacionServiciosPage({ searchParams }: Props) {
   );
 
   return (
-    <main className="min-h-dvh bg-zinc-50 dark:bg-zinc-950">
+    <AuthenticatedShell>
       <RotacionServiciosView
         metricasIniciales={metricasPorServicio}
         resumenInicial={resumen}
@@ -193,6 +192,6 @@ export default async function RotacionServiciosPage({ searchParams }: Props) {
         desdeInicial={desdeQuery}
         hastaInicial={hastaQuery}
       />
-    </main>
+    </AuthenticatedShell>
   );
 }

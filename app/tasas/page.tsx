@@ -1,6 +1,4 @@
 import {
-  ArrowLeft,
-  Banknote,
   CheckCircle,
   Clock,
   History,
@@ -14,6 +12,8 @@ import {
   type TasaHistorica,
 } from "@/lib/tasas/tasas";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { TasaForm } from "./tasa-form";
 
 export const instant = false;
@@ -85,38 +85,26 @@ export default async function TasasPage() {
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl space-y-8">
-        {/* Encabezado */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <Link
-              href="/dashboard"
-              className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-            >
-              <ArrowLeft className="size-3.5" />
-              Volver al Dashboard
-            </Link>
-            <div className="flex items-center gap-2.5">
-              <Banknote className="size-6 text-emerald-600 dark:text-emerald-400" />
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
-                Tasa de Cambio Referencial
-              </h1>
-            </div>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Configuración y vigencia de la tasa referencial Bs/USD. Los pedidos previos retienen su tasa histórica (RF-15).
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Tasa de Cambio Referencial"
+          description="Configuración y vigencia de la tasa referencial Bs/USD. Los pedidos previos retienen su tasa histórica (RF-15)."
+          backHref="/"
+          backLabel="Inicio"
+          breadcrumbs={[
+            { label: "Finanzas" },
+            { label: "Tasa de Cambio" },
+          ]}
+          actions={
             <Link
               href="/pedidos"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
             >
               Ver Pedidos
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* Tarjeta destacada de la tasa vigente */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-emerald-950/20 sm:p-8">
@@ -249,6 +237,6 @@ export default async function TasasPage() {
           </div>
         </div>
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }
