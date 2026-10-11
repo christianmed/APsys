@@ -1,3 +1,4 @@
+import { Layers } from "lucide-react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -40,8 +41,12 @@ export default async function NuevoServicioPage() {
         <PageHeader
           title="Nuevo servicio"
           description="Registra una nueva categoría de trabajo en el catálogo de producción."
-          backHref="/servicios"
-          backLabel="Volver a Servicios"
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-purple-700 dark:text-purple-400">
+              <Layers className="size-3.5" />
+              <span>Registro de Servicio</span>
+            </span>
+          }
         />
 
         <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">

@@ -1,3 +1,4 @@
+import { UserPlus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
@@ -27,8 +28,12 @@ export default async function NuevoClientePage() {
         <PageHeader
           title="Nuevo Cliente"
           description="Registra un cliente en el directorio para facturar y enviar avisos de comanda."
-          backHref="/clientes"
-          backLabel="Volver a Clientes"
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <UserPlus className="size-3.5" />
+              <span>Registro de Cliente</span>
+            </span>
+          }
         />
 
         <div className="mx-auto max-w-xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

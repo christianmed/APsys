@@ -176,13 +176,11 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         title="Taller y Producción"
         description="Control táctil rápido para impresores y ensambladores (≤ 2 toques)."
         badge={
-          <span className="flex items-center gap-1">
+          <span className="flex items-center gap-1 font-semibold text-amber-700 dark:text-amber-400">
             <Flame className="size-3.5 text-amber-500" />
-            <span className="font-semibold">{rolUsuario}</span>
+            <span>{rolUsuario}</span>
           </span>
         }
-        backHref="/pedidos"
-        backLabel="Volver a Pedidos"
         actions={
           <div className="flex w-full items-center gap-2 sm:w-auto">
             <div className="relative flex-1 sm:w-64">

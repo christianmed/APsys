@@ -89,8 +89,6 @@ export function RotacionServiciosView({
             <span>Demanda & Producción</span>
           </span>
         }
-        backHref="/dashboard"
-        backLabel="Volver al Dashboard"
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Link

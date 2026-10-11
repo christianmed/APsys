@@ -1,3 +1,4 @@
+import { User } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -144,8 +145,12 @@ export default async function EditarClientePage({
         <PageHeader
           title={cliente.nombre}
           description={`${cliente.telefono ? `Teléfono: ${cliente.telefono} • ` : ""}${metricas.total_pedidos_activos} compras registradas`}
-          backHref="/clientes"
-          backLabel="Volver a Clientes"
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <User className="size-3.5" />
+              <span>Ficha de Cliente</span>
+            </span>
+          }
           actions={
             <Link
               href={`/pedidos/nuevo?cliente_id=${cliente.id}`}

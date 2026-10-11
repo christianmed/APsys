@@ -40,3 +40,8 @@
   - [x] Paso 4: Agregar badges temáticos a las cabeceras de Recordatorios, Plantillas, Dashboard de Ingresos, Cuentas por Cobrar, Rotación y Ayuda.
   - [x] Paso 5: Auditoría exhaustiva de componentes, mapeo de reutilización y verificación de cero código huérfano.
   - [x] Paso 6: Verificación completa DoD (`tsc`, `test`, `lint`, `build`).
+- [x] **Fase 9: Eliminación de Botones de Retorno Redundantes y Depuración Total de Código**
+  - [x] Paso 1: Remover botones de retorno de `Taller`, `Nueva Orden`, `Rotación de Servicios`, `Clientes` y `Servicios`.
+  - [x] Paso 2: Limpiar `PageHeader` eliminando props muertos (`backHref`, `backLabel`, `breadcrumbs`, imports de iconos).
+  - [x] Paso 3: Toda la navegación centralizada limpiamente en el Sidebar persistente.
+  - [x] Paso 4: Cero código huérfano o código ocioso. Verificación DoD 100% aprobada.

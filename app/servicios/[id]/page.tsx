@@ -1,3 +1,4 @@
+import { Layers } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -57,8 +58,12 @@ export default async function EditarServicioPage({
         <PageHeader
           title={servicio.nombre}
           description="Modifica los parámetros y disponibilidad del servicio."
-          backHref="/servicios"
-          backLabel="Volver a Servicios"
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-purple-700 dark:text-purple-400">
+              <Layers className="size-3.5" />
+              <span>Edición de Servicio</span>
+            </span>
+          }
         />
 
         <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8 dark:border-zinc-800 dark:bg-zinc-900">
