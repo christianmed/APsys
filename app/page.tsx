@@ -1,4 +1,4 @@
-import { LogOut, UserRound, Users } from "lucide-react";
+import { LogOut, Tag, UserRound, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -60,6 +60,14 @@ export default async function Home() {
         >
           <Users aria-hidden className="size-4" />
           Clientes
+        </Link>
+
+        <Link
+          href="/servicios"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
+        >
+          <Tag aria-hidden className="size-4" />
+          Servicios
         </Link>
 
         <form action={cerrarSesion}>
