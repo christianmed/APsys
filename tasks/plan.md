@@ -60,3 +60,13 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
 - Ejecución de `npm run typecheck`, `npm test`, `npm run lint` y `npm run build`.
 - Verificación visual.
 - Commit final y reporte al usuario.
+
+---
+
+### Fase 19: Validación Rápida de JWT en Proxy (Opción A) + Propagación de Sesión vía Headers (Opción B)
+- **Objetivo:** Eliminar el cuello de botella de 2.1s - 3.3s en `proxy.ts` y la doble llamada remota a Supabase Auth en Server Components.
+- **Acción:**
+  1. **Opción A (Validación local de JWT en `proxy.ts`):** Extraer el access token de las cookies de Supabase (`sb-*-auth-token`) y validar claims (`sub`, `email`, `exp`) en memoria en < 1ms, evitando llamadas HTTPS a EE.UU. en cada clic.
+  2. **Opción B (Propagación de usuario vía headers):** Inyectar `x-user-id` y `x-user-email` en las cabeceras de la petición hacia Next.js Server Components.
+  3. **Optimización en `auth-cache.ts` y páginas:** `obtenerUsuarioSesion` lee las cabeceras del proxy, evitando una segunda llamada a `supabase.auth.getUser()`.
+  4. **TDD y Benchmarking:** Pruebas unitarias dedicadas en `test/jwt-session.test.ts` y verificación de latencia en vivo.
