@@ -112,3 +112,13 @@
   - [x] Paso 3: Optimizar `lib/supabase/auth-cache.ts` y `app/page.tsx` para consumir el usuario propagado en cabeceras evitando la segunda llamada remota a Supabase Auth.
   - [x] Paso 4: Medir y validar en vivo en el servidor `next dev` la reducción drástica de tiempo en `proxy.ts` (< 5ms) y navegación fluida sin bloqueos.
   - [x] Paso 5: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`, `npm run build`) y commit formal.
+
+- [ ] **Fase 20: Transición a Arquitectura Client-First / Instant Navigation (Estilo 3DCalc)**
+  - [ ] Paso 1 (TDD - AuthContext): Diseñar suite `test/auth-context.test.tsx` e implementar `context/auth-context.tsx` para gestión reactiva de sesión y rol en el navegador.
+  - [ ] Paso 2 (TDD - TasasContext): Diseñar suite `test/tasas-context.test.tsx` e implementar `context/tasas-context.tsx` con hidratación instantánea desde caché y cálculo multimoneda.
+  - [ ] Paso 3 (TDD - Shell Client): Migrar `AuthenticatedShell` a componente de cliente reactivo, eliminando llamadas bloqueantes en el layout raíz.
+  - [ ] Paso 4: Desbloquear rutas operativas (`/taller`, `/pedidos`, `/pedidos/nuevo`) eliminando queries bloqueantes de servidor y conectando hooks de cliente.
+  - [ ] Paso 5: Desbloquear rutas de catálogo y gerencia (`/clientes`, `/servicios`, `/dashboard`, `/cuentas-por-cobrar`, `/tasas`).
+  - [ ] Paso 6 (E2E & TDD): Crear suite E2E en Playwright `e2e/navegacion-instantanea.spec.ts` para auditar transiciones de navegación en < 80ms y cero regresiones.
+  - [ ] Paso 7: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`, `npm run build`).
+
