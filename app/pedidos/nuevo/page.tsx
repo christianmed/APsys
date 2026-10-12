@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { createClient } from "@/lib/supabase/server";
-import { obtenerTasaVigente } from "../actions";
+import { obtenerTasaProgramada, obtenerTasaVigente } from "../actions";
 import { PedidoForm } from "../pedido-form";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
@@ -39,8 +39,9 @@ export default async function NuevoPedidoPage() {
     .order("orden", { ascending: true })
     .order("nombre", { ascending: true });
 
-  // Cargar la tasa de cambio vigente para conversiones automáticas
+  // Cargar la tasa de cambio vigente y tasa programada (para presupuestos de mañana)
   const tasaVigente = await obtenerTasaVigente(supabase);
+  const tasaProgramada = await obtenerTasaProgramada(supabase);
 
   return (
     <AuthenticatedShell>
@@ -61,6 +62,8 @@ export default async function NuevoPedidoPage() {
             clientes={clientes ?? []}
             servicios={servicios ?? []}
             tasaCambio={tasaVigente.valor_bs_por_usd}
+            tasaVigente={tasaVigente}
+            tasaProgramada={tasaProgramada}
           />
         </div>
       </div>

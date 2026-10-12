@@ -13,7 +13,7 @@ import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { type EstadoPedido } from "@/lib/pedidos/estados";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { EstadoControl } from "./estado-control";
 import { BotonAvisoWhatsApp } from "./boton-aviso-whatsapp";
 import { PedidosBuscador } from "./pedidos-buscador";
@@ -31,21 +31,11 @@ type Props = {
  */
 export default async function PedidosPage({ searchParams }: Props) {
   const { q } = await searchParams;
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 
