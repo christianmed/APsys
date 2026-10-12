@@ -19,7 +19,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 
 export const instant = false;
 
@@ -28,21 +28,11 @@ export const instant = false;
  */
 export default async function Home() {
   await connection();
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rol: string = perfil?.rol ?? "operativo";
   const esGerencial = rol === "gerencial";

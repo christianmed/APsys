@@ -105,3 +105,10 @@
   - [x] Paso 3: Agregar `suppressHydrationWarning` en `<html>` y `<body>` en `app/layout.tsx` para tolerar atributos inyectados por extensiones del navegador (`bis_skin_checked`, etc.).
   - [x] Paso 4: Validar en vivo con peticiones HTTP/browser contra el servidor `next dev` para constatar consola limpia sin advertencias de prerendering ni hidratación.
   - [x] Paso 5: Verificación integral de calidad DoD (`npm test`, `npm run typecheck`, `npm run build`) y commit convencional.
+
+- [x] **Fase 19: Validación Rápida de JWT en Proxy (Opción A) y Propagación de Sesión vía Headers (Opción B)**
+  - [x] Paso 1 (TDD - Rojo & Verde): Escribir suite de pruebas en `test/jwt-session.test.ts` e implementar `lib/supabase/jwt-session.ts` para extraer y validar JWT de cookies Supabase en memoria (< 1ms).
+  - [x] Paso 2: Optimizar `proxy.ts` (Opción A + Opción B) usando validación local de JWT y propagación de cabeceras `x-user-id`, `x-user-email` y `x-user-role`, eliminando la llamada remota de 2.5s.
+  - [x] Paso 3: Optimizar `lib/supabase/auth-cache.ts` y `app/page.tsx` para consumir el usuario propagado en cabeceras evitando la segunda llamada remota a Supabase Auth.
+  - [x] Paso 4: Medir y validar en vivo en el servidor `next dev` la reducción drástica de tiempo en `proxy.ts` (< 5ms) y navegación fluida sin bloqueos.
+  - [x] Paso 5: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`, `npm run build`) y commit formal.
