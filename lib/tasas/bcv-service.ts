@@ -67,6 +67,23 @@ export const DOLARAPI_BASE = "https://ve.dolarapi.com/v1";
 /** Timeout de 8 segundos para evitar bloquear la UI en caso de API lenta */
 const FETCH_TIMEOUT_MS = 8_000;
 
+/** TTL de caché en memoria: 15 minutos para evitar consultas HTTP salientes en cada SSR */
+export const CACHE_BCV_TTL_MS = 15 * 60 * 1000;
+
+type CacheEntry = {
+  datos: TasasBcvCompletas;
+  timestamp: number;
+};
+
+let cacheTasasBcv: CacheEntry | null = null;
+
+/**
+ * Invalida el caché en memoria para obligar a consultar la API en la próxima llamada.
+ */
+export function limpiarCacheBcv(): void {
+  cacheTasasBcv = null;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -235,23 +252,43 @@ async function obtenerTasasDesdeDolarApi(): Promise<TasasBcvCompletas> {
 // API Pública
 // ---------------------------------------------------------------------------
 
+export type OpcionesConsultaBcv = {
+  /** Si es true, ignora el caché en memoria y consulta directamente los proveedores externos */
+  forzarRefresco?: boolean;
+};
+
 /**
  * Obtiene ambas tasas oficiales (USD y EUR) del BCV.
  *
- * Consulta primero la API de DolarVZLA (rates.dolarvzla.com/bcv/current.json).
- * Si falla, utiliza DolarApi como respaldo automático.
+ * Utiliza un caché en memoria con TTL de 15 minutos para eliminar la latencia
+ * de red en renders repetidos. Si el caché está vacío o expiró, consulta primero
+ * DolarVZLA (rates.dolarvzla.com) con respaldo automático a DolarApi.
  *
+ * @param opciones - Opciones de consulta (permite forzar el refresco)
  * @returns Objeto con ambas tasas y posible mensaje de error parcial
  */
-export async function obtenerTasasBcvCompletas(): Promise<TasasBcvCompletas> {
-  // 1. Intentar proveedor principal: DolarVZLA
+export async function obtenerTasasBcvCompletas(
+  opciones: OpcionesConsultaBcv = {},
+): Promise<TasasBcvCompletas> {
+  const ahora = Date.now();
+
+  // 1. Servir desde caché si está vigente y no se fuerza el refresco
+  if (!opciones.forzarRefresco && cacheTasasBcv) {
+    const edad = ahora - cacheTasasBcv.timestamp;
+    if (edad < CACHE_BCV_TTL_MS && cacheTasasBcv.datos.usd && cacheTasasBcv.datos.eur) {
+      return cacheTasasBcv.datos;
+    }
+  }
+
+  // 2. Intentar proveedor principal: DolarVZLA
+  let resultado: TasasBcvCompletas | null = null;
   try {
     const response = await fetchConTimeout(DOLARVZLA_BCV_URL);
     if (response.ok) {
       const data: unknown = await response.json();
-      const resultado = parsearRespuestaDolarVzla(data);
-      if (resultado && resultado.usd && resultado.eur) {
-        return resultado;
+      const parseado = parsearRespuestaDolarVzla(data);
+      if (parseado && parseado.usd && parseado.eur) {
+        resultado = parseado;
       }
     } else {
       console.warn(
@@ -265,19 +302,33 @@ export async function obtenerTasasBcvCompletas(): Promise<TasasBcvCompletas> {
     );
   }
 
-  // 2. Fallback secundario: DolarApi
-  return obtenerTasasDesdeDolarApi();
+  // 3. Fallback secundario si DolarVZLA no resolvió
+  if (!resultado) {
+    resultado = await obtenerTasasDesdeDolarApi();
+  }
+
+  // 4. Guardar en caché si se obtuvo al menos una divisa válida
+  if (resultado.usd || resultado.eur) {
+    cacheTasasBcv = {
+      datos: resultado,
+      timestamp: ahora,
+    };
+  }
+
+  return resultado;
 }
 
 /**
  * Obtiene la tasa oficial BCV para una divisa específica (USD o EUR).
  *
  * @param divisa - La divisa a consultar ("USD" o "EUR")
+ * @param opciones - Opciones de consulta (permite forzar refresco)
  * @returns La tasa normalizada o null si falla
  */
 export async function obtenerTasaBcv(
   divisa: "USD" | "EUR",
+  opciones: OpcionesConsultaBcv = {},
 ): Promise<TasaBcv | null> {
-  const tasas = await obtenerTasasBcvCompletas();
+  const tasas = await obtenerTasasBcvCompletas(opciones);
   return divisa === "USD" ? tasas.usd : tasas.eur;
 }
