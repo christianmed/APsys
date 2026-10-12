@@ -270,7 +270,8 @@ export type OpcionesConsultaBcv = {
 export async function obtenerTasasBcvCompletas(
   opciones: OpcionesConsultaBcv = {},
 ): Promise<TasasBcvCompletas> {
-  const ahora = Date.now();
+  // Usar performance.now() para medición de TTL en memoria (recomendado por Next.js para evitar unstable prerender errors)
+  const ahora = performance.now();
 
   // 1. Servir desde caché si está vigente y no se fuerza el refresco
   if (!opciones.forzarRefresco && cacheTasasBcv) {

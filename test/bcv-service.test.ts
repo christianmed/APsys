@@ -302,6 +302,44 @@ describe("bcv-service (DolarVZLA + fallback DolarApi)", () => {
       await obtenerTasasBcvCompletas();
       expect(fetchMock).toHaveBeenCalledTimes(2);
     });
+
+    it("expira el caché en memoria cuando transcurre el TTL usando performance.now", async () => {
+      const mockData1 = crearRespuestaDolarVzla({
+        current: { date: "2026-10-13", usd: 876.7976, eur: 982.0045 },
+      });
+      const mockData2 = crearRespuestaDolarVzla({
+        current: { date: "2026-10-13", usd: 885.00, eur: 995.00 },
+      });
+
+      const fetchMock = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(mockData1),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          status: 200,
+          json: () => Promise.resolve(mockData2),
+        });
+
+      globalThis.fetch = fetchMock;
+
+      const spyPerf = vi.spyOn(performance, "now").mockReturnValue(1000);
+
+      await obtenerTasasBcvCompletas();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+
+      // Simular que han transcurrido más de 15 minutos (900,000 ms)
+      spyPerf.mockReturnValue(1000 + 15 * 60 * 1000 + 10);
+
+      const resExpirado = await obtenerTasasBcvCompletas();
+      expect(fetchMock).toHaveBeenCalledTimes(2);
+      expect(resExpirado.usd?.valorBs).toBe(885.00);
+
+      spyPerf.mockRestore();
+    });
   });
 });
 

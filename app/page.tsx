@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { createClient } from "@/lib/supabase/server";
 
@@ -26,6 +27,7 @@ export const instant = false;
  * Centro de Mando Operativo y Panel de Inicio de APSys (Rediseño UX/UI).
  */
 export default async function Home() {
+  await connection();
   const supabase = await createClient();
 
   const {
@@ -78,7 +80,9 @@ export default async function Home() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                 <Sparkles className="size-3.5 text-amber-500" />
-                <span className="capitalize">{fechaFormateada}</span>
+                <span className="capitalize" suppressHydrationWarning>
+                  {fechaFormateada}
+                </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
                 ¡Hola de nuevo!

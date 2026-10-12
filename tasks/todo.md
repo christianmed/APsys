@@ -99,8 +99,9 @@
   - [x] Paso 3: Implementar `obtenerUsuarioSesion()` con `React.cache()` y paralelizar consultas de tasas en `AuthenticatedShell` con `Promise.all`.
   - [x] Paso 4: Verificación completa de calidad DoD (`vitest`, `tsc`, `eslint`, `next build`).
 
-
-
-
-
-
+- [x] **Fase 18: Estabilidad de Prerenderizado Next.js (performance.now) y Supresión de Hydration Mismatches**
+  - [x] Paso 1 (TDD): Actualizar `lib/tasas/bcv-service.ts` para usar `performance.now()` en el cálculo de TTL en memoria y validar suite `test/bcv-service.test.ts`.
+  - [x] Paso 2: Declarar renderizado dinámico en `app/page.tsx` (`export const instant = false`, `await connection()`) y asegurar consistencia de fecha con `suppressHydrationWarning`.
+  - [x] Paso 3: Agregar `suppressHydrationWarning` en `<html>` y `<body>` en `app/layout.tsx` para tolerar atributos inyectados por extensiones del navegador (`bis_skin_checked`, etc.).
+  - [x] Paso 4: Validar en vivo con peticiones HTTP/browser contra el servidor `next dev` para constatar consola limpia sin advertencias de prerendering ni hidratación.
+  - [x] Paso 5: Verificación integral de calidad DoD (`npm test`, `npm run typecheck`, `npm run build`) y commit convencional.
