@@ -2,7 +2,6 @@
 
 import {
   AlertCircle,
-  ArrowLeft,
   BarChart3,
   Calendar,
   DollarSign,
@@ -20,6 +19,7 @@ import {
   type ResumenRotacionServicios,
 } from "@/lib/dashboard/rotacion-servicios";
 import { type PresetFecha } from "@/lib/dashboard/ingresos";
+import { PageHeader } from "@/components/shell/page-header";
 
 type Props = {
   metricasIniciales: MetricaServicioRotacion[];
@@ -79,44 +79,34 @@ export function RotacionServiciosView({
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      {/* Encabezado */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            href="/dashboard"
-            className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-          >
-            <ArrowLeft className="size-3.5" />
-            Volver al Dashboard de Ingresos
-          </Link>
-          <div className="flex items-center gap-2.5">
-            <BarChart3 className="size-6 text-indigo-600 dark:text-indigo-400" />
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
-              Rotación y Demanda por Servicio
-            </h1>
+    <div className="space-y-6">
+      <PageHeader
+        title="Rotación y Demanda por Servicio"
+        description="Análisis de los productos y servicios con mayor y menor demanda, volumen producido y facturación (RF-13)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-indigo-700 dark:text-indigo-400">
+            <BarChart3 className="size-3.5" />
+            <span>Demanda & Producción</span>
+          </span>
+        }
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/servicios"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+            >
+              <Layers className="size-3.5" />
+              Catálogo de Servicios
+            </Link>
+            <Link
+              href="/cuentas-por-cobrar"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 text-xs font-bold text-rose-900 shadow-sm transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+            >
+              Cuentas por Cobrar
+            </Link>
           </div>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Análisis de los productos y servicios con mayor y menor demanda, volumen producido y facturación (RF-13).
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/servicios"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
-          >
-            <Layers className="size-4" />
-            Catálogo de Servicios
-          </Link>
-          <Link
-            href="/cuentas-por-cobrar"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 text-xs font-bold text-rose-900 shadow-sm transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
-          >
-            Cuentas por Cobrar
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Selector de Períodos */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

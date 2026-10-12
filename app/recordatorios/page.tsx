@@ -4,6 +4,7 @@ import {
   type PedidoListoRecordatorio,
 } from "@/lib/notificaciones/recordatorios";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { RecordatoriosPanel } from "./recordatorios-panel";
 
 export const instant = false;
@@ -98,13 +99,13 @@ export default async function RecordatoriosPage() {
   });
 
   return (
-    <main className="min-h-dvh bg-zinc-50 p-4 sm:p-8 dark:bg-zinc-950">
-      <div className="mx-auto max-w-5xl">
+    <AuthenticatedShell>
+      <div className="space-y-6">
         <RecordatoriosPanel
           pedidosIniciales={pedidosListos}
           rolUsuario={rolUsuario}
         />
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

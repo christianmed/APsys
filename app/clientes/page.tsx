@@ -1,6 +1,8 @@
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { createClient } from "@/lib/supabase/server";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
@@ -60,20 +62,27 @@ export default async function ClientesPage({
   const lista = clientes ?? [];
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
-      <div className="mx-auto w-full max-w-2xl space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-            Clientes
-          </h1>
-          <Link
-            href="/clientes/nuevo"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-sm font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-50 focus-visible:outline-none dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950"
-          >
-            <Plus aria-hidden className="size-4" />
-            Nuevo cliente
-          </Link>
-        </div>
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Directorio de Clientes"
+          description="Búsqueda rápida por nombre o teléfono, WhatsApp y resumen de compras."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <Users className="size-3.5" />
+              <span>Directorio de Clientes</span>
+            </span>
+          }
+          actions={
+            <Link
+              href="/clientes/nuevo"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            >
+              <Plus className="size-4" />
+              Nuevo Cliente
+            </Link>
+          }
+        />
 
         <form method="get" className="flex items-end gap-2">
           <div className="min-w-0 flex-1 space-y-2">
@@ -160,6 +169,6 @@ export default async function ClientesPage({
           </p>
         )}
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

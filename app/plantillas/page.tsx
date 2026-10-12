@@ -4,6 +4,7 @@ import {
   type TipoPlantilla,
 } from "@/lib/notificaciones/plantillas";
 import { createClient } from "@/lib/supabase/server";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PlantillaEditor } from "./plantilla-editor";
 
 export const instant = false;
@@ -50,13 +51,13 @@ export default async function PlantillasPage() {
   }
 
   return (
-    <main className="min-h-dvh bg-zinc-50 p-4 sm:p-8 dark:bg-zinc-950">
-      <div className="mx-auto max-w-5xl">
+    <AuthenticatedShell>
+      <div className="space-y-6">
         <PlantillaEditor
           plantillasIniciales={plantillasMap}
           rolUsuario={rolUsuario}
         />
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

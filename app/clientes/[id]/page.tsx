@@ -1,6 +1,8 @@
-import { ArrowLeft, User } from "lucide-react";
+import { User } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import {
   calcularMetricasCliente,
   type PedidoHistorialInput,
@@ -138,41 +140,26 @@ export default async function EditarClientePage({
   const metricas = calcularMetricasCliente(pedidosMapeados);
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl space-y-6">
-        {/* Cabecera */}
-        <div>
-          <Link
-            href="/clientes"
-            className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-          >
-            <ArrowLeft className="size-3.5" />
-            Volver a Clientes
-          </Link>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="rounded-xl bg-zinc-200 p-2.5 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                <User className="size-6" />
-              </span>
-              <div>
-                <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
-                  {cliente.nombre}
-                </h1>
-                <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
-                  {cliente.telefono ? `Teléfono: ${cliente.telefono} • ` : ""}
-                  {metricas.total_pedidos_activos} compras registradas
-                </p>
-              </div>
-            </div>
-
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title={cliente.nombre}
+          description={`${cliente.telefono ? `Teléfono: ${cliente.telefono} • ` : ""}${metricas.total_pedidos_activos} compras registradas`}
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <User className="size-3.5" />
+              <span>Ficha de Cliente</span>
+            </span>
+          }
+          actions={
             <Link
               href={`/pedidos/nuevo?cliente_id=${cliente.id}`}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
             >
               Crear Pedido para Cliente
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* Layout de 2 secciones: Formulario + Historial */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
@@ -205,6 +192,6 @@ export default async function EditarClientePage({
           </div>
         </div>
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

@@ -261,6 +261,9 @@ export async function crearPedido(
   }
 
   revalidatePath("/pedidos");
+  revalidatePath("/taller");
+  revalidatePath("/dashboard");
+  revalidatePath("/cuentas-por-cobrar");
   redirect("/pedidos");
 }
 
@@ -360,6 +363,7 @@ export async function cambiarEstadoPedido(
   }
 
   revalidatePath("/pedidos");
+  revalidatePath("/taller");
   revalidatePath(`/comanda/${pedidoId}`);
   revalidatePath("/dashboard");
   revalidatePath("/cuentas-por-cobrar");
@@ -450,6 +454,7 @@ export async function anularPedidoConAuditoria(
   }
 
   revalidatePath("/pedidos");
+  revalidatePath("/taller");
   revalidatePath(`/comanda/${pedidoId}`);
   revalidatePath("/dashboard");
   revalidatePath("/cuentas-por-cobrar");

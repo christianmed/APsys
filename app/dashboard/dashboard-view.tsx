@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowLeft,
   Banknote,
   BarChart3,
   Calendar,
@@ -23,6 +22,8 @@ import {
   type PagoMétrica,
   type PresetFecha,
 } from "@/lib/dashboard/ingresos";
+
+import { PageHeader } from "@/components/shell/page-header";
 
 type Props = {
   pagos: PagoMétrica[];
@@ -81,66 +82,52 @@ export function DashboardView({
 
   return (
     <div className="space-y-6">
-      {/* Cabecera */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            aria-label="Volver al inicio"
-            className="inline-flex size-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="size-5 text-emerald-600 dark:text-emerald-400" />
-              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                Dashboard Gerencial de Ingresos
-              </h1>
-              <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-                Gerencial
-              </span>
-            </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Consolidación de ingresos reales recaudados en USD y Bolívares (RF-11).
-            </p>
+      {/* Cabecera unificada */}
+      <PageHeader
+        title="Dashboard Gerencial de Ingresos"
+        description="Consolidación de ingresos reales recaudados en USD y Bolívares (RF-11)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-blue-700 dark:text-blue-400">
+            <TrendingUp className="size-3.5" />
+            <span>Finanzas & Facturación</span>
+          </span>
+        }
+        actions={
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/tasas"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 text-xs font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+            >
+              <Banknote className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+              Tasa del Día
+            </Link>
+
+            <Link
+              href="/dashboard/rotacion"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-indigo-300 bg-indigo-50 px-3 text-xs font-semibold text-indigo-900 transition hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
+            >
+              <BarChart3 className="size-3.5 text-indigo-600 dark:text-indigo-400" />
+              Rotación
+            </Link>
+
+            <Link
+              href="/cuentas-por-cobrar"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 text-xs font-semibold text-rose-900 transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+            >
+              <Wallet className="size-3.5 text-rose-600 dark:text-rose-400" />
+              Cuentas por Cobrar
+            </Link>
+
+            <Link
+              href="/pedidos"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              <Receipt className="size-3.5" />
+              Ver Pedidos
+            </Link>
           </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Link
-            href="/tasas"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 px-4 text-xs font-bold text-emerald-900 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
-          >
-            <Banknote className="size-4 text-emerald-600 dark:text-emerald-400" />
-            Tasa de Cambio
-          </Link>
-
-          <Link
-            href="/dashboard/rotacion"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-indigo-300 bg-indigo-50 px-4 text-xs font-bold text-indigo-900 transition hover:bg-indigo-100 dark:border-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-200"
-          >
-            <BarChart3 className="size-4 text-indigo-600 dark:text-indigo-400" />
-            Rotación por Servicio
-          </Link>
-
-          <Link
-            href="/cuentas-por-cobrar"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-rose-300 bg-rose-50 px-4 text-xs font-bold text-rose-900 transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
-          >
-            <Wallet className="size-4 text-rose-600 dark:text-rose-400" />
-            Cuentas por Cobrar
-          </Link>
-
-          <Link
-            href="/pedidos"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            <Receipt className="size-4" />
-            Ver Pedidos
-          </Link>
-        </div>
-      </div>
+        }
+      />
 
       {/* Barra de Filtros de Período */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">

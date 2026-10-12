@@ -3,7 +3,6 @@
 import {
   AlertCircle,
   AlertTriangle,
-  ArrowLeft,
   Bell,
   Clock,
   ExternalLink,
@@ -21,15 +20,16 @@ import {
   ordenarPedidosPorAntiguedad,
   type PedidoListoRecordatorio,
 } from "@/lib/notificaciones/recordatorios";
+import { PageHeader } from "@/components/shell/page-header";
 
 type Props = {
   pedidosIniciales: PedidoListoRecordatorio[];
-  rolUsuario: string;
+  rolUsuario?: string;
 };
 
 type FiltroUmbral = "todos" | "atencion_48h" | "urgente_72h";
 
-export function RecordatoriosPanel({ pedidosIniciales, rolUsuario }: Props) {
+export function RecordatoriosPanel({ pedidosIniciales }: Props) {
   const [filtro, setFiltro] = useState<FiltroUmbral>("todos");
   const [busqueda, setBusqueda] = useState("");
 
@@ -65,54 +65,39 @@ export function RecordatoriosPanel({ pedidosIniciales, rolUsuario }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Cabecera */}
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/pedidos"
-            aria-label="Volver a pedidos"
-            className="inline-flex size-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <Bell className="size-5 text-indigo-600 dark:text-indigo-400" />
-              <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                Panel de Recordatorios (48–72 h)
-              </h1>
-              <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                {rolUsuario}
-              </span>
-            </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Seguimiento a pedidos listos sin retirar para incentivar cobranza y liberar almacén (RF-09).
-            </p>
+      {/* Cabecera unificada */}
+      <PageHeader
+        title="Recordatorios (48–72 h)"
+        description="Seguimiento a pedidos listos sin retirar para incentivar cobranza y despacho oportuno (RF-09)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-amber-700 dark:text-amber-400">
+            <Bell className="size-3.5" />
+            <span>Cobranzas & Alertas</span>
+          </span>
+        }
+        actions={
+          <div className="relative w-full sm:w-64">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
+            <input
+              type="search"
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              placeholder="Buscar orden o cliente..."
+              className="h-10 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm text-zinc-900 focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            />
+            {busqueda && (
+              <button
+                type="button"
+                onClick={() => setBusqueda("")}
+                aria-label="Limpiar búsqueda"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+              >
+                <X className="size-4" />
+              </button>
+            )}
           </div>
-        </div>
-
-        {/* Buscador */}
-        <div className="relative w-full sm:w-64">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-          <input
-            type="search"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Buscar orden o cliente..."
-            className="h-10 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm text-zinc-900 focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
-          />
-          {busqueda && (
-            <button
-              type="button"
-              onClick={() => setBusqueda("")}
-              aria-label="Limpiar búsqueda"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-            >
-              <X className="size-4" />
-            </button>
-          )}
-        </div>
-      </div>
+        }
+      />
 
       {/* Tarjetas de Métricas Resumen */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

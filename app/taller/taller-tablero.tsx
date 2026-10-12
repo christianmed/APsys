@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowLeft,
   Camera,
   CheckCircle2,
   Clock,
@@ -15,10 +14,13 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { createClient } from "@/lib/supabase/client";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
+import { PageHeader } from "@/components/shell/page-header";
 import { CamaraEscanerModal } from "./camara-escaner-modal";
 import {
   ESTADOS_METADATA,
@@ -29,13 +31,15 @@ import {
 export type PedidoTallerItem = {
   id: string;
   cantidad: number;
-  ancho: number | null;
-  alto: number | null;
-  acabados: string | null;
-  notas: string | null;
+  descripcion?: string | null;
+  dimensiones?: string | null;
+  acabados?: string | null;
+  ancho?: number | null;
+  alto?: number | null;
+  notas?: string | null;
   servicios?: {
     nombre: string;
-    unidad_medida: string;
+    unidad_medida?: string;
   } | null;
 };
 
@@ -82,13 +86,51 @@ function formatoTiempo(fechaIso: string): string {
 }
 
 export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
+  const router = useRouter();
   const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
   const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
+  const [prevPedidosIniciales, setPrevPedidosIniciales] = useState(pedidosIniciales);
   const [pedidos, setPedidos] = useState<PedidoTaller[]>(pedidosIniciales);
   const [idEnProceso, setIdEnProceso] = useState<string | null>(null);
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  // Sincronizar reactivamente cuando el Server Component revalida y entrega nuevos pedidosIniciales
+  if (pedidosIniciales !== prevPedidosIniciales) {
+    setPrevPedidosIniciales(pedidosIniciales);
+    setPedidos(pedidosIniciales);
+  }
+
+  // Suscripción automática en tiempo real: cuando se crea o actualiza un pedido en Supabase,
+  // la pantalla de taller se actualiza inmediatamente sin necesidad de recargar manualmente.
+  useEffect(() => {
+    const supabase = createClient();
+    const canal = supabase
+      .channel("taller-realtime-pedidos")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "pedidos",
+        },
+        () => {
+          router.refresh();
+        },
+      )
+      .subscribe();
+
+    // Sondeo de respaldo cada 5 segundos para actualización continua en taller
+    const temporizador = setInterval(() => {
+      router.refresh();
+    }, 5000);
+
+    return () => {
+      supabase.removeChannel(canal);
+      clearInterval(temporizador);
+    };
+  }, [router]);
 
   // Conteo reactivo por estado
   const conteoRecibido = pedidos.filter((p) => p.estado === "recibido").length;
@@ -171,67 +213,52 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
 
   return (
     <div className="space-y-4">
-      {/* Barra de cabecera optimizada para tablet / táctil */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm border border-zinc-200 dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/pedidos"
-            aria-label="Volver a pedidos"
-            className="inline-flex size-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 transition hover:bg-zinc-100 active:scale-95 dark:border-zinc-800 dark:bg-zinc-800 dark:text-zinc-200"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <Flame className="size-5 text-amber-500" />
-              <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                Taller y Producción
-              </h1>
-              <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                {rolUsuario}
-              </span>
+      {/* Cabecera unificada consistente con el resto de la aplicación */}
+      <PageHeader
+        title="Taller y Producción"
+        description="Control táctil rápido para impresores y ensambladores (≤ 2 toques)."
+        badge={
+          <span className="flex items-center gap-1 font-semibold text-amber-700 dark:text-amber-400">
+            <Flame className="size-3.5 text-amber-500" />
+            <span>{rolUsuario}</span>
+          </span>
+        }
+        actions={
+          <div className="flex w-full items-center gap-2 sm:w-auto">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
+              <input
+                type="search"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Escanear comanda o # orden..."
+                aria-label="Escanear comanda en taller"
+                className="h-11 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm font-medium text-zinc-900 transition focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-100"
+              />
+              {busqueda && (
+                <button
+                  type="button"
+                  onClick={() => setBusqueda("")}
+                  aria-label="Limpiar búsqueda"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                >
+                  <X className="size-4" />
+                </button>
+              )}
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              Control táctil rápido para impresores y ensambladores (≤ 2 toques).
-            </p>
-          </div>
-        </div>
 
-        {/* Buscador de escáner USB y cámara de alta visibilidad */}
-        <div className="flex w-full items-center gap-2 sm:w-auto">
-          <div className="relative flex-1 sm:w-64">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-            <input
-              type="search"
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              placeholder="Escanear comanda o # orden..."
-              aria-label="Escanear comanda en taller"
-              className="h-11 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm font-medium text-zinc-900 transition focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-100"
-            />
-            {busqueda && (
-              <button
-                type="button"
-                onClick={() => setBusqueda("")}
-                aria-label="Limpiar búsqueda"
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
-              >
-                <X className="size-4" />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => setModalCamaraAbierto(true)}
+              aria-label="Escanear con cámara móvil"
+              className="inline-flex size-11 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm transition hover:bg-amber-600 active:scale-95 shrink-0"
+              title="Escanear con cámara"
+            >
+              <Camera className="size-5" />
+            </button>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setModalCamaraAbierto(true)}
-            aria-label="Escanear con cámara móvil"
-            className="inline-flex size-11 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm transition hover:bg-amber-600 active:scale-95 shrink-0"
-            title="Escanear con cámara"
-          >
-            <Camera className="size-5" />
-          </button>
-        </div>
-      </div>
+        }
+      />
 
       {modalCamaraAbierto && (
         <CamaraEscanerModal
@@ -378,7 +405,14 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                     </h3>
                     <ul className="space-y-2">
                       {pedido.items.map((item, idx) => {
-                        const tieneMedidas = item.ancho != null && item.alto != null;
+                        const tieneMedidas =
+                          Boolean(item.dimensiones) ||
+                          (item.ancho != null && item.alto != null);
+                        const textoMedidas =
+                          item.dimensiones ??
+                          (item.ancho != null && item.alto != null
+                            ? `${item.ancho} × ${item.alto} m`
+                            : null);
                         return (
                           <li
                             key={item.id ?? idx}
@@ -390,7 +424,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                               </span>
                               {tieneMedidas && (
                                 <span className="font-mono text-xs font-medium text-zinc-600 dark:text-zinc-400">
-                                  {item.ancho} × {item.alto} m
+                                  {textoMedidas}
                                 </span>
                               )}
                             </div>
@@ -400,9 +434,9 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                                 {item.acabados}
                               </div>
                             )}
-                            {item.notas && (
+                            {(item.descripcion || item.notas) && (
                               <div className="mt-0.5 text-zinc-500 dark:text-zinc-400 italic">
-                                Nota: {item.notas}
+                                {item.descripcion || item.notas}
                               </div>
                             )}
                           </li>

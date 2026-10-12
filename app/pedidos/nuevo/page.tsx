@@ -1,6 +1,7 @@
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
 import { createClient } from "@/lib/supabase/server";
 import { obtenerTasaVigente } from "../actions";
 import { PedidoForm } from "../pedido-form";
@@ -42,32 +43,27 @@ export default async function NuevoPedidoPage() {
   const tasaVigente = await obtenerTasaVigente(supabase);
 
   return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950">
-      <div className="mx-auto w-full max-w-3xl space-y-6">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/pedidos"
-            aria-label="Volver a pedidos"
-            className="inline-flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-white text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
-          >
-            <ArrowLeft className="size-5" />
-          </Link>
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-              Nuevo pedido
-            </h1>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Registra los detalles del cliente, servicios, medidas y cobranza inicial.
-            </p>
-          </div>
-        </div>
-
-        <PedidoForm
-          clientes={clientes ?? []}
-          servicios={servicios ?? []}
-          tasaCambio={tasaVigente.valor_bs_por_usd}
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Nueva Orden de Trabajo"
+          description="Registra los detalles del cliente, servicios, medidas y cobranza inicial."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <Plus className="size-3.5" />
+              <span>Registro de Orden</span>
+            </span>
+          }
         />
+
+        <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <PedidoForm
+            clientes={clientes ?? []}
+            servicios={servicios ?? []}
+            tasaCambio={tasaVigente.valor_bs_por_usd}
+          />
+        </div>
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }

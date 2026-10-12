@@ -1,5 +1,4 @@
 import {
-  ArrowLeft,
   Banknote,
   CheckCircle,
   Clock,
@@ -13,8 +12,11 @@ import {
   obtenerTasaVigenteParaFecha,
   type TasaHistorica,
 } from "@/lib/tasas/tasas";
+import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
 import { createClient } from "@/lib/supabase/server";
-import { TasaForm } from "./tasa-form";
+import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { PageHeader } from "@/components/shell/page-header";
+import { BcvSyncPanel } from "./bcv-sync-panel";
 
 export const instant = false;
 
@@ -41,8 +43,8 @@ function formatoFechaCompleta(iso: string): string {
 
 /**
  * Gestión de tasa de cambio referencial (RF-15 / T-023).
- * Muestra la tasa vigente actual, formulario para nueva tasa (gerencial)
- * y el histórico inmutable de vigencias.
+ * Muestra la tasa vigente actual, tasas BCV en vivo (USD + EUR informativo),
+ * formulario para nueva tasa (gerencial) y el histórico inmutable de vigencias.
  */
 export default async function TasasPage() {
   const supabase = await createClient();
@@ -84,56 +86,50 @@ export default async function TasasPage() {
 
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
 
-  return (
-    <main className="min-h-dvh bg-zinc-50 px-4 py-8 dark:bg-zinc-950 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl space-y-8">
-        {/* Encabezado */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <Link
-              href="/dashboard"
-              className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-            >
-              <ArrowLeft className="size-3.5" />
-              Volver al Dashboard
-            </Link>
-            <div className="flex items-center gap-2.5">
-              <Banknote className="size-6 text-emerald-600 dark:text-emerald-400" />
-              <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
-                Tasa de Cambio Referencial
-              </h1>
-            </div>
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              Configuración y vigencia de la tasa referencial Bs/USD. Los pedidos previos retienen su tasa histórica (RF-15).
-            </p>
-          </div>
+  // Consulta inicial de tasas BCV en vivo para precargar en el panel sin requerir clic
+  let tasasBcvIniciales: Awaited<ReturnType<typeof obtenerTasasBcvCompletas>> | null = null;
+  try {
+    tasasBcvIniciales = await obtenerTasasBcvCompletas();
+  } catch {
+    // Silenciar — la consulta BCV es best-effort
+  }
 
-          <div className="flex flex-wrap items-center gap-2">
+  return (
+    <AuthenticatedShell>
+      <div className="space-y-6">
+        <PageHeader
+          title="Tasa de Cambio Referencial"
+          description="Configuración y vigencia de la tasa referencial Bs/USD. Los pedidos previos retienen su tasa histórica (RF-15)."
+          badge={
+            <span className="flex items-center gap-1 font-semibold text-emerald-700 dark:text-emerald-400">
+              <Banknote className="size-3.5" />
+              <span>Divisas & BCV</span>
+            </span>
+          }
+          actions={
             <Link
               href="/pedidos"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
             >
               Ver Pedidos
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* Tarjeta destacada de la tasa vigente */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-emerald-950/20 sm:p-8">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
+          <div className="flex flex-wrap items-start justify-between gap-6">
+            {/* USD principal */}
+            <div className="flex-1 min-w-[200px]">
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
                   <CheckCircle className="size-3.5" />
-                  Tasa Vigente Ahora
-                </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Aplica para nuevos pedidos y cobros
+                  Tasa Vigente — USD
                 </span>
               </div>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white sm:text-5xl">
-                  Bs. {tasaVigente ? formatearTasaBs(tasaVigente.valor_bs_por_usd) : "40,00"}
+                  Bs. {tasaVigente ? formatearTasaBs(tasaVigente.valor_bs_por_usd) : "—"}
                 </span>
                 <span className="text-sm font-bold text-zinc-500 dark:text-zinc-400">
                   / 1.00 USD
@@ -146,56 +142,58 @@ export default async function TasasPage() {
                   {tasaVigente ? formatoFechaCompleta(tasaVigente.vigente_desde) : "Vigencia base"}
                 </span>
               </p>
+              <p className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
+                Aplica para nuevos pedidos y cobros
+              </p>
             </div>
 
-            <div className="rounded-2xl border border-emerald-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-emerald-900/40 dark:bg-zinc-900/80 text-xs text-zinc-600 dark:text-zinc-300 max-w-xs space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-300">
-                <ShieldCheck className="size-4 text-emerald-600" />
-                Inmutabilidad Histórica
+            {/* Nota de inmutabilidad */}
+            <div className="min-w-[200px] max-w-sm">
+              <div className="rounded-2xl border border-emerald-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-emerald-900/40 dark:bg-zinc-900/80 text-xs text-zinc-600 dark:text-zinc-300 space-y-1">
+                <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-300">
+                  <ShieldCheck className="size-4 text-emerald-600" />
+                  Inmutabilidad Histórica
+                </div>
+                <p className="leading-relaxed text-[11px] text-zinc-500 dark:text-zinc-400">
+                  Al actualizar la tasa, ninguna orden ni cobro emitido con anterioridad sufrirá cambios en sus totales en bolívares.
+                </p>
               </div>
-              <p className="leading-relaxed text-[11px] text-zinc-500 dark:text-zinc-400">
-                Al actualizar la tasa, ninguna orden ni cobro emitido con anterioridad sufrirá cambios en sus totales en bolívares.
-              </p>
             </div>
           </div>
         </div>
 
-        {/* Sección de 2 columnas: Formulario de actualización + Histórico */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Formulario para Gerencia */}
-          <div className="lg:col-span-5">
-            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <h2 className="text-sm font-bold text-zinc-900 dark:text-white">
-                Actualizar Tasa Referencial
-              </h2>
-              <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400 mb-4">
-                {esGerencial
-                  ? "Ingrese el nuevo valor para registrar la nueva vigencia."
-                  : "Acción reservada exclusivamente para el perfil gerencial."}
-              </p>
-
-              {esGerencial ? (
-                <TasaForm valorActual={tasaVigente?.valor_bs_por_usd} />
-              ) : (
+        {/* Sección de 2 columnas de igual ancho: Sincronización BCV en Vivo e Histórico (en móvil: Sincronización arriba, Histórico abajo) */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {/* Columna 1: Sincronización BCV en Vivo */}
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            {esGerencial ? (
+              <BcvSyncPanel
+                tasaActualUsd={tasaVigente?.valor_bs_por_usd}
+                tasasIniciales={tasasBcvIniciales}
+              />
+            ) : (
+              <div className="space-y-3">
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
+                  Tasa BCV en Vivo
+                </h3>
                 <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-                  Su usuario tiene perfil <strong>operativo</strong>. Puede consultar la tasa referencial para atender clientes en mostrador, pero la actualización está restringida a gerencia.
+                  La sincronización automática con BCV está disponible únicamente para el perfil <strong>gerencial</strong>.
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
-          {/* Histórico Inmutable de Tasas */}
-          <div className="lg:col-span-7">
-            <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <History className="size-4 text-zinc-400" />
-                  <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
-                    Histórico de Tasas Registradas ({historial.length})
-                  </h3>
-                </div>
+          {/* Columna 2: Histórico Inmutable de Tasas */}
+          <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <History className="size-4 text-zinc-400" />
+                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
+                  Histórico ({historial.length})
+                </h3>
+              </div>
                 <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Orden cronológico inverso
+                  Cronológico inverso
                 </span>
               </div>
 
@@ -246,9 +244,8 @@ export default async function TasasPage() {
                 </div>
               )}
             </div>
-          </div>
         </div>
       </div>
-    </main>
+    </AuthenticatedShell>
   );
 }
