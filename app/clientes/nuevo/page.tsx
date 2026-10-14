@@ -2,7 +2,7 @@ import { UserPlus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { ClienteForm } from "../cliente-form";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
@@ -12,11 +12,7 @@ export const instant = false;
 
 /** Alta de cliente (RF-01): guarda de sesión + formulario en modo "crear". */
 export default async function NuevoClientePage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");

@@ -7,7 +7,7 @@ import {
   filtrarPedidosPorPeriodo,
   type PedidoReporte,
 } from "@/lib/reportes/exportacion";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { BotonImprimir } from "./boton-imprimir";
 
 export const instant = false;
@@ -22,21 +22,11 @@ type Props = {
 
 export default async function ReporteImprimirPage({ searchParams }: Props) {
   const { periodo, desde, hasta } = await searchParams;
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   if (perfil?.rol !== "gerencial") {
     redirect("/");

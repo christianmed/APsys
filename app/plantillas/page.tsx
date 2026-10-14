@@ -3,7 +3,7 @@ import {
   PLANTILLAS_POR_DEFECTO,
   type TipoPlantilla,
 } from "@/lib/notificaciones/plantillas";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PlantillaEditor } from "./plantilla-editor";
 
@@ -14,21 +14,11 @@ export const instant = false;
  * Permite a gerencia personalizar textos con variables dinámicas validadas.
  */
 export default async function PlantillasPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 

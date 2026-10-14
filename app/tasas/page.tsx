@@ -57,13 +57,18 @@ export default async function TasasPage() {
   const esGerencial = perfil?.rol === "gerencial";
 
   // Consultar histórico de tasas
-  const { data: tasasData, error } = await supabase
-    .from("tasas_cambio")
-    .select("id, valor_bs_por_usd, vigente_desde, creado_en")
-    .order("vigente_desde", { ascending: false });
+  // Consulta paralela del histórico y de tasas BCV en vivo para precargar instantáneamente
+  const [tasasRes, tasasBcvIniciales] = await Promise.all([
+    supabase
+      .from("tasas_cambio")
+      .select("id, valor_bs_por_usd, vigente_desde, creado_en")
+      .order("vigente_desde", { ascending: false }),
+    obtenerTasasBcvCompletas().catch(() => null),
+  ]);
 
-  if (error) {
-    console.error("Error al consultar tasas_cambio:", error);
+  const tasasData = tasasRes.data;
+  if (tasasRes.error) {
+    console.error("Error al consultar tasas_cambio:", tasasRes.error);
   }
 
   const historial: TasaHistorica[] = ((tasasData ?? []) as unknown as TasaRaw[]).map(
@@ -77,14 +82,6 @@ export default async function TasasPage() {
 
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
   const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, new Date());
-
-  // Consulta inicial de tasas BCV en vivo para precargar en el panel sin requerir clic
-  let tasasBcvIniciales: Awaited<ReturnType<typeof obtenerTasasBcvCompletas>> | null = null;
-  try {
-    tasasBcvIniciales = await obtenerTasasBcvCompletas();
-  } catch {
-    // Silenciar — la consulta BCV es best-effort
-  }
 
   return (
     <AuthenticatedShell>
