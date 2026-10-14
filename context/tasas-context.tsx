@@ -108,6 +108,34 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
     }
   }, [initialTasas?.tasaUsd, refrescarTasas]);
 
+  // Suscripción en tiempo real: cuando se actualiza o inserta una tasa en Supabase,
+  // el contexto en memoria (Sidebar, Header y conversores) se refresca automáticamente.
+  useEffect(() => {
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const canal = supabase
+        .channel("tasas-cambio-realtime")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "tasas_cambio",
+          },
+          () => {
+            void refrescarTasas();
+          },
+        )
+        .subscribe();
+
+      return () => {
+        void supabase.removeChannel(canal);
+      };
+    } catch {
+      // Ignorar en entornos sin soporte de WebSockets (ej. jsdom)
+    }
+  }, [refrescarTasas]);
+
   const convertirUsdABs = useCallback(
     (montoUsd: number) => {
       return calcularConversionBsUsd(montoUsd, tasaUsd);

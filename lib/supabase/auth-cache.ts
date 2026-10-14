@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { headers } from "next/headers";
+import { connection } from "next/server";
 import { createClient } from "./server";
 
 export type PerfilUsuario = {
@@ -22,6 +23,12 @@ export type UsuarioSesion = {
  *    `supabase.auth.getUser()`.
  */
 export const obtenerUsuarioSesion = cache(async () => {
+  try {
+    await connection();
+  } catch {
+    // Si no está en contexto de request de Next.js (ej. tests unitarios), continúa
+  }
+
   const supabase = await createClient();
 
   // Opción B: Inspeccionar cabeceras inyectadas por proxy.ts

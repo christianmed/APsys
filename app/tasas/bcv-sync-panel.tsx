@@ -9,6 +9,8 @@ import {
   Wifi,
 } from "lucide-react";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useTasas } from "@/context/tasas-context";
 import {
   consultarTasasBcvEnVivo,
   sincronizarTasaBcv,
@@ -26,6 +28,8 @@ type Props = {
  * y botón para aplicar la tasa USD como nueva vigencia (RF-15).
  */
 export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
+  const router = useRouter();
+  const { refrescarTasas } = useTasas();
   const [consultando, iniciarConsulta] = useTransition();
   const [sincronizando, iniciarSync] = useTransition();
 
@@ -51,6 +55,10 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
         // Refrescar las tasas en vivo después de sincronizar
         const nuevasTasas = await consultarTasasBcvEnVivo();
         setTasasEnVivo(nuevasTasas);
+        // Actualizar el contexto en memoria RAM (Sidebar, Header y conversores)
+        await refrescarTasas();
+        // Revalidar el Server Component de la ruta actual (/tasas)
+        router.refresh();
       }
     });
   };

@@ -109,7 +109,7 @@ export default async function TasasPage() {
 
         {/* Tarjeta destacada de la tasa vigente */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-emerald-950/20 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-6">
+          <div className="flex flex-wrap items-center justify-between gap-6">
             {/* USD principal */}
             <div className="flex-1 min-w-[200px]">
               <div className="flex items-center gap-2">
