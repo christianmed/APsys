@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { connection } from "next/server";
 import { generarCodigoBarrasSvg } from "@/lib/comanda/barcode";
 import { generarQrSvg } from "@/lib/comanda/qr";
 import { createClient } from "@/lib/supabase/server";
@@ -16,7 +15,6 @@ type Props = {
  * Accesible tanto por recepción como por personal de taller.
  */
 export default async function ComandaPage({ params }: Props) {
-  await connection();
   const { id } = await params;
   const supabase = await createClient();
 

@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import {
   PLANTILLAS_POR_DEFECTO,
   type TipoPlantilla,
@@ -15,7 +14,6 @@ export const instant = false;
  * Permite a gerencia personalizar textos con variables dinámicas validadas.
  */
 export default async function PlantillasPage() {
-  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

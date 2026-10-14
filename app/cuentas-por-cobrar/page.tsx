@@ -1,7 +1,6 @@
 import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import {
   calcularCuentasPorCobrar,
   type PedidoConDeudaInput,
@@ -39,7 +38,6 @@ type PedidoRaw = {
  * Protegido por RLS y perfil: Solo usuarios gerenciales tienen acceso a la cartera consolidada (RF-18 / RF-19).
  */
 export default async function CuentasPorCobrarPage() {
-  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

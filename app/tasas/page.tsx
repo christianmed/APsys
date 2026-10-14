@@ -7,7 +7,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import {
   formatearTasaBs,
   obtenerTasaVigenteParaFecha,
@@ -49,7 +48,6 @@ function formatoFechaCompleta(iso: string): string {
  * formulario para nueva tasa (gerencial) y el histórico inmutable de vigencias.
  */
 export default async function TasasPage() {
-  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

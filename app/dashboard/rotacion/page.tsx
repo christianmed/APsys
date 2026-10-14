@@ -1,7 +1,6 @@
 import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import {
   obtenerRangoFechasPreset,
   type PresetFecha,
@@ -45,7 +44,6 @@ type PedidoRaw = {
  * Restringido a usuarios con rol 'gerencial' (RF-18 / RF-19).
  */
 export default async function RotacionServiciosPage({ searchParams }: Props) {
-  await connection();
   const {
     preset: presetQuery,
     desde: desdeQuery,

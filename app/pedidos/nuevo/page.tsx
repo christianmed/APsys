@@ -1,6 +1,5 @@
 import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
@@ -16,7 +15,6 @@ export const instant = false;
  * Accesible tanto para el perfil operativo (recepción) como para el gerencial.
  */
 export default async function NuevoPedidoPage() {
-  await connection();
   const { user, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

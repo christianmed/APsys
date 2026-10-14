@@ -1,7 +1,6 @@
 import { Layers, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
@@ -29,7 +28,6 @@ const CLASES_BADGE_INACTIVO = `${CLASES_BADGE} bg-zinc-100 text-zinc-600 dark:bg
  * alta y abre cada fila para editar (incluida la baja lógica vía `activo`).
  */
 export default async function ServiciosPage() {
-  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

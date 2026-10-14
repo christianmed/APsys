@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
@@ -31,7 +30,6 @@ type Props = {
  * Listado de pedidos, búsqueda por número/escáner y cobranza (RF-01, RF-02, RF-06 / T-012).
  */
 export default async function PedidosPage({ searchParams }: Props) {
-  await connection();
   const { q } = await searchParams;
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 

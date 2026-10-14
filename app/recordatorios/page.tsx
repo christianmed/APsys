@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import {
   calcularAntiguedadHoras,
   type PedidoListoRecordatorio,
@@ -15,7 +14,6 @@ export const instant = false;
  * Alertas automáticas para órdenes con 48 h (atención) o 72 h (urgente) en espera.
  */
 export default async function RecordatoriosPage() {
-  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
