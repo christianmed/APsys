@@ -20,6 +20,10 @@ import {
 } from "@/lib/dashboard/rotacion-servicios";
 import { type PresetFecha } from "@/lib/dashboard/ingresos";
 import { PageHeader } from "@/components/shell/page-header";
+import {
+  CustomSelect,
+  type CustomSelectOption,
+} from "@/components/ui/custom-select";
 
 type Props = {
   metricasIniciales: MetricaServicioRotacion[];
@@ -29,6 +33,13 @@ type Props = {
   desdeInicial?: string;
   hastaInicial?: string;
 };
+
+const OPCIONES_CRITERIO: CustomSelectOption<CriterioOrdenRotacion>[] = [
+  { value: "mayor_ingreso", label: "Mayor facturación ($)" },
+  { value: "mayor_demanda", label: "Mayor demanda (piezas)" },
+  { value: "menor_demanda", label: "Menor demanda (rotación baja)" },
+  { value: "nombre", label: "Nombre (A - Z)" },
+];
 
 function formatearUSD(monto: number): string {
   return `$${monto.toLocaleString("en-US", {
@@ -337,16 +348,13 @@ export function RotacionServiciosView({
 
           <div className="flex items-center gap-2">
             <span className="text-xs text-zinc-500 dark:text-zinc-400">Ordenar por:</span>
-            <select
+            <CustomSelect<CriterioOrdenRotacion>
               value={criterio}
-              onChange={(e) => cambiarOrden(e.target.value as CriterioOrdenRotacion)}
-              className="h-8 rounded-lg border border-zinc-200 bg-white px-2.5 text-xs font-semibold text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
-            >
-              <option value="mayor_ingreso">Mayor facturación ($)</option>
-              <option value="mayor_demanda">Mayor demanda (piezas)</option>
-              <option value="menor_demanda">Menor demanda (rotación baja)</option>
-              <option value="nombre">Nombre (A - Z)</option>
-            </select>
+              onChange={(val) => cambiarOrden(val)}
+              options={OPCIONES_CRITERIO}
+              variant="header"
+              size="sm"
+            />
           </div>
         </div>
 

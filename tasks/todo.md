@@ -122,13 +122,13 @@
   - [x] Paso 6 (E2E & TDD): Crear suite E2E en Playwright `e2e/navegacion-instantanea.spec.ts` para auditar transiciones de navegación en < 80ms y cero regresiones.
   - [x] Paso 7: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`, `npm run build`).
 
-- [ ] **Fase 21: Componente Universal CustomSelect para APSys (Consistencia Visual y Selectores Mejorados)**
-  - [ ] Paso 1 (Diseño & Especificación): Adaptar `CustomSelect.jsx` a TypeScript estricto (`components/ui/custom-select.tsx`), definiendo contratos tipados con genéricos (`Option<T>`, `CustomSelectProps<T>`).
-  - [ ] Paso 2 (Tokens y Sistema de Diseño): Migrar de la paleta Slate original a la paleta oficial **Zinc de Tailwind v4** de APSys (`bg-white`, `border-zinc-200`, `dark:bg-zinc-900`, `dark:border-zinc-800`), manteniendo esquinas redondeadas (`rounded-xl` y `rounded-2xl`), soporte táctil móvil, y variantes de tamaño (`sm`, `md`).
-  - [ ] Paso 3 (Accesibilidad y Teclado a11y): Integrar roles WAI-ARIA completos (`role="listbox"`, `role="option"`, `aria-selected`), navegación completa por teclado (`ArrowDown`, `ArrowUp`, `Enter`, `Escape`) y prevención de scroll corporal en móviles.
-  - [ ] Paso 4 (TDD - Pruebas Unitarias): Crear suite de pruebas `test/custom-select.test.tsx` en Vitest/Testing Library verificando selección, filtrado por búsqueda en tiempo real, click-outside, teclado y renderizado de acción inferior (`actionButton`).
-  - [ ] Paso 5 (Integración Piloto en Formularios): Reemplazar selectores nativos en `/pedidos/nuevo` (selector de clientes con búsqueda y botón `+ Nuevo Cliente`, selector de servicios y selector de tipo de tasa de cambio).
-  - [ ] Paso 6 (Integración en Filtros de Módulos): Integrar variante `header`/filtro compacto en `/pedidos` y `/taller` para filtrado rápido por estado.
-  - [ ] Paso 7: Verificación de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`, `npm run build`).
+- [x] **Fase 21: Componente Universal CustomSelect para APSys (Consistencia Visual y Selectores Mejorados)**
+  - [x] Paso 1 (Diseño & Especificación): Adaptar `CustomSelect.jsx` a TypeScript estricto (`components/ui/custom-select.tsx`), definiendo contratos tipados con genéricos (`Option<T>`, `CustomSelectProps<T>`).
+  - [x] Paso 2 (Tokens y Sistema de Diseño): Migrar de la paleta Slate original a la paleta oficial **Zinc de Tailwind v4** de APSys (`bg-white`, `border-zinc-200`, `dark:bg-zinc-900`, `dark:border-zinc-800`), manteniendo esquinas redondeadas (`rounded-xl` y `rounded-2xl`), soporte táctil móvil, y variantes de tamaño (`sm`, `md`).
+  - [x] Paso 3 (Accesibilidad y Teclado a11y): Integrar roles WAI-ARIA completos (`role="listbox"`, `role="option"`, `aria-selected`), navegación completa por teclado (`ArrowDown`, `ArrowUp`, `Enter`, `Escape`) y prevención de scroll corporal en móviles.
+  - [x] Paso 4 (TDD - Pruebas Unitarias): Crear suite de pruebas `test/custom-select.test.tsx` en Vitest/Testing Library verificando selección, filtrado por búsqueda en tiempo real, click-outside, teclado y renderizado de acción inferior (`actionButton`).
+  - [x] Paso 5 (Integración Piloto en Formularios): Reemplazar selectores nativos en `/pedidos/nuevo` (selector de clientes con búsqueda reactiva, subtítulo de teléfono y botón integrado `Registrar Nuevo Cliente`, y selector de servicios en renglones).
+  - [x] Paso 6 (Integración en Filtros de Módulos): Integrar variante `header` compacta en `/dashboard/rotacion` (ordenar por criterio) y en `/cuentas-por-cobrar` (ordenar saldos).
+  - [x] Paso 7: Verificación de calidad DoD completada (198 tests Vitest 100% verde, `tsc` 0 errores, ESLint limpio).
 
 

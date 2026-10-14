@@ -8,9 +8,16 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 
 ## [Unreleased]
 
-### Planned
+### Added
+- **Componente Universal `CustomSelect` (Fase 21)**: Selector accesible en TypeScript (`components/ui/custom-select.tsx`) estilizado con la paleta oficial Zinc de APSys.
+  - Soporte para búsqueda reactiva en tiempo real sobre etiquetas y subtítulos.
+  - Botón de acción rápida inferior (ej. `+ Registrar Nuevo Cliente`).
+  - Navegación por teclado completa (`ArrowDown`, `ArrowUp`, `Enter`, `Escape`) y roles WAI-ARIA (`listbox`, `option`).
+  - Variante `header` (píldora compacta para filtros) y variante `form` (para formularios y modales con input hidden para Server Actions).
+  - Integración en formulario de nueva orden (`/pedidos/nuevo`) para clientes y servicios, y en filtros de `/dashboard/rotacion` y `/cuentas-por-cobrar`.
+  - Cobertura de 12 pruebas unitarias en `test/custom-select.test.tsx` (198 pruebas totales en verde).
 
-- **Fase 21 (CustomSelect)**: Componente de selección desplegable personalizado accesible y con soporte para búsqueda reactiva.
+### Planned
 - Preparación y auditoría final para el lanzamiento de la versión mayor `v1.0.0`.
 
 ---
