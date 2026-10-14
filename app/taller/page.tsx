@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
-import { mapearPedidosTaller, TallerTablero } from "./taller-tablero";
+import { mapearPedidosTaller } from "@/lib/pedidos/taller-mapper";
+import { TallerTablero } from "./taller-tablero";
 
 export const instant = false;
 
