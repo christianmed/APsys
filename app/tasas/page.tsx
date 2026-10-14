@@ -57,13 +57,18 @@ export default async function TasasPage() {
   const esGerencial = perfil?.rol === "gerencial";
 
   // Consultar histórico de tasas
-  const { data: tasasData, error } = await supabase
-    .from("tasas_cambio")
-    .select("id, valor_bs_por_usd, vigente_desde, creado_en")
-    .order("vigente_desde", { ascending: false });
+  // Consulta paralela del histórico y de tasas BCV en vivo para precargar instantáneamente
+  const [tasasRes, tasasBcvIniciales] = await Promise.all([
+    supabase
+      .from("tasas_cambio")
+      .select("id, valor_bs_por_usd, vigente_desde, creado_en")
+      .order("vigente_desde", { ascending: false }),
+    obtenerTasasBcvCompletas().catch(() => null),
+  ]);
 
-  if (error) {
-    console.error("Error al consultar tasas_cambio:", error);
+  const tasasData = tasasRes.data;
+  if (tasasRes.error) {
+    console.error("Error al consultar tasas_cambio:", tasasRes.error);
   }
 
   const historial: TasaHistorica[] = ((tasasData ?? []) as unknown as TasaRaw[]).map(
@@ -77,14 +82,6 @@ export default async function TasasPage() {
 
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
   const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, new Date());
-
-  // Consulta inicial de tasas BCV en vivo para precargar en el panel sin requerir clic
-  let tasasBcvIniciales: Awaited<ReturnType<typeof obtenerTasasBcvCompletas>> | null = null;
-  try {
-    tasasBcvIniciales = await obtenerTasasBcvCompletas();
-  } catch {
-    // Silenciar — la consulta BCV es best-effort
-  }
 
   return (
     <AuthenticatedShell>
@@ -110,7 +107,7 @@ export default async function TasasPage() {
 
         {/* Tarjeta destacada de la tasa vigente */}
         <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-emerald-950/20 sm:p-8">
-          <div className="flex flex-wrap items-start justify-between gap-6">
+          <div className="flex flex-wrap items-center justify-between gap-6">
             {/* USD principal */}
             <div className="flex-1 min-w-[200px]">
               <div className="flex items-center gap-2">

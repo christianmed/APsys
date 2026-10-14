@@ -7,7 +7,7 @@ import {
   calcularMetricasCliente,
   type PedidoHistorialInput,
 } from "@/lib/clientes/historial";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { ClienteForm } from "../cliente-form";
 import { HistorialClienteView } from "./historial-cliente-view";
 
@@ -43,11 +43,7 @@ export default async function EditarClientePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");

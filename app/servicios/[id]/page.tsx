@@ -1,6 +1,6 @@
 import { Layers } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { ServicioForm } from "../servicio-form";
@@ -20,21 +20,11 @@ export default async function EditarServicioPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   if (perfil?.rol !== "gerencial") {
     redirect("/servicios");

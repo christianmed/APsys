@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 
@@ -27,7 +26,6 @@ export const instant = false;
  * Centro de Mando Operativo y Panel de Inicio de APSys (Rediseño UX/UI).
  */
 export default async function Home() {
-  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

@@ -11,7 +11,7 @@ import {
   type PedidoRotacionInput,
   type ServicioCatalogo,
 } from "@/lib/dashboard/rotacion-servicios";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { RotacionServiciosView } from "./rotacion-view";
 
@@ -51,21 +51,11 @@ export default async function RotacionServiciosPage({ searchParams }: Props) {
     orden: ordenQuery,
   } = await searchParams;
 
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 

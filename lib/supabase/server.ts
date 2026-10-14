@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 
 /**
  * Env público de Supabase. El mensaje nombra la variable pero nunca incluye
@@ -24,6 +25,12 @@ function requireEnv(name: string, value: string | undefined): string {
  * sesión en cada request vive en `proxy.ts` (patrón oficial @supabase/ssr).
  */
 export async function createClient() {
+  try {
+    await connection();
+  } catch {
+    // Si se ejecuta fuera del contexto de request de Next.js (ej. tests unitarios), continúa
+  }
+
   const cookieStore = await cookies(); // En Next.js 15+ la API es asíncrona.
 
   return createServerClient(

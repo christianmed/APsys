@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { obtenerTasaProgramada, obtenerTasaVigente } from "../actions";
 import { PedidoForm } from "../pedido-form";
 
@@ -15,33 +15,31 @@ export const instant = false;
  * Accesible tanto para el perfil operativo (recepción) como para el gerencial.
  */
 export default async function NuevoPedidoPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
 
-  // Cargar clientes para el selector
-  const { data: clientes } = await supabase
-    .from("clientes")
-    .select("id,nombre,telefono")
-    .order("nombre", { ascending: true });
+  // Carga paralela ultrarrápida de clientes, servicios y tasas simultáneamente
+  const [clientesRes, serviciosRes, tasaVigente, tasaProgramada] =
+    await Promise.all([
+      supabase
+        .from("clientes")
+        .select("id,nombre,telefono")
+        .order("nombre", { ascending: true }),
+      supabase
+        .from("servicios")
+        .select("id,nombre")
+        .eq("activo", true)
+        .order("orden", { ascending: true })
+        .order("nombre", { ascending: true }),
+      obtenerTasaVigente(supabase),
+      obtenerTasaProgramada(supabase),
+    ]);
 
-  // Cargar servicios activos del catálogo
-  const { data: servicios } = await supabase
-    .from("servicios")
-    .select("id,nombre")
-    .eq("activo", true)
-    .order("orden", { ascending: true })
-    .order("nombre", { ascending: true });
-
-  // Cargar la tasa de cambio vigente y tasa programada (para presupuestos de mañana)
-  const tasaVigente = await obtenerTasaVigente(supabase);
-  const tasaProgramada = await obtenerTasaProgramada(supabase);
+  const clientes = clientesRes.data ?? [];
+  const servicios = serviciosRes.data ?? [];
 
   return (
     <AuthenticatedShell>

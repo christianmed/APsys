@@ -3,7 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
 // se bloquea la ruta con la opción documentada (`instant = false`),
@@ -28,21 +28,11 @@ const CLASES_BADGE_INACTIVO = `${CLASES_BADGE} bg-zinc-100 text-zinc-600 dark:bg
  * alta y abre cada fila para editar (incluida la baja lógica vía `activo`).
  */
 export default async function ServiciosPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const esGerencial = perfil?.rol === "gerencial";
 

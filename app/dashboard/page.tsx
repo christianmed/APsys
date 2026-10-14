@@ -1,12 +1,8 @@
 import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  obtenerRangoFechasPreset,
-  type PagoMétrica,
-  type PresetFecha,
-} from "@/lib/dashboard/ingresos";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerRangoFechasPreset, type PagoMétrica, type PresetFecha } from "@/lib/dashboard/ingresos";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { DashboardView } from "./dashboard-view";
 
@@ -28,21 +24,11 @@ export default async function DashboardPage({ searchParams }: Props) {
   const { preset: presetQuery, desde: desdeQuery, hasta: hastaQuery } =
     await searchParams;
 
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 

@@ -3,7 +3,7 @@ import {
   calcularAntiguedadHoras,
   type PedidoListoRecordatorio,
 } from "@/lib/notificaciones/recordatorios";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { RecordatoriosPanel } from "./recordatorios-panel";
 
@@ -14,21 +14,11 @@ export const instant = false;
  * Alertas automáticas para órdenes con 48 h (atención) o 72 h (urgente) en espera.
  */
 export default async function RecordatoriosPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 

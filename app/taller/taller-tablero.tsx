@@ -14,7 +14,6 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
@@ -27,39 +26,13 @@ import {
   type EstadoPedido,
   obtenerSiguienteEstadoSugerido,
 } from "@/lib/pedidos/estados";
+import {
+  mapearPedidosTaller,
+  type PedidoTaller,
+  type PedidoTallerItem,
+} from "@/lib/pedidos/taller-mapper";
 
-export type PedidoTallerItem = {
-  id: string;
-  cantidad: number;
-  descripcion?: string | null;
-  dimensiones?: string | null;
-  acabados?: string | null;
-  ancho?: number | null;
-  alto?: number | null;
-  notas?: string | null;
-  servicios?: {
-    nombre: string;
-    unidad_medida?: string;
-  } | null;
-};
-
-export type PedidoTaller = {
-  id: string;
-  numero_orden: number;
-  estado: EstadoPedido;
-  creado_en: string;
-  listo_en: string | null;
-  entregado_en: string | null;
-  anulado: boolean;
-  total_usd?: number;
-  saldo_usd?: number;
-  tasa_bs?: number;
-  clientes?: {
-    nombre: string;
-    telefono: string | null;
-  } | null;
-  items: PedidoTallerItem[];
-};
+export type { PedidoTaller, PedidoTallerItem };
 
 type Props = {
   pedidosIniciales: PedidoTaller[];
@@ -86,7 +59,6 @@ function formatoTiempo(fechaIso: string): string {
 }
 
 export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
-  const router = useRouter();
   const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
   const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
@@ -96,14 +68,65 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Sincronizar reactivamente cuando el Server Component revalida y entrega nuevos pedidosIniciales
+  // Sincronizar reactivamente si pedidosIniciales cambia
   if (pedidosIniciales !== prevPedidosIniciales) {
     setPrevPedidosIniciales(pedidosIniciales);
     setPedidos(pedidosIniciales);
   }
 
+  // Recarga reactiva en cliente sin bloquear el servidor Next.js
+  const recargarPedidosCliente = async () => {
+    try {
+      const supabase = createClient();
+      const { data: pedidosRaw } = await supabase
+        .from("pedidos")
+        .select(
+          `
+          id,
+          numero_orden,
+          estado,
+          total_usd,
+          creado_en,
+          listo_en,
+          entregado_en,
+          anulado,
+          cliente_id,
+          clientes (
+            nombre,
+            telefono
+          ),
+          pagos (
+            monto,
+            moneda
+          ),
+          tasas_cambio (
+            valor_bs_por_usd
+          ),
+          pedido_items (
+            id,
+            cantidad,
+            descripcion,
+            dimensiones,
+            acabados,
+            servicios (
+              nombre
+            )
+          )
+        `,
+        )
+        .eq("anulado", false)
+        .order("creado_en", { ascending: true });
+
+      if (pedidosRaw) {
+        setPedidos(mapearPedidosTaller(pedidosRaw));
+      }
+    } catch {
+      // Si falla en cliente, fallback suave
+    }
+  };
+
   // Suscripción automática en tiempo real: cuando se crea o actualiza un pedido en Supabase,
-  // la pantalla de taller se actualiza inmediatamente sin necesidad de recargar manualmente.
+  // la pantalla de taller se actualiza inmediatamente en cliente vía WebSocket.
   useEffect(() => {
     const supabase = createClient();
     const canal = supabase
@@ -116,21 +139,21 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
           table: "pedidos",
         },
         () => {
-          router.refresh();
+          recargarPedidosCliente();
         },
       )
       .subscribe();
 
     // Sondeo de respaldo cada 5 segundos para actualización continua en taller
     const temporizador = setInterval(() => {
-      router.refresh();
+      recargarPedidosCliente();
     }, 5000);
 
     return () => {
       supabase.removeChannel(canal);
       clearInterval(temporizador);
     };
-  }, [router]);
+  }, []);
 
   // Conteo reactivo por estado
   const conteoRecibido = pedidos.filter((p) => p.estado === "recibido").length;
@@ -374,7 +397,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                       </div>
                       <div className="mt-0.5 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                         <Clock className="size-3" />
-                        <span>{formatoTiempo(pedido.creado_en)}</span>
+                        <span suppressHydrationWarning>{formatoTiempo(pedido.creado_en)}</span>
                       </div>
                     </div>
 

@@ -5,7 +5,7 @@ import {
   calcularCuentasPorCobrar,
   type PedidoConDeudaInput,
 } from "@/lib/cobranzas/cuentas-por-cobrar";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { CuentasCobrarView } from "./cuentas-view";
 
@@ -38,21 +38,11 @@ type PedidoRaw = {
  * Protegido por RLS y perfil: Solo usuarios gerenciales tienen acceso a la cartera consolidada (RF-18 / RF-19).
  */
 export default async function CuentasPorCobrarPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   const rolUsuario = perfil?.rol ?? "operativo";
 

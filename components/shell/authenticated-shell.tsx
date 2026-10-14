@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation";
-import { connection } from "next/server";
-import { type ReactNode } from "react";
-import { cerrarSesion } from "@/app/actions";
-import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
-import { obtenerTasaBcv } from "@/lib/tasas/bcv-service";
+"use client";
+
+import React, { useEffect, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
+import { useTasas } from "@/context/tasas-context";
 import { AppShell } from "./app-shell";
 
 type Props = {
@@ -11,57 +11,38 @@ type Props = {
 };
 
 /**
- * Envoltorio de Servidor que resuelve la sesión, perfil y tasas del día
- * de forma paralela y optimizada para máxima velocidad de respuesta.
+ * Envoltorio de Cliente Reactivo que consume sesión, perfil y tasas directamente
+ * desde la memoria del navegador (AuthContext y TasasContext), garantizando navegación
+ * instantánea (0ms) sin bloqueos de servidor.
  */
-export async function AuthenticatedShell({ children }: Props) {
-  await connection();
-  const { user, perfil, supabase } = await obtenerUsuarioSesion();
+export function AuthenticatedShell({ children }: Props) {
+  const router = useRouter();
+  const { user, perfil, isLoading, signOut } = useAuth();
+  const { tasaUsd, tasaEur, tasaSiguiente } = useTasas();
 
-  if (!user) {
-    redirect("/login");
-  }
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login");
+    }
+  }, [isLoading, user, router]);
 
-  const ahoraIso = new Date().toISOString();
+  const handleCerrarSesion = async () => {
+    await signOut();
+    router.push("/login");
+  };
 
-  // Ejecución simultánea y en paralelo de todas las consultas de tasas
-  const [tasaDataRes, tasaProgramadaDataRes, eurBcvRes] = await Promise.all([
-    // 1. Tasa vigente oficial para cobros de hoy (vigente_desde <= NOW)
-    supabase
-      .from("tasas_cambio")
-      .select("valor_bs_por_usd")
-      .lte("vigente_desde", ahoraIso)
-      .order("vigente_desde", { ascending: false })
-      .limit(1)
-      .maybeSingle(),
-
-    // 2. Tasa programada para el siguiente día hábil (vigente_desde > NOW)
-    supabase
-      .from("tasas_cambio")
-      .select("valor_bs_por_usd")
-      .gt("vigente_desde", ahoraIso)
-      .order("vigente_desde", { ascending: true })
-      .limit(1)
-      .maybeSingle(),
-
-    // 3. Consulta best-effort de tasa EUR (informativa) desde API BCV
-    obtenerTasaBcv("EUR").catch(() => null),
-  ]);
-
-  const valorTasa = Number(tasaDataRes.data?.valor_bs_por_usd) || 40.0;
-  const valorTasaProgramada = tasaProgramadaDataRes.data
-    ? Number(tasaProgramadaDataRes.data.valor_bs_por_usd)
-    : undefined;
-  const tasaEurHoy = eurBcvRes ? eurBcvRes.valorBs : undefined;
+  const usuarioEmail = user?.email ?? "Usuario";
+  const usuarioRol =
+    perfil?.rol ?? (user as { role?: string } | null)?.role ?? "operativo";
 
   return (
     <AppShell
-      usuarioEmail={user.email ?? "Usuario"}
-      usuarioRol={perfil?.rol ?? "operativo"}
-      tasaHoy={valorTasa}
-      tasaEurHoy={tasaEurHoy}
-      tasaSiguiente={valorTasaProgramada}
-      accionCerrarSesion={cerrarSesion}
+      usuarioEmail={usuarioEmail}
+      usuarioRol={usuarioRol}
+      tasaHoy={tasaUsd}
+      tasaEurHoy={tasaEur}
+      tasaSiguiente={tasaSiguiente}
+      accionCerrarSesion={handleCerrarSesion}
     >
       {children}
     </AppShell>

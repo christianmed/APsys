@@ -1,6 +1,6 @@
 import { Layers } from "lucide-react";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { ServicioForm } from "../servicio-form";
@@ -15,21 +15,11 @@ export const instant = false;
  * gerencial administra el catálogo; el resto vuelve al listado.
  */
 export default async function NuevoServicioPage() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, perfil } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const { data: perfil } = await supabase
-    .from("perfiles")
-    .select("rol")
-    .eq("usuario_id", user.id)
-    .maybeSingle();
 
   if (perfil?.rol !== "gerencial") {
     redirect("/servicios");
