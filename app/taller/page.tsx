@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { mapearPedidosTaller } from "@/lib/pedidos/taller-mapper";
@@ -11,6 +12,7 @@ export const instant = false;
  * Permite cambiar el estado de las órdenes en <= 2 toques (1 toque directo para avanzar).
  */
 export default async function TallerPage() {
+  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

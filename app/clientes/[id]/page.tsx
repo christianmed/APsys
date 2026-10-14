@@ -1,6 +1,7 @@
 import { User } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import {
@@ -43,6 +44,7 @@ export default async function EditarClientePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await connection();
   const { user, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { type PresetFecha } from "@/lib/dashboard/ingresos";
 import {
   calcularResumenReporte,
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export default async function ReporteImprimirPage({ searchParams }: Props) {
+  await connection();
   const { periodo, desde, hasta } = await searchParams;
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 

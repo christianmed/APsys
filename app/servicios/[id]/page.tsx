@@ -1,5 +1,6 @@
 import { Layers } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
+import { connection } from "next/server";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
@@ -20,6 +21,7 @@ export default async function EditarServicioPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await connection();
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

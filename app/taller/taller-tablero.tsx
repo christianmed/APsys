@@ -397,7 +397,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                       </div>
                       <div className="mt-0.5 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
                         <Clock className="size-3" />
-                        <span>{formatoTiempo(pedido.creado_en)}</span>
+                        <span suppressHydrationWarning>{formatoTiempo(pedido.creado_en)}</span>
                       </div>
                     </div>
 

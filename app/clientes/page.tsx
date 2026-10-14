@@ -1,6 +1,7 @@
 import { Plus, Search, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
@@ -26,6 +27,7 @@ export default async function ClientesPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  await connection();
   const { user, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {

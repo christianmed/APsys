@@ -1,5 +1,6 @@
 import { UserPlus } from "lucide-react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
@@ -12,6 +13,7 @@ export const instant = false;
 
 /** Alta de cliente (RF-01): guarda de sesión + formulario en modo "crear". */
 export default async function NuevoClientePage() {
+  await connection();
   const { user } = await obtenerUsuarioSesion();
 
   if (!user) {

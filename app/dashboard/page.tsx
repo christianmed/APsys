@@ -1,6 +1,7 @@
 import { ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { obtenerRangoFechasPreset, type PagoMétrica, type PresetFecha } from "@/lib/dashboard/ingresos";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -21,6 +22,7 @@ type Props = {
  * Restringido a usuarios con rol 'gerencial' (RF-18).
  */
 export default async function DashboardPage({ searchParams }: Props) {
+  await connection();
   const { preset: presetQuery, desde: desdeQuery, hasta: hastaQuery } =
     await searchParams;
 
