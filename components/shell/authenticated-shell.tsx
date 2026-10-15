@@ -18,7 +18,14 @@ type Props = {
 export function AuthenticatedShell({ children }: Props) {
   const router = useRouter();
   const { user, perfil, isLoading, signOut } = useAuth();
-  const { tasaUsd, tasaEur, tasaSiguiente } = useTasas();
+  const {
+    tasaUsd,
+    tasaEur,
+    tasaSiguiente,
+    tasaEurSiguiente,
+    fechaHoy,
+    fechaSiguiente,
+  } = useTasas();
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -42,6 +49,9 @@ export function AuthenticatedShell({ children }: Props) {
       tasaHoy={tasaUsd}
       tasaEurHoy={tasaEur}
       tasaSiguiente={tasaSiguiente}
+      tasaEurSiguiente={tasaEurSiguiente}
+      fechaHoy={fechaHoy}
+      fechaSiguiente={fechaSiguiente}
       accionCerrarSesion={handleCerrarSesion}
     >
       {children}

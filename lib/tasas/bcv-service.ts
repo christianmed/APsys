@@ -8,6 +8,8 @@
  * @module lib/tasas/bcv-service
  */
 
+import { esTasaBcvFutura } from "./tasas";
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -50,10 +52,20 @@ export type TasaBcv = {
   variacionPorcentaje?: number;
 };
 
-/** Resultado completo con ambas divisas */
+/** Resultado completo con ambas divisas y desglose hoy/mañana */
 export type TasasBcvCompletas = {
   usd: TasaBcv | null;
   eur: TasaBcv | null;
+  hoy?: {
+    usd: number;
+    eur: number;
+    fecha: string;
+  } | null;
+  siguiente?: {
+    usd: number;
+    eur: number;
+    fecha: string;
+  } | null;
   error?: string;
 };
 
@@ -171,9 +183,41 @@ export function parsearRespuestaDolarVzla(
   if (!usd) errores.push("USD");
   if (!eur) errores.push("EUR");
 
+  const esFutura = resp.current.date ? esTasaBcvFutura(resp.current.date) : false;
+
+  let hoyDesglose: { usd: number; eur: number; fecha: string } | null = null;
+  let siguienteDesglose: { usd: number; eur: number; fecha: string } | null = null;
+
+  if (esFutura) {
+    hoyDesglose = {
+      usd:
+        typeof resp.previous?.usd === "number" && resp.previous.usd > 0
+          ? resp.previous.usd
+          : (usdValor ?? 0),
+      eur:
+        typeof resp.previous?.eur === "number" && resp.previous.eur > 0
+          ? resp.previous.eur
+          : (eurValor ?? 0),
+      fecha: resp.previous?.date ?? "",
+    };
+    siguienteDesglose = {
+      usd: usdValor ?? 0,
+      eur: eurValor ?? 0,
+      fecha: resp.current.date,
+    };
+  } else {
+    hoyDesglose = {
+      usd: usdValor ?? 0,
+      eur: eurValor ?? 0,
+      fecha: resp.current.date,
+    };
+  }
+
   return {
     usd,
     eur,
+    hoy: hoyDesglose,
+    siguiente: siguienteDesglose,
     error:
       errores.length > 0
         ? `No se pudo obtener la tasa para: ${errores.join(", ")}`
@@ -241,6 +285,12 @@ async function obtenerTasasDesdeDolarApi(): Promise<TasasBcvCompletas> {
   return {
     usd,
     eur,
+    hoy: {
+      usd: usd?.valorBs ?? 0,
+      eur: eur?.valorBs ?? 0,
+      fecha: usd?.fechaActualizacion ?? "",
+    },
+    siguiente: null,
     error:
       errores.length > 0
         ? `No se pudo obtener la tasa para: ${errores.join(", ")}`

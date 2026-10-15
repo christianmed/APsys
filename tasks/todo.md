@@ -137,3 +137,14 @@
   - [x] Paso 3 (Supresión Centralizada de Advertencia de Hidratación): Incorporar micro-script preventivo en `<head>` de `app/layout.tsx` con `MutationObserver` para desinfectar atributos de extensiones (`bis_skin_checked="1"`) antes de la hidratación de React 19 sin contaminar componentes con `suppressHydrationWarning` innecesarios.
   - [x] Paso 4 (Actualización de Badge de Versión): Actualizar la etiqueta del branding en `components/shell/app-shell.tsx` de `v1.0` a `v0.9` en coherencia con el SemVer actual.
   - [x] Paso 5: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`).
+
+- [x] **Fase 23: Rediseño de Tarjeta de Tasas en Sidebar, Soporte de Euro BCV y 3 Alternativas UI/UX Conmutables**
+  - [x] Paso 1 (Diagnóstico y Corrección de Tasa Euro): Resolver la ausencia de tasa EUR en el sidebar conectando `bcv-service.ts` con el endpoint `/api/tasas/en-vivo` y enriqueciendo `TasasContext` con `tasaEurHoy` y `tasaEurSiguiente`.
+  - [x] Paso 2 (Desglose Temporal Hoy vs Mañana): Estructurar fechas explícitas (`Hoy, DD/MM/AAAA` y `Mañana, DD/MM/AAAA`) asociando a cada día sus tasas oficiales correspondientes (USD y EUR).
+  - [x] Paso 3 (Implementación de 3 Alternativas UI/UX en `SidebarTasasCard`):
+    - *Alternativa 1 (Pestañas Segmentadas):* Conmutador `[ Hoy (DD/MM) ]` / `[ Mañana (DD/MM) • ]` ultra-compacto y limpio.
+    - *Alternativa 2 (Acordeón Plegable):* Sección "Hoy" fija + acordeón con flecha giratoria para desplegar "Mañana" bajo demanda.
+    - *Alternativa 3 (Apilado / Timeline Dual):* Bloques apilados con ambas fechas y divisas visibles simultáneamente.
+  - [x] Paso 4 (Conmutador Interactivo en Vivo): Selector integrado en el widget para alternar al instante entre los 3 diseños, persistiendo la preferencia en `localStorage` con `useSyncExternalStore`.
+  - [x] Paso 5 (TDD y Verificación de Calidad DoD): Crear `test/sidebar-tasas-card.test.tsx` (5 pruebas unitarias cubriendo las 3 alternativas y persistencia), logrando 203 pruebas Vitest 100% verde, `tsc` 0 errores y ESLint impecable.
+

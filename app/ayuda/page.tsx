@@ -42,7 +42,7 @@ export default async function AyudaPage() {
       <div className="mx-auto w-full max-w-4xl space-y-6">
         <PageHeader
           title="Guía Rápida de Uso"
-          description="Manual operativo por perfil para el personal del taller de imprenta."
+          description="Manual operativo por perfil para el personal del taller de imprenta (v0.9.1)."
           badge={
             <span className="flex items-center gap-1 font-semibold text-indigo-700 dark:text-indigo-400">
               <HelpCircle className="size-3.5" />
@@ -148,9 +148,9 @@ export default async function AyudaPage() {
 
           <div className="mt-4 grid gap-3 text-xs text-zinc-600 sm:grid-cols-3 dark:text-zinc-300">
             <div className="rounded-xl border border-zinc-200 p-3 dark:border-zinc-800">
-              <h4 className="font-bold text-zinc-900 dark:text-zinc-100">Tasa Diaria</h4>
+              <h4 className="font-bold text-zinc-900 dark:text-zinc-100">Tasas BCV y Sidebar</h4>
               <p className="mt-1">
-                Actualiza la tasa oficial en <strong>/tasas</strong> cada mañana. Los pedidos anteriores retienen su tasa inmutablemente.
+                Visualiza en la barra lateral las tasas oficiales de <strong>Hoy</strong> y <strong>Mañana</strong> (USD y EUR). Los acordeones memorizan su estado abierto/cerrado al navegar. La gerencia puede sincronizar o ajustar vigencias en <strong>/tasas</strong>.
               </p>
             </div>
             <div className="rounded-xl border border-zinc-200 p-3 dark:border-zinc-800">

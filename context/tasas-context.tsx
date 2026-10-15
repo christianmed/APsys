@@ -18,12 +18,18 @@ export interface TasasData {
   tasaUsd: number;
   tasaEur?: number;
   tasaSiguiente?: number;
+  tasaEurSiguiente?: number;
+  fechaHoy?: string;
+  fechaSiguiente?: string;
 }
 
 export interface TasasContextType {
   tasaUsd: number;
   tasaEur?: number;
   tasaSiguiente?: number;
+  tasaEurSiguiente?: number;
+  fechaHoy?: string;
+  fechaSiguiente?: string;
   isLoading: boolean;
   convertirUsdABs: (montoUsd: number) => number;
   convertirBsAUsd: (montoBs: number) => number;
@@ -48,11 +54,20 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
   const [tasaUsd, setTasaUsd] = useState<number>(
     initialTasas?.tasaUsd ?? TASA_POR_DEFECTO,
   );
-  const [tasaEur] = useState<number | undefined>(
+  const [tasaEur, setTasaEur] = useState<number | undefined>(
     initialTasas?.tasaEur,
   );
   const [tasaSiguiente, setTasaSiguiente] = useState<number | undefined>(
     initialTasas?.tasaSiguiente,
+  );
+  const [tasaEurSiguiente, setTasaEurSiguiente] = useState<number | undefined>(
+    initialTasas?.tasaEurSiguiente,
+  );
+  const [fechaHoy, setFechaHoy] = useState<string | undefined>(
+    initialTasas?.fechaHoy,
+  );
+  const [fechaSiguiente, setFechaSiguiente] = useState<string | undefined>(
+    initialTasas?.fechaSiguiente,
   );
   const [isLoading, setIsLoading] = useState<boolean>(!initialTasas?.tasaUsd);
 
@@ -61,21 +76,26 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
       const supabase = getSupabaseBrowserClient();
       const ahoraIso = new Date().toISOString();
 
-      const [vigenteRes, programadaRes] = await Promise.all([
+      const [vigenteRes, programadaRes, bcvRes] = await Promise.all([
         supabase
           .from("tasas_cambio")
-          .select("valor_bs_por_usd")
+          .select("valor_bs_por_usd, vigente_desde")
           .lte("vigente_desde", ahoraIso)
           .order("vigente_desde", { ascending: false })
           .limit(1)
           .maybeSingle(),
         supabase
           .from("tasas_cambio")
-          .select("valor_bs_por_usd")
+          .select("valor_bs_por_usd, vigente_desde")
           .gt("vigente_desde", ahoraIso)
           .order("vigente_desde", { ascending: true })
           .limit(1)
           .maybeSingle(),
+        typeof window !== "undefined"
+          ? fetch("/api/tasas/en-vivo")
+              .then((r) => (r.ok ? r.json() : null))
+              .catch(() => null)
+          : Promise.resolve(null),
       ]);
 
       if (vigenteRes?.data?.valor_bs_por_usd) {
@@ -87,8 +107,27 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
       } else {
         setTasaSiguiente(undefined);
       }
+
+      if (bcvRes?.hoy?.eur) {
+        setTasaEur(Number(bcvRes.hoy.eur));
+      } else if (bcvRes?.tasas?.eur?.valorBs) {
+        setTasaEur(Number(bcvRes.tasas.eur.valorBs));
+      }
+
+      if (bcvRes?.siguiente?.eur) {
+        setTasaEurSiguiente(Number(bcvRes.siguiente.eur));
+      } else {
+        setTasaEurSiguiente(undefined);
+      }
+
+      if (bcvRes?.hoy?.fecha) {
+        setFechaHoy(bcvRes.hoy.fecha);
+      }
+      if (bcvRes?.siguiente?.fecha) {
+        setFechaSiguiente(bcvRes.siguiente.fecha);
+      }
     } catch (err) {
-      console.warn("No se pudieron refrescar las tasas desde Supabase:", err);
+      console.warn("No se pudieron refrescar las tasas:", err);
     } finally {
       setIsLoading(false);
     }
@@ -155,6 +194,9 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
       tasaUsd,
       tasaEur,
       tasaSiguiente,
+      tasaEurSiguiente,
+      fechaHoy,
+      fechaSiguiente,
       isLoading,
       convertirUsdABs,
       convertirBsAUsd,
@@ -164,6 +206,9 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
       tasaUsd,
       tasaEur,
       tasaSiguiente,
+      tasaEurSiguiente,
+      fechaHoy,
+      fechaSiguiente,
       isLoading,
       convertirUsdABs,
       convertirBsAUsd,

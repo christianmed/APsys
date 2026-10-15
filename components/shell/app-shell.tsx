@@ -18,12 +18,17 @@ import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { NAVIGATION_GROUPS } from "./app-nav-items";
 
+import { SidebarTasasCard } from "./sidebar-tasas-card";
+
 type Props = {
   usuarioEmail: string;
   usuarioRol: string;
   tasaHoy?: number;
   tasaEurHoy?: number;
   tasaSiguiente?: number;
+  tasaEurSiguiente?: number;
+  fechaHoy?: string;
+  fechaSiguiente?: string;
   children: ReactNode;
   accionCerrarSesion: () => Promise<void>;
 };
@@ -34,6 +39,9 @@ export function AppShell({
   tasaHoy,
   tasaEurHoy,
   tasaSiguiente,
+  tasaEurSiguiente,
+  fechaHoy,
+  fechaSiguiente,
   children,
   accionCerrarSesion,
 }: Props) {
@@ -71,65 +79,21 @@ export function AppShell({
             </div>
           </Link>
           <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-mono text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-            v0.9
+            v0.9.1
           </span>
         </div>
 
-        {/* Widget de Tasas de Cambio del día (USD + EUR equilibrados) */}
+        {/* Widget de Tasas de Cambio (Pestañas, Acordeón y Apilado conmutable) */}
         {tasaHoy && (
-          <div className="mx-3 mt-3">
-            <Link
-              href={esGerencial ? "/tasas" : "#"}
-              className={`block rounded-2xl border border-zinc-200/90 bg-gradient-to-b from-white to-zinc-50/80 p-2.5 text-xs shadow-sm transition hover:border-zinc-300 hover:shadow dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/60 dark:hover:border-zinc-700 ${
-                esGerencial ? "cursor-pointer" : "cursor-default"
-              }`}
-            >
-              <div className="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                <span>Tasas Referenciales</span>
-                {esGerencial && (
-                  <span className="text-[9px] font-medium text-emerald-600 hover:underline dark:text-emerald-400">
-                    Ajustar
-                  </span>
-                )}
-              </div>
-
-              <div className="space-y-1.5">
-                {/* Renglón USD */}
-                <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/80 px-2.5 py-1.5 dark:border-emerald-900/60 dark:bg-emerald-950/30">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
-                    <Banknote className="size-3.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>USD</span>
-                  </div>
-                  <span className="font-mono text-xs font-black text-emerald-950 dark:text-emerald-100">
-                    Bs. {tasaHoy.toFixed(2)}
-                  </span>
-                </div>
-
-                {/* Renglón EUR */}
-                <div className="flex items-center justify-between rounded-xl border border-indigo-200 bg-indigo-50/80 px-2.5 py-1.5 dark:border-indigo-900/60 dark:bg-indigo-950/30">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-800 dark:text-indigo-300">
-                    <Euro className="size-3.5 text-indigo-600 dark:text-indigo-400" />
-                    <span>EUR</span>
-                  </div>
-                  <span className="font-mono text-xs font-black text-indigo-950 dark:text-indigo-100">
-                    {tasaEurHoy ? `Bs. ${tasaEurHoy.toFixed(2)}` : "—"}
-                  </span>
-                </div>
-
-                {/* Indicador de Tasa Programada para Mañana (si existe) */}
-                {tasaSiguiente && (
-                  <div className="flex items-center justify-between rounded-xl border border-amber-200/90 bg-amber-50/70 px-2.5 py-1 text-[11px] dark:border-amber-900/50 dark:bg-amber-950/20">
-                    <span className="font-semibold text-amber-800 dark:text-amber-300">
-                      Mañana (BCV)
-                    </span>
-                    <span className="font-mono font-bold text-amber-950 dark:text-amber-100">
-                      Bs. {tasaSiguiente.toFixed(2)}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </Link>
-          </div>
+          <SidebarTasasCard
+            tasaHoy={tasaHoy}
+            tasaEurHoy={tasaEurHoy}
+            tasaSiguiente={tasaSiguiente}
+            tasaEurSiguiente={tasaEurSiguiente}
+            fechaHoy={fechaHoy}
+            fechaSiguiente={fechaSiguiente}
+            esGerencial={esGerencial}
+          />
         )}
 
         {/* Menú de navegación agrupado */}
@@ -289,6 +253,20 @@ export function AppShell({
                 <X className="size-5" />
               </button>
             </div>
+
+            {tasaHoy && (
+              <div className="-mx-1">
+                <SidebarTasasCard
+                  tasaHoy={tasaHoy}
+                  tasaEurHoy={tasaEurHoy}
+                  tasaSiguiente={tasaSiguiente}
+                  tasaEurSiguiente={tasaEurSiguiente}
+                  fechaHoy={fechaHoy}
+                  fechaSiguiente={fechaSiguiente}
+                  esGerencial={esGerencial}
+                />
+              </div>
+            )}
 
             <nav className="flex-1 space-y-6 overflow-y-auto px-4 py-4 text-xs">
               {NAVIGATION_GROUPS.map((grupo) => {
