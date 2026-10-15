@@ -14,7 +14,9 @@ import { extraerUsuarioVigenteDeCookies } from "@/lib/supabase/jwt-session";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const esRutaPublica =
-    pathname === "/login" || pathname.startsWith("/api/supabase-health");
+    pathname === "/login" ||
+    pathname.startsWith("/api/supabase-health") ||
+    pathname.startsWith("/api/tasas");
 
   // =========================================================================
   // 1. VÍA RÁPIDA (Opción A): Validación local de JWT en memoria (< 1ms)

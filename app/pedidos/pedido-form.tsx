@@ -13,7 +13,9 @@ import {
   UserPlus,
 } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useId, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useActionState, useId, useMemo, useState } from "react";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { crearPedido, type EstadoFormularioPedido } from "./actions";
 import {
   calcularCobranzaInicial,
@@ -51,8 +53,6 @@ type ItemLocal = ItemPedidoEntrada & { localId: string };
 const CLASES_INPUT =
   "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-zinc-400 dark:focus-visible:ring-zinc-100/15";
 
-const CLASES_SELECT = `${CLASES_INPUT} appearance-none`;
-
 const CLASES_BOTON =
   "inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950";
 
@@ -71,6 +71,7 @@ export function PedidoForm({
   tasaVigente,
   tasaProgramada,
 }: Props) {
+  const router = useRouter();
   const formId = useId();
   const [estado, accion, pendiente] = useActionState<
     EstadoFormularioPedido,
@@ -83,6 +84,21 @@ export function PedidoForm({
   const [notas, setNotas] = useState<string>(estado.valores?.notas ?? "");
 
   const servicioDefault = servicios[0]?.id ?? "";
+
+  const opcionesClientes = useMemo(() => {
+    return clientes.map((c) => ({
+      value: c.id,
+      label: c.nombre,
+      subtitle: c.telefono ? `Tel: ${c.telefono}` : undefined,
+    }));
+  }, [clientes]);
+
+  const opcionesServicios = useMemo(() => {
+    return servicios.map((s) => ({
+      value: s.id,
+      label: s.nombre,
+    }));
+  }, [servicios]);
 
   const [items, setItems] = useState<ItemLocal[]>(() => {
     if (estado.valores?.items && estado.valores.items.length > 0) {
@@ -249,22 +265,23 @@ export function PedidoForm({
         </div>
 
         <div>
-          <select
+          <CustomSelect
             id={`${formId}-cliente`}
             name="cliente_id"
             value={clienteId}
-            onChange={(e) => setClienteId(e.target.value)}
-            required
-            className={CLASES_SELECT}
-          >
-            <option value="">-- Seleccionar cliente --</option>
-            {clientes.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.nombre}
-                {c.telefono ? ` (${c.telefono})` : ""}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setClienteId(val)}
+            options={opcionesClientes}
+            placeholder="-- Seleccionar cliente --"
+            searchable={true}
+            searchPlaceholder="Buscar por nombre o teléfono..."
+            emptyText="No se encontraron clientes registrados"
+            error={Boolean(estado.errores?.cliente_id)}
+            actionButton={{
+              label: "Registrar Nuevo Cliente",
+              icon: UserPlus,
+              onClick: () => router.push("/clientes/nuevo"),
+            }}
+          />
           {estado.errores?.cliente_id ? (
             <p className="mt-1.5 text-xs text-red-600 dark:text-red-400">
               {estado.errores.cliente_id}
@@ -321,25 +338,22 @@ export function PedidoForm({
                     <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
                       Servicio
                     </label>
-                    <select
+                    <CustomSelect
                       value={item.servicio_id}
-                      onChange={(e) =>
+                      onChange={(val) =>
                         actualizarItem(
                           item.localId,
                           "servicio_id",
-                          e.target.value,
+                          val,
                         )
                       }
-                      required
-                      className={CLASES_SELECT}
-                    >
-                      <option value="">-- Seleccionar --</option>
-                      {servicios.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.nombre}
-                        </option>
-                      ))}
-                    </select>
+                      options={opcionesServicios}
+                      placeholder="-- Seleccionar servicio --"
+                      searchable={servicios.length > 5}
+                      searchPlaceholder="Buscar servicio..."
+                      error={Boolean(errServicio)}
+                      size="sm"
+                    />
                     {errServicio ? (
                       <p className="mt-1 text-xs text-red-600 dark:text-red-400">
                         {errServicio}

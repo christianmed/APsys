@@ -23,6 +23,23 @@ import {
   type TramoAntiguedad,
 } from "@/lib/cobranzas/cuentas-por-cobrar";
 import { PageHeader } from "@/components/shell/page-header";
+import {
+  CustomSelect,
+  type CustomSelectOption,
+} from "@/components/ui/custom-select";
+
+type CriterioOrdenCuentas =
+  | "mayor_saldo"
+  | "mas_antiguo"
+  | "mas_reciente"
+  | "cliente";
+
+const OPCIONES_ORDEN_CUENTAS: CustomSelectOption<CriterioOrdenCuentas>[] = [
+  { value: "mayor_saldo", label: "Mayor saldo pendiente" },
+  { value: "mas_antiguo", label: "Más antiguos primero" },
+  { value: "mas_reciente", label: "Más recientes primero" },
+  { value: "cliente", label: "Cliente (A - Z)" },
+];
 
 type Props = {
   cuentasIniciales: CuentaPorCobrar[];
@@ -300,16 +317,14 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             />
           </div>
 
-          <select
+          <CustomSelect<CriterioOrdenCuentas>
             value={ordenarPor}
-            onChange={(e) => setOrdenarPor(e.target.value as "mayor_saldo" | "mas_antiguo" | "mas_reciente" | "cliente")}
-            className="h-9 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-900 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white"
-          >
-            <option value="mayor_saldo">Mayor saldo pendiente</option>
-            <option value="mas_antiguo">Más antiguos primero</option>
-            <option value="mas_reciente">Más recientes primero</option>
-            <option value="cliente">Cliente (A - Z)</option>
-          </select>
+            onChange={(val) => setOrdenarPor(val)}
+            options={OPCIONES_ORDEN_CUENTAS}
+            variant="header"
+            size="sm"
+            className="min-w-[200px]"
+          />
         </div>
       </div>
 

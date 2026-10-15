@@ -9,9 +9,34 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
 ## [Unreleased]
 
 ### Planned
-
-- **Fase 21 (CustomSelect)**: Componente de selección desplegable personalizado accesible y con soporte para búsqueda reactiva.
 - Preparación y auditoría final para el lanzamiento de la versión mayor `v1.0.0`.
+
+---
+
+## [0.9.1] - 2026-10-14
+
+### Added
+- **Widget de Tasas Referenciales BCV en Sidebar con Acordeones Duales (Fase 23)**:
+  - Componente `SidebarTasasCard` (`components/shell/sidebar-tasas-card.tsx`) con diseño de acordeones independientes para **Hoy** y **Mañana**.
+  - Acordeón de Hoy con borde verde (`border-emerald-500/40`), fondo neutro y circulito verde encendido, abierto por defecto para consulta inmediata al cobrar.
+  - Acordeón de Mañana con borde ámbar (`border-amber-500/50`), fondo neutro y circulito ámbar encendido cuando hay tasa oficial nueva emitida por el BCV.
+  - Persistencia total del estado de apertura/cierre entre todas las vistas del sistema mediante `localStorage` y `useSyncExternalStore`.
+  - Nuevo endpoint `/api/tasas/en-vivo` con cabecera `Cache-Control: no-store` para servir tasas oficiales de USD y EUR en <2ms.
+  - Cobertura de pruebas unitarias en `test/sidebar-tasas-card.test.tsx` (202 pruebas totales en verde).
+- **Componente Universal `CustomSelect` (Fase 21)**: Selector accesible en TypeScript (`components/ui/custom-select.tsx`) estilizado con la paleta oficial Zinc de APSys.
+  - Búsqueda reactiva en tiempo real sobre nombres y subtítulos de clientes y servicios.
+  - Botón de acción rápida inferior integrado (ej. `+ Registrar Nuevo Cliente`).
+  - Navegación por teclado completa (`ArrowDown`, `ArrowUp`, `Enter`, `Escape`) y roles WAI-ARIA (`listbox`, `option`).
+  - Variante `header` (píldora compacta para filtros) y variante `form` (para formularios y modales con input hidden).
+  - Cobertura de 12 pruebas unitarias en `test/custom-select.test.tsx`.
+
+### Fixed
+- **Resolución de Tasa Euro (EUR) en Sidebar**: Conexión de `TasasContext` con el proveedor oficial BCV / DolarVZLA, extrayendo las tasas oficiales de USD y EUR tanto para el día de hoy como para el día de mañana, eliminando el guión (`—`) y mostrando valores precisos en bolívares.
+- **Espaciado Superior en Acordeones**: Corrección del padding superior (`pt-2.5`) dentro del área desplegable de los acordeones, garantizando una separación limpia entre la línea divisoria y la primera pastilla de divisa.
+- **Estilización de Barras de Desplazamiento en Modo Oscuro (Fase 22)**: Incorporación de `color-scheme: dark;` y reglas universales para scrollbars minimalistas (6px, canal transparente y pulgar gris grafito) en `app/globals.css`, eliminando las barras blancas nativas de Windows en el sidebar y tablas horizontales.
+- **Eliminación de Scrollbars Anidadas en CustomSelect**: Supresión del `overflow-y-auto` en el contenedor exterior de `components/ui/custom-select.tsx`, eliminando la doble barra vertical paralela en formularios.
+- **Desinfección de Atributos de Extensiones en DOM**: Integración de micro-script en `<head>` de `app/layout.tsx` con `MutationObserver` para remover atributos inyectados por extensiones de seguridad (`bis_skin_checked="1"`) antes de la hidratación de React 19, suprimiendo errores en consola y limpiando `suppressHydrationWarning` innecesario en páginas.
+- **Sincronización de Versión en AppShell**: Actualización del badge visual de versión en el sidebar a `v0.9.1`.
 
 ---
 

@@ -1,20 +1,21 @@
 # Guía Rápida de Uso de APSys por Perfil
 
 **Sistema:** APSys — Taller de Gráfica & Impresión  
-**Versión:** 1.0.0  
-**Audiencia:** Personal de Mostrador, Operarios de Taller y Gerencia  
+**Versión:** 0.9.1  
+**Audiencia:** Personal de Mostrador, Operarios de Taller y Gerencia
 
 ---
 
 ## 1. Perfil Mostrador / Recepción (Registro y Cobranza)
 
 ### Registrar una Nueva Orden de Trabajo (< 2 minutos)
+
 1. Presiona el botón **"Nuevo pedido"** (o navega a `/pedidos/nuevo`).
-2. **Selecciona o crea el cliente:**
-   - Si es recurrente, búscalo por nombre o teléfono.
-   - Si es nuevo, pulsa "Nuevo cliente", ingresa nombre y WhatsApp y guarda.
+2. **Selecciona o crea el cliente (Selector Inteligente):**
+   - Escribe en el buscador predictivo para filtrar al instante por nombre o número de teléfono.
+   - Si es nuevo, pulsa el botón integrado "Registrar Nuevo Cliente", ingresa sus datos y queda seleccionado automáticamente.
 3. **Agrega los trabajos a realizar:**
-   - Selecciona el servicio (ej. Vinil Adhesivo, Pendón, Talonarios).
+   - Selecciona el servicio desde el selector interactivo (ej. Vinil Adhesivo, Pendón, Talonarios).
    - Ingresa dimensiones (ancho × alto en metros o cm) y acabados (ojetes, laminado, corte).
    - Coloca la cantidad y el precio unitario pactado en USD.
 4. **Registra el abono inicial:**
@@ -27,6 +28,7 @@
 ## 2. Perfil Taller / Producción (Impresión y Acabados)
 
 ### Operar el Tablero Kanban (`/taller`)
+
 El tablero de taller está diseñado para pantallas táctiles y uso con una sola mano:
 
 1. **Columna "Por Imprimir / Registrado":**
@@ -44,16 +46,26 @@ El tablero de taller está diseñado para pantallas táctiles y uso con una sola
 
 ## 3. Perfil Gerencial / Administración (Finanzas y Control)
 
-### Tasa de Cambio del Día (`/tasas`)
-- Al abrir el taller cada mañana, ingresa a `/tasas` y actualiza la tasa referencial (BCV u oficial).
+### Widget de Tasas Referenciales BCV (Barra Lateral)
+
+- En la barra lateral se ubica el widget interactivo con dos acordeones independientes:
+  - **Hoy:** Tasa vigente en USD y EUR con indicador verde.
+  - **Mañana:** Tasa programada emitida por el BCV para el día siguiente con indicador ámbar.
+- Los acordeones **memorizan su estado abierto o cerrado** al navegar entre cualquier página del sistema.
+
+### Gestión de Tasas de Cambio (`/tasas`)
+
+- Al abrir el taller cada mañana, ingresa a `/tasas` para sincronizar con un solo clic con la API oficial del BCV o ingresar una tasa manual.
 - **Garantía histórica:** Modificar la tasa de hoy nunca alterará los montos de pedidos de días anteriores.
 
 ### Cuentas por Cobrar (`/cuentas-por-cobrar`)
+
 - Monitorea los saldos vencidos organizados en 4 tramos de antigüedad:
   - 0 a 7 días, 8 a 15 días, 16 a 30 días, más de 30 días.
 - Haz clic en **"Recordatorio WhatsApp"** para enviar cobranza formal con un solo toque.
 
 ### Reportes y Exportación (`/dashboard`)
+
 - Revisa ingresos consolidados en USD y Bs.
 - Pulsa **"Descargar CSV"** para abrir en Excel o **"Imprimir / Guardar PDF"** para reportes ejecutivos.
 - En caso de cancelaciones, usa **"Anular Pedido"** ingresando el motivo obligatorio para la auditoría inmutable.
