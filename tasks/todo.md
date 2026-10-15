@@ -131,9 +131,9 @@
   - [x] Paso 6 (Integración en Filtros de Módulos): Integrar variante `header` compacta en `/dashboard/rotacion` (ordenar por criterio) y en `/cuentas-por-cobrar` (ordenar saldos).
   - [x] Paso 7: Verificación de calidad DoD completada (198 tests Vitest 100% verde, `tsc` 0 errores, ESLint limpio).
 
-- [ ] **Fase 22: Estilización de Barras de Desplazamiento en Modo Oscuro y Supresión de Hydration Mismatches (Bitdefender)**
-  - [ ] Paso 1 (Estilización de Scrollbars en Modo Oscuro): Declarar `color-scheme: dark;` y reglas de scrollbar minimalistas (`scrollbar-width: thin`, `::-webkit-scrollbar` de 6px, fondo transparente y pulgar gris grafito) en `app/globals.css`.
-  - [ ] Paso 2 (Eliminación de Scrollbars Dobles Anidadas): Auditar y resolver desbordamientos dobles paralelos en contenedores de tablas y menús desplegables para asegurar un solo scroll fluido por eje.
-  - [ ] Paso 3 (Supresión de Advertencia de Hidratación): Agregar `suppressHydrationWarning` en el contenedor raíz de `components/shell/app-shell.tsx` para ignorar la inyección de atributos de extensiones de seguridad (`bis_skin_checked="1"` de Bitdefender TrafficLight/Anti-tracker).
-  - [ ] Paso 4 (Actualización de Badge de Versión): Actualizar la etiqueta del branding en `components/shell/app-shell.tsx` de `v1.0` a `v0.9` en coherencia con el SemVer actual.
-  - [ ] Paso 5: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`).
+- [x] **Fase 22: Estilización de Barras de Desplazamiento en Modo Oscuro y Supresión de Hydration Mismatches (Bitdefender)**
+  - [x] Paso 1 (Estilización de Scrollbars en Modo Oscuro): Declarar `color-scheme: dark;` y reglas de scrollbar minimalistas (`scrollbar-width: thin`, `::-webkit-scrollbar` de 6px, fondo transparente y pulgar gris grafito) en `app/globals.css`.
+  - [x] Paso 2 (Eliminación de Scrollbars Dobles Anidadas): Auditar y resolver desbordamientos dobles paralelos en `components/ui/custom-select.tsx` removiendo `max-h-72 overflow-y-auto` del contenedor exterior para asegurar un solo scroll fluido por eje.
+  - [x] Paso 3 (Supresión Centralizada de Advertencia de Hidratación): Incorporar micro-script preventivo en `<head>` de `app/layout.tsx` con `MutationObserver` para desinfectar atributos de extensiones (`bis_skin_checked="1"`) antes de la hidratación de React 19 sin contaminar componentes con `suppressHydrationWarning` innecesarios.
+  - [x] Paso 4 (Actualización de Badge de Versión): Actualizar la etiqueta del branding en `components/shell/app-shell.tsx` de `v1.0` a `v0.9` en coherencia con el SemVer actual.
+  - [x] Paso 5: Verificación completa de calidad DoD (`npm test`, `npm run typecheck`, `npm run lint`).

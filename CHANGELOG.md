@@ -17,6 +17,12 @@ El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1
   - Integración en formulario de nueva orden (`/pedidos/nuevo`) para clientes y servicios, y en filtros de `/dashboard/rotacion` y `/cuentas-por-cobrar`.
   - Cobertura de 12 pruebas unitarias en `test/custom-select.test.tsx` (198 pruebas totales en verde).
 
+### Fixed
+- **Estilización de Barras de Desplazamiento en Modo Oscuro (Fase 22)**: Incorporación de `color-scheme: dark;` y reglas universales para scrollbars minimalistas (6px, canal transparente y pulgar gris grafito) en `app/globals.css`, eliminando las barras blancas nativas de Windows en el sidebar y tablas horizontales.
+- **Eliminación de Scrollbars Anidadas en CustomSelect**: Supresión del `overflow-y-auto` en el contenedor exterior de `components/ui/custom-select.tsx`, eliminando la doble barra vertical paralela en formularios.
+- **Desinfección de Atributos de Extensiones en DOM**: Integración de micro-script en `<head>` de `app/layout.tsx` con `MutationObserver` para remover atributos inyectados por extensiones de seguridad (`bis_skin_checked="1"`) antes de la hidratación de React 19, suprimiendo errores en consola y limpiando `suppressHydrationWarning` innecesario en páginas.
+- **Sincronización de Versión en AppShell**: Actualización del badge visual de versión en el sidebar de `v1.0` a `v0.9`.
+
 ### Planned
 - Preparación y auditoría final para el lanzamiento de la versión mayor `v1.0.0`.
 

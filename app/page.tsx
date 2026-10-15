@@ -68,7 +68,7 @@ export default async function Home() {
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                 <Sparkles className="size-3.5 text-amber-500" />
-                <span className="capitalize" suppressHydrationWarning>
+                <span className="capitalize">
                   {fechaFormateada}
                 </span>
               </div>

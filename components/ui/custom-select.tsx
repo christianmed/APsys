@@ -468,7 +468,7 @@ export function CustomSelect<T extends string | number = string>({
           ref={listboxRef}
           role="listbox"
           tabIndex={-1}
-          className="absolute top-full left-0 right-0 mt-1.5 z-50 max-h-72 overflow-y-auto rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 shadow-xl p-1.5 space-y-1 animate-in fade-in-0 zoom-in-95 duration-150 overscroll-contain"
+          className="absolute top-full left-0 right-0 mt-1.5 z-50 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 shadow-xl p-1.5 space-y-1 animate-in fade-in-0 zoom-in-95 duration-150 overscroll-contain"
         >
           {headerTitle && (
             <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between select-none">
