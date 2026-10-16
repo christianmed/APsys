@@ -42,21 +42,26 @@ export function LoginForm() {
     setMensajeError(null);
     setEnviando(true);
 
-    const { error } = await createClient().auth.signInWithPassword({
-      email: correoNormalizado,
-      password: contrasena,
-    });
+    try {
+      const { error } = await createClient().auth.signInWithPassword({
+        email: correoNormalizado,
+        password: contrasena,
+      });
 
-    if (error) {
-      setMensajeError(mensajeDeErrorAuth(error));
+      if (error) {
+        setMensajeError(mensajeDeErrorAuth(error));
+        return;
+      }
+
+      // El proxy y las páginas de servidor leen la sesión de las cookies:
+      // push + refresh garantizan que el home se renderice con el usuario.
+      router.push("/");
+      router.refresh();
+    } catch {
+      setMensajeError("Ocurrió un error inesperado al intentar iniciar sesión.");
+    } finally {
       setEnviando(false);
-      return;
     }
-
-    // El proxy y las páginas de servidor leen la sesión de las cookies:
-    // push + refresh garantizan que el home se renderice con el usuario.
-    router.push("/");
-    router.refresh();
   }
 
   return (

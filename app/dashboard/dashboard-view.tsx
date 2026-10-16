@@ -3,7 +3,6 @@
 import {
   Banknote,
   BarChart3,
-  Calendar,
   CreditCard,
   DollarSign,
   Download,
@@ -93,7 +92,7 @@ export function DashboardView({
           </span>
         }
         actions={
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:flex-wrap sm:items-center">
             <Link
               href="/tasas"
               className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 text-xs font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
@@ -130,16 +129,16 @@ export function DashboardView({
       />
 
       {/* Barra de Filtros de Período */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        {/* Presets rápidos */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        {/* Presets rápidos con scroll horizontal nativo en pantallas táctiles */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+          <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1 shrink-0">
             Período:
           </span>
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("hoy")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "hoy"
                 ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -150,7 +149,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("esta_semana")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "esta_semana"
                 ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -161,7 +160,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("este_mes")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "este_mes"
                 ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -172,7 +171,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("todo")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "todo"
                 ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -185,27 +184,28 @@ export function DashboardView({
         {/* Rango de fechas manual */}
         <form
           onSubmit={aplicarRangoPersonalizado}
-          className="flex flex-wrap items-center gap-2"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto"
         >
-          <Calendar className="size-4 text-zinc-400" />
-          <input
-            type="date"
-            aria-label="Fecha inicial"
-            value={fechaDesde}
-            onChange={(e) => setFechaDesde(e.target.value)}
-            className="h-9 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-          />
-          <span className="text-xs text-zinc-400">hasta</span>
-          <input
-            type="date"
-            aria-label="Fecha final"
-            value={fechaHasta}
-            onChange={(e) => setFechaHasta(e.target.value)}
-            className="h-9 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-          />
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 w-full sm:w-auto">
+            <input
+              type="date"
+              aria-label="Fecha inicial"
+              value={fechaDesde}
+              onChange={(e) => setFechaDesde(e.target.value)}
+              className="h-9 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            />
+            <span className="text-xs text-zinc-400 text-center">hasta</span>
+            <input
+              type="date"
+              aria-label="Fecha final"
+              value={fechaHasta}
+              onChange={(e) => setFechaHasta(e.target.value)}
+              className="h-9 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+            />
+          </div>
           <button
             type="submit"
-            className="inline-flex h-9 items-center justify-center rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex h-9 items-center justify-center rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             Filtrar
           </button>
@@ -213,7 +213,7 @@ export function DashboardView({
       </div>
 
       {/* Botones de Exportación de Reportes (RF-17) */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
         <div className="flex items-center gap-2">
           <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             Exportar reporte del período:
@@ -223,7 +223,7 @@ export function DashboardView({
           </span>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
           <a
             href={`/api/reportes/exportar?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
             download
@@ -239,7 +239,7 @@ export function DashboardView({
             className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             <Printer className="size-3.5" />
-            Imprimir / Guardar PDF
+            Imprimir / PDF
           </Link>
         </div>
       </div>

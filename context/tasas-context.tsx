@@ -98,28 +98,50 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
           : Promise.resolve(null),
       ]);
 
-      if (vigenteRes?.data?.valor_bs_por_usd) {
-        setTasaUsd(Number(vigenteRes.data.valor_bs_por_usd));
+      // 1. Resolver Tasa USD Hoy:
+      // Prioridad a la BD si tiene una tasa real > 40 (o si no hay dato de API).
+      // Si la BD no responde o tiene el valor por defecto (40.0) pero el BCV ya tiene tasa oficial (ej. 879.12),
+      // se adopta la tasa oficial en vivo de inmediato para evitar mostrar 40.0 desfasado.
+      const bcvUsdHoy = bcvRes?.hoy?.usd ? Number(bcvRes.hoy.usd) : undefined;
+      const bdUsdHoy = vigenteRes?.data?.valor_bs_por_usd ? Number(vigenteRes.data.valor_bs_por_usd) : undefined;
+
+      if (bdUsdHoy && bdUsdHoy > 0 && bdUsdHoy !== TASA_POR_DEFECTO) {
+        setTasaUsd(bdUsdHoy);
+      } else if (bcvUsdHoy && bcvUsdHoy > 0) {
+        setTasaUsd(bcvUsdHoy);
+      } else if (bdUsdHoy && bdUsdHoy > 0) {
+        setTasaUsd(bdUsdHoy);
       }
 
-      if (programadaRes?.data?.valor_bs_por_usd) {
-        setTasaSiguiente(Number(programadaRes.data.valor_bs_por_usd));
+      // 2. Resolver Tasa USD Mañana:
+      // Si existe tasa programada en BD, se usa. Si no, se toma la tasa oficial del día siguiente
+      // emitida en vivo por el BCV (bcvRes.siguiente.usd) para activar el acordeón en amarillo automáticamente.
+      const bcvUsdSiguiente = bcvRes?.siguiente?.usd ? Number(bcvRes.siguiente.usd) : undefined;
+      const bdUsdSiguiente = programadaRes?.data?.valor_bs_por_usd ? Number(programadaRes.data.valor_bs_por_usd) : undefined;
+
+      if (bdUsdSiguiente && bdUsdSiguiente > 0) {
+        setTasaSiguiente(bdUsdSiguiente);
+      } else if (bcvUsdSiguiente && bcvUsdSiguiente > 0) {
+        setTasaSiguiente(bcvUsdSiguiente);
       } else {
         setTasaSiguiente(undefined);
       }
 
+      // 3. Resolver Tasa EUR Hoy
       if (bcvRes?.hoy?.eur) {
         setTasaEur(Number(bcvRes.hoy.eur));
       } else if (bcvRes?.tasas?.eur?.valorBs) {
         setTasaEur(Number(bcvRes.tasas.eur.valorBs));
       }
 
+      // 4. Resolver Tasa EUR Mañana
       if (bcvRes?.siguiente?.eur) {
         setTasaEurSiguiente(Number(bcvRes.siguiente.eur));
       } else {
         setTasaEurSiguiente(undefined);
       }
 
+      // 5. Fechas descriptivas emitidas por el BCV
       if (bcvRes?.hoy?.fecha) {
         setFechaHoy(bcvRes.hoy.fecha);
       }

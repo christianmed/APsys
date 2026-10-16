@@ -144,7 +144,9 @@ export function SidebarTasasCard({
     fechaSiguiente ? formatearFechaCorta(fechaSiguiente) : obtenerFechaManana()
   }`;
 
-  const hayTasaManana = Boolean(tasaSiguiente && tasaSiguiente > 0);
+  const hayTasaManana = Boolean(
+    (tasaSiguiente && tasaSiguiente > 0) || (tasaEurSiguiente && tasaEurSiguiente > 0)
+  );
 
   return (
     <div className="mx-3 mt-3">

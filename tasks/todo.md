@@ -147,4 +147,9 @@
     - *Alternativa 3 (Apilado / Timeline Dual):* Bloques apilados con ambas fechas y divisas visibles simultáneamente.
   - [x] Paso 4 (Conmutador Interactivo en Vivo): Selector integrado en el widget para alternar al instante entre los 3 diseños, persistiendo la preferencia en `localStorage` con `useSyncExternalStore`.
   - [x] Paso 5 (TDD y Verificación de Calidad DoD): Crear `test/sidebar-tasas-card.test.tsx` (5 pruebas unitarias cubriendo las 3 alternativas y persistencia), logrando 203 pruebas Vitest 100% verde, `tsc` 0 errores y ESLint impecable.
-
+- [x] **Fase 24: Sincronización Autónoma de Tasas BCV, Robustez de Login y Responsividad Mobile-First**
+  - [x] Paso 1 (Tasas Autónomas y Reactivas): En `context/tasas-context.tsx`, sincronizar `tasaUsd` y `tasaSiguiente` con la respuesta en vivo de `/api/tasas/en-vivo` (`bcvRes.hoy.usd` y `bcvRes.siguiente.usd`) como respaldo inmediato ante bases de datos desactualizadas o cargas iniciales sin sesión, encendiendo automáticamente el acordeón de Mañana en ámbar.
+  - [x] Paso 2 (Robustez de Formulario de Login): En `app/login/login-form.tsx`, aplicar el ciclo `try ... finally` para resetear `enviando = false` garantizando que el formulario nunca se congele tras cerrar sesión, y asegurar redirección limpia en `components/shell/authenticated-shell.tsx`.
+  - [x] Paso 3 (Rediseño Mobile-First en Dashboard): En `app/dashboard/dashboard-view.tsx`, optimizar la botonera de acciones en cuadrícula compacta 2x2 para móviles (< sm), barra de filtros con selector de períodos deslizante (pills), inputs de rango de fechas apilados a ancho completo y botones de exportación táctiles.
+  - [x] Paso 4 (Rediseño Mobile-First en Rotación de Servicios): En `app/dashboard/rotacion/rotacion-view.tsx`, organizar filtros de criterio y fechas en columna vertical limpia para móviles sin desbordamiento horizontal de pantalla.
+  - [x] Paso 5 (TDD & DoD): Crear pruebas unitarias para login y tasas context; verificar `npm test` (100% verde), `npm run typecheck` (0 errores) y `npm run lint` (0 advertencias); validar visualmente en navegador con resolución móvil (390x844).
