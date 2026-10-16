@@ -38,15 +38,20 @@ export async function GET(request: Request) {
   }
 
   // 2. Validación de credenciales maestras de Supabase
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const serviceRoleKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    console.error("[cron/sincronizar-tasas] Faltan variables NEXT_PUBLIC_SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY");
+    console.error(
+      "[cron/sincronizar-tasas] Faltan variables de URL o Service Role Key de Supabase",
+    );
     return NextResponse.json(
       {
         exito: false,
-        error: "Configuración incompleta: se requieren NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY",
+        error:
+          "Configuración incompleta: se requieren NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY (o SUPABASE_SECRET_KEY)",
       },
       { status: 500 },
     );

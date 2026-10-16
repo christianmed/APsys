@@ -25,33 +25,25 @@ let browserClientInstance: ReturnType<typeof createBrowserClient> | null = null;
  * reconexiones de red redundantes.
  */
 export function createClient() {
+  const url = requireEnv(
+    "NEXT_PUBLIC_SUPABASE_URL",
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+  );
+  const anonKey = requireEnv(
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY (o NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  );
+
   if (typeof window !== "undefined") {
     if (browserClientInstance) {
       return browserClientInstance;
     }
-    browserClientInstance = createBrowserClient(
-      requireEnv(
-        "NEXT_PUBLIC_SUPABASE_URL",
-        process.env.NEXT_PUBLIC_SUPABASE_URL,
-      ),
-      requireEnv(
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      ),
-    );
+    browserClientInstance = createBrowserClient(url, anonKey);
     return browserClientInstance;
   }
 
-  return createBrowserClient(
-    requireEnv(
-      "NEXT_PUBLIC_SUPABASE_URL",
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-    ),
-    requireEnv(
-      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    ),
-  );
+  return createBrowserClient(url, anonKey);
 }
 
 /**
