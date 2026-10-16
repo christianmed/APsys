@@ -65,9 +65,9 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
   const valorRedondeado = Math.round(tasaBcv.valorBs * 10000) / 10000;
 
   const esFutura = esTasaBcvFutura(tasaBcv.fechaActualizacion);
-  const fechaVigencia = esFutura
-    ? calcularVigenciaDesdeFechaBcv(tasaBcv.fechaActualizacion)
-    : new Date().toISOString();
+  // La vigencia oficial del BCV rige desde las 00:00:00 (12:00 a. m. hora Caracas) de la fecha indicada.
+  // Tanto para la jornada de hoy como para la de mañana, se ancla al inicio de operaciones bancarias.
+  const fechaVigencia = calcularVigenciaDesdeFechaBcv(tasaBcv.fechaActualizacion);
 
   // Verificar si ya existe una tasa registrada para esta misma fecha de vigencia
   const { data: tasaExistente } = await supabase
@@ -81,7 +81,7 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
       exito: true,
       mensaje: esFutura
         ? `La tasa oficial de mañana (${tasaBcv.fechaActualizacion}) ya está registrada: Bs. ${valorRedondeado.toFixed(4)} / USD.`
-        : `La tasa oficial de hoy ya está al día: Bs. ${valorRedondeado.toFixed(4)} / USD.`,
+        : `La tasa oficial de hoy (${tasaBcv.fechaActualizacion}) ya está al día: Bs. ${valorRedondeado.toFixed(4)} / USD.`,
       valorSincronizado: valorRedondeado,
     };
   }

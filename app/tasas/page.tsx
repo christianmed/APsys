@@ -78,8 +78,10 @@ export default async function TasasPage() {
     }),
   );
 
-  const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
-  const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, new Date());
+  const ahora = new Date();
+  const ahoraTimestamp = ahora.getTime();
+  const tasaVigente = obtenerTasaVigenteParaFecha(historial, ahora);
+  const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, ahora);
 
   return (
     <AuthenticatedShell>
@@ -205,11 +207,18 @@ export default async function TasasPage() {
                     <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
                       {historial.map((t) => {
                         const esLaVigente = tasaVigente?.id === t.id;
+                        const esLaProgramada =
+                          tasaProgramada?.id === t.id ||
+                          new Date(t.vigente_desde).getTime() > ahoraTimestamp;
                         return (
                           <tr
                             key={t.id}
                             className={`transition-colors hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40 ${
-                              esLaVigente ? "bg-emerald-50/30 dark:bg-emerald-950/10 font-bold" : ""
+                              esLaVigente
+                                ? "bg-emerald-50/30 dark:bg-emerald-950/10 font-bold"
+                                : esLaProgramada
+                                ? "bg-amber-50/30 dark:bg-amber-950/10 font-bold"
+                                : ""
                             }`}
                           >
                             <td className="px-6 py-4 font-mono font-bold text-zinc-900 dark:text-white">
@@ -221,7 +230,11 @@ export default async function TasasPage() {
                             <td className="px-6 py-4 text-center">
                               {esLaVigente ? (
                                 <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                                  Vigente
+                                  Vigente (Hoy)
+                                </span>
+                              ) : esLaProgramada ? (
+                                <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                                  Programada (Mañana)
                                 </span>
                               ) : (
                                 <span className="text-[11px] text-zinc-400">Histórica</span>

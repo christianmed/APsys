@@ -3,6 +3,7 @@
 import {
   CheckCircle2,
   CircleAlert,
+  Clock,
   Euro,
   Loader2,
   RefreshCw,
@@ -11,6 +12,7 @@ import {
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTasas } from "@/context/tasas-context";
+import { esTasaBcvFutura } from "@/lib/tasas/tasas";
 import {
   consultarTasasBcvEnVivo,
   sincronizarTasaBcv,
@@ -65,6 +67,9 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
 
   const tasaUsdEnVivo = tasasEnVivo?.usd;
   const tasaEurEnVivo = tasasEnVivo?.eur;
+  const esFutura = tasaUsdEnVivo
+    ? esTasaBcvFutura(tasaUsdEnVivo.fechaActualizacion)
+    : false;
 
   return (
     <div className="space-y-4">
@@ -181,25 +186,43 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
 
           {/* Botón para aplicar la tasa USD como vigencia */}
           {tasaUsdEnVivo && (
-            <button
-              type="button"
-              onClick={handleSincronizar}
-              disabled={sincronizando || consultando}
-              className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-800 disabled:opacity-60 dark:bg-emerald-600 dark:hover:bg-emerald-700"
-            >
-              {sincronizando ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" />
-                  Aplicando tasa BCV...
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="size-4" />
-                  Aplicar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} como Tasa
-                  Vigente
-                </>
+            <div className="space-y-2 pt-1">
+              <button
+                type="button"
+                onClick={handleSincronizar}
+                disabled={sincronizando || consultando}
+                className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold text-white shadow-sm transition disabled:opacity-60 ${
+                  esFutura
+                    ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700"
+                    : "bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                }`}
+              >
+                {sincronizando ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    {esFutura
+                      ? "Programando tasa de mañana..."
+                      : "Aplicando tasa de hoy..."}
+                  </>
+                ) : esFutura ? (
+                  <>
+                    <Clock className="size-4" />
+                    Programar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} para Mañana (Día Hábil)
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="size-4" />
+                    Aplicar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} como Tasa Vigente de Hoy
+                  </>
+                )}
+              </button>
+
+              {esFutura && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50/90 p-2.5 text-center text-[11px] leading-relaxed text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300">
+                  <span className="font-bold">Nota operativa:</span> Esta tasa oficial entrará en vigencia automática a las <strong>12:00 a. m. de mañana</strong>. La tasa de hoy permanece vigente para el cierre del día. Ya puedes usar la tasa de mañana para cotizar o facturar en <strong>Nuevo Pedido</strong> usando el selector interactivo.
+                </div>
               )}
-            </button>
+            </div>
           )}
         </div>
       )}

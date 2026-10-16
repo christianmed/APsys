@@ -18,9 +18,12 @@
    - Selecciona el servicio desde el selector interactivo (ej. Vinil Adhesivo, Pendón, Talonarios).
    - Ingresa dimensiones (ancho × alto en metros o cm) y acabados (ojetes, laminado, corte).
    - Coloca la cantidad y el precio unitario pactado en USD.
-4. **Registra el abono inicial:**
+4. **Registra el abono inicial y selecciona la tasa adecuada:**
    - Puedes cobrar en **USD efectivo** o **Bolívares (Pago Móvil / Transferencia)**.
-   - Si es en Bs, el sistema aplica la tasa oficial del día automáticamente.
+   - Si el cobro es en Bs, el sistema aplica la tasa oficial del día automáticamente.
+   - **Selector de Tasa Hoy vs. Mañana:** Si el BCV ya emitió en la tarde la tasa para el día siguiente y fue registrada en `/tasas`, en el formulario de la orden aparecerá un selector destacado en color ámbar:
+     `[ Hoy (Bs. 879.12) ]` | `[ Mañana (Bs. 880.12) ]`
+     Permite cotizar o cobrar de inmediato con la tasa nueva a discreción del operador para proteger el margen del taller antes del cierre de jornada.
 5. Haz clic en **"Crear Pedido"** e imprime la **Comanda Técnica**.
 
 ---
@@ -44,7 +47,30 @@ El tablero de taller está diseñado para pantallas táctiles y uso con una sola
 
 ---
 
-## 3. Perfil Gerencial / Administración (Finanzas y Control)
+## 3. Gestión y Dinámica de Tasas de Cambio (`/tasas`) — Operador & Gerencia
+
+### Ciclo Diario y Doble Vigencia del BCV
+
+En Venezuela, el Banco Central publica la tasa oficial bajo el siguiente ciclo operativo:
+1. **En la mañana:** Rige la tasa fijada para el día hábil en curso (con vigencia legal desde las 12:00 a. m. de hoy).
+2. **En la tarde (3:30 p. m. a 5:30 p. m.):** El BCV publica la tasa oficial del **siguiente día hábil**.
+
+### Estados en el Histórico de Tasas
+
+Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un estado visual explícito:
+- 🟢 **Vigente (Hoy):** La tasa oficial activa para la jornada en curso. Se toma por defecto para cálculos y cobros del día.
+- 🟡 **Programada (Mañana):** La tasa oficial emitida para el siguiente día hábil (inicia a las 12:00 a. m. del día siguiente). Se mantiene en espera y **se activa de forma automática a medianoche (12:00 a. m.)** sin requerir ninguna acción del usuario.
+- ⚪ **Histórica:** Tasas de días anteriores conservadas inmutablemente. Garantiza que ninguna orden o abono previo sufra variaciones en sus montos en bolívares.
+
+### ¿Cómo aplicar o utilizar la tasa del día siguiente?
+- **Paso 1:** Al final de la tarde, haz clic en **"Consultar Tasas BCV en Vivo"**.
+- **Paso 2:** Si el BCV ya publicó para mañana, el botón mostrará: **"Programar Bs. XXX.XXXX para Mañana (Día Hábil)"**. Al pulsar el botón, la tasa queda registrada en la base de datos con inicio a las 12:00 a. m. del día siguiente.
+- **Paso 3 (Opcional):** Si necesitas cobrar un pedido en ese momento usando esa tasa anticipada, ve a `/pedidos/nuevo` y activa la píldora **"Mañana (Bs. XXX.XX)"** en el selector de tasa.
+- **Paso 4 (Automático):** Al llegar las 12:00 a. m. (medianoche), el sistema promueve automáticamente esa tasa como la nueva tasa **Vigente** para todo el sistema.
+
+---
+
+## 4. Perfil Gerencial / Administración (Finanzas y Control)
 
 ### Widget de Tasas Referenciales BCV (Barra Lateral)
 
@@ -52,11 +78,6 @@ El tablero de taller está diseñado para pantallas táctiles y uso con una sola
   - **Hoy:** Tasa vigente en USD y EUR con indicador verde.
   - **Mañana:** Tasa programada emitida por el BCV para el día siguiente con indicador ámbar.
 - Los acordeones **memorizan su estado abierto o cerrado** al navegar entre cualquier página del sistema.
-
-### Gestión de Tasas de Cambio (`/tasas`)
-
-- Al abrir el taller cada mañana, ingresa a `/tasas` para sincronizar con un solo clic con la API oficial del BCV o ingresar una tasa manual.
-- **Garantía histórica:** Modificar la tasa de hoy nunca alterará los montos de pedidos de días anteriores.
 
 ### Cuentas por Cobrar (`/cuentas-por-cobrar`)
 
