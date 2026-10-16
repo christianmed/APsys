@@ -68,6 +68,9 @@ Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un es
 - **Paso 3 (Opcional):** Si necesitas cobrar un pedido en ese momento usando esa tasa anticipada, ve a `/pedidos/nuevo` y activa la píldora **"Mañana (Bs. XXX.XX)"** en el selector de tasa.
 - **Paso 4 (Automático):** Al llegar las 12:00 a. m. (medianoche), el sistema promueve automáticamente esa tasa como la nueva tasa **Vigente** para todo el sistema.
 
+> 💡 **Sincronización Automática en Segundo Plano (Cron Job):**  
+> Aunque ningún operador o administrador esté conectado al sistema, una tarea automática se ejecuta a las 6:30 p. m. y a las 12:05 a. m. para registrar la tasa oficial directamente en la base de datos de Supabase. El botón en `/tasas` queda disponible como respaldo inmediato para forzar una sincronización manual al instante.
+
 ---
 
 ## 4. Perfil Gerencial / Administración (Finanzas y Control)

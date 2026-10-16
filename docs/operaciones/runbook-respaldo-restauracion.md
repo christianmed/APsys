@@ -123,3 +123,33 @@ Tras completar la restauración, el ingeniero o administrador debe validar:
 Para garantizar que el runbook no quede obsoleto:
 - Realizar una prueba de restauración en un entorno local o de preview **una vez por trimestre**.
 - Documentar fecha, tiempo total de recuperación cronometrado y cualquier ajuste requerido al runbook.
+
+---
+
+## 6. Automatización de Sincronización de Tasas BCV (Vercel Cron & Service Role Key)
+
+Para garantizar que la tasa oficial del BCV se guarde de forma automática y persistente en la base de datos sin depender de que un usuario esté logueado, se utiliza un Vercel Cron Job y la clave maestra de Supabase.
+
+### 6.1 Variables de Entorno Requeridas
+
+1. **`SUPABASE_SERVICE_ROLE_KEY`**:
+   - **Dónde se obtiene:** En el dashboard de [Supabase](https://supabase.com) → **Project Settings** → **API** → sección **Project API keys** → copiar la clave **`service_role` (secret)**.
+   - **Propósito:** Permite al endpoint del Cron escribir en `tasas_cambio` y `auditoria` saltando las restricciones de sesión de usuario de RLS.
+   - **Precaución:** Nunca exponer esta clave en el cliente (`NEXT_PUBLIC_`), debe mantenerse estrictamente en el backend.
+
+2. **`CRON_SECRET`**:
+   - **Dónde se obtiene:** **La genera el propio desarrollador/administrador.**
+   - **Cómo generarla:** Puedes generar una cadena aleatoria segura de 32 o 64 caracteres.
+     - En PowerShell: `[System.Guid]::NewGuid().ToString("N") + [System.Guid]::NewGuid().ToString("N")`
+     - O en bash/openssl: `openssl rand -hex 32`
+   - **Propósito:** Vercel envía automáticamente la cabecera `Authorization: Bearer <CRON_SECRET>` al invocar el cron. El endpoint rechaza con 401 cualquier petición que no incluya esta firma.
+
+### 6.2 Horarios y Monitoreo del Cron Job
+
+El archivo `vercel.json` tiene configurados dos disparadores automáticos:
+- **`30 22 * * 1-5` (6:30 p. m. Venezuela / Lunes a Viernes):** Ejecución principal tras el cierre de mesas de cambio bancarias para registrar la tasa programada de mañana.
+- **`5 4 * * *` (12:05 a. m. Venezuela / Diario):** Red de seguridad nocturna para garantizar que la jornada arranque con la tasa registrada.
+
+Para monitorear las ejecuciones:
+- En Vercel: **Project Dashboard → Logs / Crons**.
+- En Supabase: Consultar la tabla `auditoria` filtrando por `origen = 'cron_automatico_bcv'`.
