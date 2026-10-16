@@ -76,6 +76,11 @@ export const NAVIGATION_GROUPS: NavGroup[] = [
         icon: Tag,
       },
       {
+        label: "Tasa de Cambio",
+        href: "/tasas",
+        icon: Banknote,
+      },
+      {
         label: "Plantillas WhatsApp",
         href: "/plantillas",
         icon: MessageSquare,
@@ -102,12 +107,6 @@ export const NAVIGATION_GROUPS: NavGroup[] = [
         label: "Rotación de Servicios",
         href: "/dashboard/rotacion",
         icon: Package,
-        rolRequerido: "gerencial",
-      },
-      {
-        label: "Tasa de Cambio",
-        href: "/tasas",
-        icon: Banknote,
         rolRequerido: "gerencial",
       },
     ],

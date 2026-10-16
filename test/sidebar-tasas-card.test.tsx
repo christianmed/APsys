@@ -25,6 +25,12 @@ describe("SidebarTasasCard (Acordeones de Tasas BCV)", () => {
     expect(screen.getByText("Ajustar")).toBeInTheDocument();
   });
 
+  it("renderiza el enlace 'Ajustar' también para el perfil operativo", () => {
+    render(<SidebarTasasCard {...propsBase} esGerencial={false} />);
+
+    expect(screen.getByText("Ajustar")).toBeInTheDocument();
+  });
+
   it("mantiene el acordeón de Hoy abierto por defecto sin la palabra 'vigente' ni 'en vigencia'", () => {
     render(<SidebarTasasCard {...propsBase} />);
 

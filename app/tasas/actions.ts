@@ -42,10 +42,11 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
     .eq("usuario_id", user.id)
     .maybeSingle();
 
-  if (perfil?.rol !== "gerencial") {
+  const rol = perfil?.rol;
+  if (rol !== "gerencial" && rol !== "operativo") {
     return {
       error:
-        "Solo los usuarios con perfil gerencial pueden sincronizar la tasa BCV.",
+        "Solo los usuarios autenticados con rol operativo o gerencial pueden sincronizar la tasa BCV.",
     };
   }
 
