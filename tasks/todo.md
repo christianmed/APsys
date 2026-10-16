@@ -173,3 +173,21 @@
   - [x] Paso 3 (Configuración en `vercel.json`): Añadir programación dual cron (6:30 p. m. / 22:30 UTC y 12:05 a. m. / 04:05 UTC) para ejecución autónoma.
   - [x] Paso 4 (Actualización de Manuales y Runbook): Documentar la generación y configuración de `CRON_SECRET` y `SUPABASE_SERVICE_ROLE_KEY` en `docs/operaciones/runbook-respaldo-restauracion.md` y `docs/capacitacion/guia-rapida-usuarios.md`.
   - [x] Paso 5 (DoD y Calidad): Validar suite de pruebas (100% verde), `typecheck`, `lint` y `build`.
+
+- [ ] **Backlog Estratégico Consolidado (Post-Auditoría Cruzada PI vs. Gemma)**
+  - **Etapa 1: Blindaje Inmediato & Agilidad (Versión 1.0.0 Oficial)**
+    - [ ] **Ajustar frecuencia de Crons en `vercel.json`**: Ajustar según plan de Vercel (Hobby: 1 ejecución diaria a las 6:30 PM Caracas / 22:30 UTC; Pro: ejecución dual tarde y medianoche).
+    - [ ] **Adopción de Fast Lanes en `AGENTS.md`**: Formalizar la vía rápida TDD para bugfixes cosméticos y mantenimiento sin burocracia de especificación.
+    - [ ] **Migración de Índices en PostgreSQL (`0006_indices_rendimiento.sql`)**: Crear índices en `pedidos(cliente_id)`, `pedidos(estado)`, `pedidos(fecha_registro DESC)` y `clientes(telefono)`.
+    - [ ] **Validación con esquemas Zod en Server Actions**: Crear esquemas en `lib/validaciones/` para sanitizar `crearPedido`, `crearCliente` y `registrarAbono`.
+    - [ ] **Paginación por Cursor en `/clientes` y `/pedidos`**: Implementar paginación en servidor (`limit 25` + `created_at < cursor`).
+    - [ ] **Alertas de Cron por Telegram**: Micro-webhook que emita alerta si la sincronización del BCV falla repetidamente.
+    - [x] **Archivar documentos sueltos de auditoría**: Mover `Analisis-PI.md`, `Analisis-Gemma.md` y `pruebna.md` a `docs/analisis/2026-10-16/`.
+  - **Etapa 2: Potencia Comercial y Finanzas (Versión 1.1.0 — Sprint 1)**
+    - [ ] **Generador de Presupuestos Formales en PDF Vectorial**: Endpoint descargable con membrete, especificaciones de m², acabados y montos en USD y Bs.
+    - [ ] **Desglose de Pagos Mixtos y Multimoneda**: Tabla `pedido_pagos` para abonos combinados (Efectivo USD + Zelle + Pago Móvil Bs con tasa congelada y referencia bancaria).
+    - [ ] **Suite E2E Playwright de Flujo Completo**: Automatizar recorrido de usuario comercial y de planta.
+  - **Etapa 3: Planta Inteligente y Manufactura (Versión 1.2.0 — Sprint 2)**
+    - [ ] **WhatsApp Cloud API Desatendido**: Webhook automático de aviso de retiro al pasar la orden a "Listo para Retiro" en Taller Kanban.
+    - [ ] **Módulo de Inventario de Bobinas y Merma**: Control de metros lineales y cálculo automático de desperdicio por corte.
+    - [ ] **Estimación Predictiva en Taller**: Estimación de entrega basada en la carga de m² en producción.

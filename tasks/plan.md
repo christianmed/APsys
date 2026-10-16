@@ -7,12 +7,14 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
 ## Fases de Ejecución
 
 ### Fase 1: Diagnóstico y Validación del Catálogo de Servicios
+
 - **Problema:** En `/pedidos/nuevo`, el selector de servicios solo mostraba `-- Seleccionar --` debido a que en la base de datos únicamente existían 2 registros de test inactivos (`activo: false`).
 - **Acción:**
   - Se sembraron con éxito los 5 servicios base oficiales en Supabase (`Pendones`, `Viniles`, `Backing`, `Microperforado`, `Etiquetas`) con `activo: true` y orden `1..5`.
   - Crear e integrar un mecanismo de fallback/aviso en `app/pedidos/nuevo/page.tsx` y `app/pedidos/pedido-form.tsx` para que, en caso de catálogo vacío, muestre un aviso con enlace directo a `/servicios/nuevo` para administradores.
 
 ### Fase 2: Unificación de Nomenclatura y Botones Coherentes
+
 - **Punto 2 (Inconsistencia de botones):**
   - Unificar en `app/pedidos/page.tsx` el botón de cabecera y el botón del empty state a la misma etiqueta y estilo: **"+ Nueva Orden"**.
 - **Punto 4 (Botón Registrar Nuevo Cliente):**
@@ -22,11 +24,13 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   - Transformarlo en un botón dashed/secundario con estilo de tarjeta o botón de adición (`<Plus /> Agregar ítem`), consistente con el sistema.
 
 ### Fase 3: Corrección de Navegación del Sidebar y Rutas Activas
+
 - **Punto 3 (Doble botón activo en sidebar):**
   - En `components/shell/app-nav-items.ts`, configurar `exactMatch: true` para `/pedidos` y `/pedidos/nuevo` (renombrado a "Nueva Orden" para consistencia con el header).
   - En `components/shell/app-shell.tsx`, refinar la función `estaRutaActiva` para evitar que `/pedidos` se active cuando el usuario está en `/pedidos/nuevo`.
 
 ### Fase 4: Jerarquía Limpia y Eliminación de Navegación Redundante
+
 - **Punto 6 (Links redundantes e inconsistentes de navegación):**
   - **Páginas de Nivel 1 (Secciones directas del Sidebar/Bottom Nav):**
     - `/pedidos`, `/taller`, `/clientes`, `/servicios`, `/dashboard`, `/cuentas-por-cobrar`, `/tasas`, `/plantillas`, `/recordatorios`, `/ayuda`.
@@ -43,6 +47,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   - En `app/ayuda/page.tsx`, retirar el botón "Ir al Taller" de la cabecera `PageHeader`, conservando el del banner de bienvenida operativo.
 
 ### Fase 5: Módulo de Tasa BCV Automática vía API (USD Principal + EUR Informativo)
+
 - **Punto 8:**
   - Crear `lib/tasas/bcv-service.ts`:
     - Consumo de `ve.dolarapi.com/v1/dolares/oficial` y `ve.dolarapi.com/v1/euros/oficial` (con fallback a `rates.dolarvzla.com`).
@@ -56,6 +61,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   - Actualizar el badge de tasa en el `AppShell` para mostrar USD principal y tooltip/indicador con EUR informativo.
 
 ### Fase 6: Pruebas y Validación Integral
+
 - Pruebas unitarias para `bcv-service.ts`.
 - Ejecución de `npm run typecheck`, `npm test`, `npm run lint` y `npm run build`.
 - Verificación visual.
@@ -64,9 +70,41 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
 ---
 
 ### Fase 19: Validación Rápida de JWT en Proxy (Opción A) + Propagación de Sesión vía Headers (Opción B)
+
 - **Objetivo:** Eliminar el cuello de botella de 2.1s - 3.3s en `proxy.ts` y la doble llamada remota a Supabase Auth en Server Components.
 - **Acción:**
   1. **Opción A (Validación local de JWT en `proxy.ts`):** Extraer el access token de las cookies de Supabase (`sb-*-auth-token`) y validar claims (`sub`, `email`, `exp`) en memoria en < 1ms, evitando llamadas HTTPS a EE.UU. en cada clic.
   2. **Opción B (Propagación de usuario vía headers):** Inyectar `x-user-id` y `x-user-email` en las cabeceras de la petición hacia Next.js Server Components.
   3. **Optimización en `auth-cache.ts` y páginas:** `obtenerUsuarioSesion` lee las cabeceras del proxy, evitando una segunda llamada a `supabase.auth.getUser()`.
   4. **TDD y Benchmarking:** Pruebas unitarias dedicadas en `test/jwt-session.test.ts` y verificación de latencia en vivo.
+
+---
+
+## Fases Consolidadas de Evolución (Post-Auditoría Cruzada PI vs. Gemma)
+
+### Fase 28: Blindaje Técnico, Rendimiento y Gobernanza Ágil (Versión 1.0.0 Oficial)
+
+- **Objetivo:** Asegurar la estabilidad a largo plazo del sistema, optimizar las consultas de base de datos a `O(log n)` y desburocratizar el desarrollo diario.
+- **Acciones Clave:**
+  1. **Gobernanza Ágil (Fast Lanes):** Actualizar `AGENTS.md` para formalizar la ruta rápida de correcciones menores (TDD directo Rojo-Verde sin reunión de especificación obligatoria).
+  2. **Índices en PostgreSQL:** Crear `supabase/migrations/0006_indices_rendimiento.sql` con índices B-Tree en `pedidos(cliente_id)`, `pedidos(estado)`, `pedidos(fecha_registro DESC)` y `clientes(telefono)`.
+  3. **Validación Zod en Server Actions:** Implementar esquemas Zod en `lib/validaciones/` para sanitizar `crearPedido`, `crearCliente` y `registrarAbono`.
+  4. **Paginación por Cursor:** Implementar paginación en servidor (`limit 25` + `created_at < cursor`) para `/clientes` y `/pedidos`.
+  5. **Alertas de Cron por Telegram:** Micro-webhook que emita alerta si la sincronización del BCV falla repetidamente.
+  6. **Limpieza de Archivos Sueltos:** Archivar `Analisis-PI.md`, `Analisis-Gemma.md` y `pruebna.md` en `docs/analisis/2026-10-16/`.
+
+### Fase 29: Potencia Comercial y Finanzas (Versión 1.1.0)
+
+- **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
+- **Acciones Clave:**
+  1. **Presupuestos Formales en PDF Vectorial:** Endpoint de generación y descarga en PDF con membrete, especificaciones de m², acabados y montos en USD y Bs para compartir por WhatsApp o imprimir.
+  2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
+  3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
+
+### Fase 30: Planta Inteligente y Manufactura (Versión 1.2.0)
+
+- **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
+- **Acciones Clave:**
+  1. **WhatsApp Cloud API Desatendido:** Disparo automático de mensaje al cliente cuando la orden se marca como "Listo para Retiro", sin interacción manual.
+  2. **Módulo de Inventario de Bobinas y Merma:** Control de metros lineales disponibles de lona y vinil con descuento automático por orden procesada y cálculo de merma por corte.
+  3. **Estimación Predictiva en Taller Kanban:** Cálculo automático del tiempo estimado de entrega basado en la carga histórica de m² en producción.

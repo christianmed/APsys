@@ -33,30 +33,40 @@ Sol_graficas C.J., C.A. gestiona hoy la toma de pedidos con una macro de Excel. 
 | Visibilidad financiera      | Ingresos y cuentas por cobrar en tiempo real, por moneda (USD/Bs)      |
 | Fidelización                | Histórico de recurrencia por cliente disponible en segundos            |
 
-## 2. Alcance
+## 2. Alcance y Delimitación Estratégica
 
-### In-Scope (MVP)
+### In-Scope (MVP Consolidado — v0.9.2 a v1.0.0)
 
-- Registro y gestión de pedidos con cobranza inicial (total, abono por moneda, referencia, saldo calculado).
-- Comanda/ticket imprimible con código QR/barras; lectura por escáner USB, cámara móvil o búsqueda por número.
-- Flujo de estados: Recibido → En Producción → Listo para Retiro → Entregado → Cancelado.
-- Aviso de retiro por WhatsApp (enlace directo con plantilla que incluye N° de orden y saldo pendiente en $ y Bs).
-- Panel de recordatorios para pedidos listos no retirados tras 48–72 h, con envío a un clic.
-- Plantillas de mensajes editables por gerencia.
-- Dashboard gerencial: ingresos por moneda, cuentas por cobrar, rotación de servicios e historial por cliente.
-- Tasa de cambio referencial configurable.
-- Auditoría de anulaciones/ediciones con motivo obligatorio.
-- Exportación de reportes (CSV/PDF).
-- Despliegue en la nube con respaldos automáticos diarios.
+- Registro y cotización paramétrica de pedidos con cálculo automático por dimensiones (ancho, alto, cantidad, m² y acabados).
+- Motor de tasas BCV con soporte de **doble vigencia temporal** (tasa de hoy vs. tasa programada del día siguiente) y sincronización desatendida vía Vercel Cron.
+- Inmutabilidad financiera: cada orden congela su tasa oficial (`tasa_id`) y registra justificación obligatoria en `auditoria` ante cambios o anulaciones.
+- Tablero Kanban reactivo en tiempo real para operarios de taller con Supabase Realtime y sincronización continua.
+- Comanda imprimible con código QR de trazabilidad para seguimiento físico del material en planta.
+- Directorio de clientes con validación telefónica y consolidación de saldos deudores.
+- Catálogo dinámico de servicios gráficos configurables en USD desde `/servicios`.
+- Módulo de Cuentas por Cobrar con registro de abonos y antigüedad de deuda.
+- Dashboard gerencial de ingresos y rotación de servicios con exportación CSV.
+- Gobernanza ágil con **Fast Lanes** para correcciones menores de UI/estilos en `AGENTS.md`.
+- Blindaje técnico de estabilidad (v1.0.0):
+  - Índices relacionales compuestos en PostgreSQL (`pedidos_cliente_id_idx`, `pedidos_estado_idx`, `pedidos_fecha_registro_idx`, `clientes_telefono_idx`).
+  - Validación tipada en runtime con **Zod** en todas las Server Actions.
+  - Paginación por cursor en `/clientes` y `/pedidos`.
+  - Alertas proactivas del Cron de tasas vía Webhook (Telegram/Email).
 
-### Out-of-Scope (MVP) — backlog posterior
+### Out-of-Scope Definitivo (Descartes Formales tras Auditoría Cruzada)
 
-- Integración con WhatsApp Business Cloud API (el MVP usa enlace directo `wa.me`, sin costos de API ni aprobaciones externas).
-- Facturación fiscal e integración contable.
-- Aplicación móvil nativa (el MVP es web responsive).
-- Modo offline / PWA instalable.
-- Multi-sucursal y roles adicionales.
-- Pasarelas de pago en línea, inventario de materiales, fidelización automática (puntos/cupones).
+- **Capa de Abstracción Agnóstica para Supabase:** Descartada por sobre-ingeniería (YAGNI). Se preserva la integración directa con Supabase RLS, Realtime y Auth.
+- **Sustitución de Manuales por Swagger/OpenAPI:** Descartada. Los manuales operativos para personal de taller y ventas se mantienen en lenguaje de negocio humano.
+- **Integración con WhatsApp Cloud API (en MVP):** El MVP utiliza enlaces directos `wa.me` sin costos fijos de API de Meta; se prioriza para la versión v1.2.0.
+- **Facturación fiscal e integración contable SENIAT:** Fuera de alcance; el sistema no sustituye la máquina fiscal.
+- **Nómina y Gestión de Recursos Humanos:** Fuera de alcance.
+- **Telemetría IoT de Maquinaria:** Fuera de alcance; no se conectan sensores físicos a los plotters.
+- **Portal de auto-servicio B2C:** El sistema es de uso interno exclusivo para el personal del taller.
+
+### Backlog Estratégico Priorizado (Versiones Posteriores)
+
+- **Versión 1.1.0 (Comercial y Cobranza):** Generador de Presupuestos descargables en PDF vectorial formal, desglose de Pagos Mixtos multimoneda (`pedido_pagos`: efectivo, Zelle, Pago Móvil), suite E2E completa en Playwright.
+- **Versión 1.2.0 (Planta Inteligente):** Notificación automática desatendida vía WhatsApp Cloud API al pasar a "Listo para Retiro", módulo de inventario de bobinas de lona/vinil con cálculo de merma por corte y estimación predictiva de tiempos de entrega.
 
 ## 3. Usuarios y perfiles
 
@@ -187,40 +197,44 @@ Consideraciones: políticas RLS por rol desde la fase de fundaciones (T-005); ag
 | Descuadres de saldos                                   | 0                                            |
 | Adopción del equipo                                    | Uso semanal sostenido por todos los perfiles |
 
-## 10. Roadmap a MVP y criterios de salida
+## 10. Roadmap de Evolución y Criterios de Salida
 
-| Fase                                 | Alcance                                                 | Duración    | Criterio de salida                                                |
-| ------------------------------------ | ------------------------------------------------------- | ----------- | ----------------------------------------------------------------- |
-| **Fase 0 — Fundaciones**             | Repo, CI, Supabase, esquema y RLS                       | (previa)    | Migraciones y RLS probadas; pipeline en verde                     |
-| **Fase 1 — Registro**                | Clientes, pedidos, cobranza, comanda                    | Semanas 1–2 | Flujo registro→comanda verificado E2E                             |
-| **Fase 2 — Taller y notificaciones** | Estados, escaneo, WhatsApp, recordatorios               | Semana 3    | Flujo taller→aviso→recordatorio verificado E2E                    |
-| **Fase 3 — Métricas y despliegue**   | Dashboard, CxC, taxa, exportación, deploy, capacitación | Semana 4    | Suite E2E completa en verde en producción; capacitación realizada |
+| Versión / Fase | Alcance Principal | Estado | Criterio de Salida |
+| :--- | :--- | :---: | :--- |
+| **v0.9.2 — Producción Actual** | Navegación Client-First, motor doble vigencia BCV, sincronización Vercel Cron, Taller Kanban reactivo. | **Completada** | 216 tests en verde, 0 errores TypeScript, desplegado en Vercel. |
+| **v1.0.0 — Estabilidad & Gobernanza** | Índices PostgreSQL (`0006_indices.sql`), validación Zod en Server Actions, paginación por cursor, alertas Telegram, Fast Lanes en `AGENTS.md`. | **En Curso** | Migración aplicada en Supabase, suites Zod y paginación 100% verde. |
+| **v1.1.0 — Potencia Comercial** | Presupuestos en PDF vectorial descargable, pagos mixtos multimoneda (`pedido_pagos`), suite E2E Playwright de flujo completo. | **Sprint 1** | Generación de PDF validada en pruebas; conciliación de pagos mixtos sin descuadre. |
+| **v1.2.0 — Planta Inteligente** | WhatsApp Cloud API desatendido, módulo de inventario de bobinas (lona/vinil) con merma por corte y estimación de tiempos de entrega. | **Sprint 2** | Disparo automático de avisos en taller y reporte de m² aprovechados vs. desperdicio. |
 
-Salida del MVP: todos los RF **Must** implementados y verificados; suite E2E de flujos críticos en verde; desplegado en producción; capacitación en sede realizada.
+Salida oficial de v1.0.0: Todos los índices activos en producción; validación Zod en actions; consultas con paginación; y manuales sincronizados.
 
-## 11. Riesgos y supuestos
+## 11. Riesgos y Supuestos
 
-| Riesgo / Supuesto                   | Impacto | Mitigación                                                                            |
-| ----------------------------------- | ------- | ------------------------------------------------------------------------------------- |
-| Conectividad intermitente en taller | Medio   | UI tolerante a reintentos; validar en sitio durante la fase 3                         |
-| Políticas de WhatsApp               | Medio   | MVP con enlace directo (sin envíos masivos automatizados); evaluar Cloud API post-MVP |
-| Volatilidad de la tasa de cambio    | Medio   | Histórico de tasas; cada pedido congela su tasa                                       |
-| Baja adopción del personal          | Alto    | Capacitación en sede + guía rápida; flujos de ≤ 2 toques                              |
-| Crecimiento del alcance             | Medio   | Backlog separado en `tasks/todo.md`; decisiones abiertas formalizadas                 |
+| Riesgo / Supuesto | Impacto | Mitigación |
+| :--- | :--- | :--- |
+| Conectividad intermitente en taller | Medio | UI reactiva client-first con tolerancia a reintentos; cache local de tasas en memoria. |
+| Caída de APIs del BCV | Medio | Arquitectura dual DolarVZLA + fallback a DolarApi + última tasa persistida en base de datos. |
+| Volatilidad de la tasa de cambio | Alto | Inmutabilidad financiera: cada orden congela su tasa oficial (`tasa_id`); soporte de tasa de mañana. |
+| Fricción metodológica en hotfixes | Medio | Incorporación de **Fast Lanes** en `AGENTS.md` para parches menores y cambios cosméticos. |
+| Crecimiento acelerado de registros | Medio | Índices relacionales compuestos en PostgreSQL y paginación por cursor en servidor. |
 
-## 12. Decisiones abiertas
+## 12. Decisiones Estratégicas y de Arquitectura
 
-| ID  | Decisión                          | Opciones                                                                       | Recomendación                                                                                                                                                                  |
-| --- | --------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| D-1 | ¿Login por perfiles desde el MVP? | (a) siempre acceso unificado · (b) login con roles · (c) configurable por flag | (c) Implementar Auth con roles desde el inicio y un "modo mostrador" que permita acceso directo; la privacidad operativa (RF-19) exige la separación de vistas de todos modos. |
-| D-2 | Canal WhatsApp                    | (a) enlace `wa.me` (MVP) · (b) Cloud API (costo + verificación)                | (a) ahora; evaluar (b) post-MVP.                                                                                                                                               |
-| D-3 | Moneda base de registro           | (a) USD · (b) Bs · (c) dual                                                    | (a) con vista dual $/Bs y tasa histórica por pedido.                                                                                                                           |
-| D-4 | Impresión de comanda              | (a) A4 · (b) térmica 58/80 mm · (c) ambas                                      | Definir con la gerencia; el MVP deja ambas vistas listas.                                                                                                                      |
-| D-5 | Modo de envío de avisos           | (a) automático sin confirmación · (b) asistido con un clic                     | (b) según la propuesta ("un solo clic"); evita envíos erróneos.                                                                                                                |
+| ID | Decisión | Resolución Definitiva | Justificación Técnica |
+| :--- | :--- | :--- | :--- |
+| **D-1** | ¿Login por perfiles o acceso unificado? | **Login con roles RLS segregados** | Privacidad financiera estricta (RF-19): operarios no ven totales globales ni márgenes. |
+| **D-2** | Canal WhatsApp (MVP vs Futuro) | **`wa.me` en v1.0.0 → Cloud API en v1.2.0** | MVP ágil sin costos de Meta; Cloud API para automatización total en taller post-lanzamiento. |
+| **D-3** | Moneda base de cálculo | **USD base con expresión dual en Bs** | Cada pedido congela su `tasa_id`; la inflación no descuadra órdenes previas. |
+| **D-4** | Impresión de comanda | **Ambas (Ticket 80mm y Carta/A4)** | Vistas CSS responsivas listas con QR de trazabilidad. |
+| **D-5** | Modo de envío de avisos | **Asistido a un clic en v1.0.0 → Desatendido en v1.2.0** | Evita envíos accidentales hoy; automatización total cuando la Cloud API esté activa. |
+| **D-6** | Gobernanza de desarrollo | **Fast Lanes para mantenimiento** | Exime a bugfixes menores del ciclo de 5 fases para evitar cuellos de botella de sobrediseño. |
+| **D-7** | Acoplamiento con Supabase | **Integración nativa con Supabase RLS** | Descarte de abstracciones agnósticas (YAGNI); se aprovecha el motor PostgreSQL al 100%. |
+| **D-8** | Presupuestos y Cobranza Mixta | **Prioridad comercial para v1.1.0** | Permite generar PDFs formales y desglosar pagos combinados (Efectivo + Zelle + Pago Móvil). |
 
-## 13. Glosario y referencias
+## 13. Glosario y Referencias
 
-- **Comanda:** ticket de producción con QR/barras que acompaña al material físico.
-- **CxC:** cuentas por cobrar.
+- **Comanda:** Ticket de producción con QR/barras que acompaña al material físico en planta.
+- **CxC:** Cuentas por cobrar.
 - **RLS:** Row Level Security — control de acceso a nivel de fila en PostgreSQL/Supabase.
-- **Referencias:** PROP-2026-10-001 (`docs/propuesta/PROP-2026-10-001.md`); `tasks/todo.md`; `AGENTS.md`.
+- **Fast Lane:** Vía rápida de desarrollo TDD (Rojo-Verde) para correcciones cosméticas y bugfixes sin burocracia de especificación.
+- **Referencias:** PROP-2026-10-001 (`docs/propuesta/PROP-2026-10-001.md`); `tasks/todo.md`; `tasks/plan.md`; `AGENTS.md`; `docs/analisis/2026-10-16/`.
