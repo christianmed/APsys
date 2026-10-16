@@ -1,7 +1,7 @@
 # Guía Rápida de Uso de APSys por Perfil
 
 **Sistema:** APSys — Taller de Gráfica & Impresión  
-**Versión:** 0.9.1  
+**Versión:** 0.9.2  
 **Audiencia:** Personal de Mostrador, Operarios de Taller y Gerencia
 
 ---
@@ -67,6 +67,9 @@ Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un es
 - **Paso 2:** Si el BCV ya publicó para mañana, el botón mostrará: **"Programar Bs. XXX.XXXX para Mañana (Día Hábil)"**. Al pulsar el botón, la tasa queda registrada en la base de datos con inicio a las 12:00 a. m. del día siguiente.
 - **Paso 3 (Opcional):** Si necesitas cobrar un pedido en ese momento usando esa tasa anticipada, ve a `/pedidos/nuevo` y activa la píldora **"Mañana (Bs. XXX.XX)"** en el selector de tasa.
 - **Paso 4 (Automático):** Al llegar las 12:00 a. m. (medianoche), el sistema promueve automáticamente esa tasa como la nueva tasa **Vigente** para todo el sistema.
+
+> 💡 **Sincronización Automática en Segundo Plano (Cron Job):**  
+> Aunque ningún operador o administrador esté conectado al sistema, una tarea automática se ejecuta a las 6:30 p. m. y a las 12:05 a. m. para registrar la tasa oficial directamente en la base de datos de Supabase. El botón en `/tasas` queda disponible como respaldo inmediato para forzar una sincronización manual al instante.
 
 ---
 

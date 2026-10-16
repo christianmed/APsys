@@ -167,3 +167,9 @@
   - [x] Paso 5 (Actualización de Manual de Usuario y Runbook): Actualizar `docs/capacitacion/guia-rapida-usuarios.md` con la dinámica detallada de tasas y pedidos con doble vigencia, y actualizar `docs/operaciones/runbook-respaldo-restauracion.md`.
   - [x] Paso 6 (Regla de Sincronización Mandatoria en `AGENTS.md`): Agregar la directriz estricta para que todo cambio futuro en funciones actualice automáticamente su manual correspondiente.
   - [x] Paso 7 (TDD & DoD): Ejecutar suite de pruebas completa, verificación de tipos y linter.
+- [x] **Fase 27: Cron Job Automatizado de Sincronización de Tasas BCV con Service Role Key**
+  - [x] Paso 1 (TDD - Test Suite): Crear `test/cron-sincronizar-tasas.test.ts` con pruebas de autorización con `CRON_SECRET`, idempotencia y persistencia con `SUPABASE_SERVICE_ROLE_KEY`.
+  - [x] Paso 2 (Route Handler `app/api/cron/sincronizar-tasas/route.ts`): Implementar el handler seguro que consulta la API de BCV, usa el cliente admin de Supabase, previene duplicados, registra en `auditoria` y revalida la app.
+  - [x] Paso 3 (Configuración en `vercel.json`): Añadir programación dual cron (6:30 p. m. / 22:30 UTC y 12:05 a. m. / 04:05 UTC) para ejecución autónoma.
+  - [x] Paso 4 (Actualización de Manuales y Runbook): Documentar la generación y configuración de `CRON_SECRET` y `SUPABASE_SERVICE_ROLE_KEY` en `docs/operaciones/runbook-respaldo-restauracion.md` y `docs/capacitacion/guia-rapida-usuarios.md`.
+  - [x] Paso 5 (DoD y Calidad): Validar suite de pruebas (100% verde), `typecheck`, `lint` y `build`.
