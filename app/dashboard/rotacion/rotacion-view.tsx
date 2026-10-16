@@ -3,7 +3,6 @@
 import {
   AlertCircle,
   BarChart3,
-  Calendar,
   DollarSign,
   Flame,
   Layers,
@@ -101,13 +100,13 @@ export function RotacionServiciosView({
           </span>
         }
         actions={
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
             <Link
               href="/servicios"
               className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
             >
               <Layers className="size-3.5" />
-              Catálogo de Servicios
+              Catálogo
             </Link>
             <Link
               href="/cuentas-por-cobrar"
@@ -120,15 +119,16 @@ export function RotacionServiciosView({
       />
 
       {/* Selector de Períodos */}
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+      <div className="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        {/* Presets rápidos con scroll horizontal nativo */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+          <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400 shrink-0">
             Período:
           </span>
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("hoy")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "hoy"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -139,7 +139,7 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("esta_semana")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "esta_semana"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -150,7 +150,7 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("este_mes")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "este_mes"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -161,7 +161,7 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("todo")}
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
               preset === "todo"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -174,29 +174,28 @@ export function RotacionServiciosView({
         {/* Fechas personalizadas */}
         <form
           onSubmit={aplicarFiltroPersonalizado}
-          className="flex flex-wrap items-center gap-2 text-xs"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 text-xs w-full lg:w-auto"
         >
-          <div className="flex items-center gap-1.5">
-            <Calendar className="size-3.5 text-zinc-400" />
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 w-full sm:w-auto">
             <input
               type="date"
               value={fechaDesde}
               onChange={(e) => setFechaDesde(e.target.value)}
               aria-label="Fecha inicio"
-              className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200"
+              className="h-9 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
             />
-            <span className="text-zinc-400">a</span>
+            <span className="text-zinc-400 text-center">a</span>
             <input
               type="date"
               value={fechaHasta}
               onChange={(e) => setFechaHasta(e.target.value)}
               aria-label="Fecha fin"
-              className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-200"
+              className="h-9 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
             />
           </div>
           <button
             type="submit"
-            className="rounded-lg bg-zinc-900 px-3 py-1 font-semibold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+            className="inline-flex h-9 items-center justify-center rounded-xl bg-zinc-900 px-4 font-semibold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
           >
             Filtrar
           </button>
@@ -336,7 +335,7 @@ export function RotacionServiciosView({
 
       {/* Tabla detallada de rotación */}
       <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 px-4 sm:px-6 py-4 dark:border-zinc-800">
           <div>
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
               Ranking de Servicios ({metricasIniciales.length})
@@ -346,7 +345,7 @@ export function RotacionServiciosView({
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <span className="text-xs text-zinc-500 dark:text-zinc-400">Ordenar por:</span>
             <CustomSelect<CriterioOrdenRotacion>
               value={criterio}

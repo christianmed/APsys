@@ -104,7 +104,6 @@ export function SidebarTasasCard({
   tasaEurSiguiente,
   fechaHoy,
   fechaSiguiente,
-  esGerencial = false,
 }: SidebarTasasCardProps) {
   // Estado reactivo persistente en localStorage para que se mantenga entre páginas
   const acordeonHoyAbierto = useSyncExternalStore(
@@ -144,7 +143,9 @@ export function SidebarTasasCard({
     fechaSiguiente ? formatearFechaCorta(fechaSiguiente) : obtenerFechaManana()
   }`;
 
-  const hayTasaManana = Boolean(tasaSiguiente && tasaSiguiente > 0);
+  const hayTasaManana = Boolean(
+    (tasaSiguiente && tasaSiguiente > 0) || (tasaEurSiguiente && tasaEurSiguiente > 0)
+  );
 
   return (
     <div className="mx-3 mt-3">
@@ -155,14 +156,12 @@ export function SidebarTasasCard({
         <div className="mb-2.5 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
           <span>Tasas Referenciales BCV</span>
 
-          {esGerencial && (
-            <Link
-              href="/tasas"
-              className="text-[9px] font-semibold text-emerald-600 hover:underline dark:text-emerald-400"
-            >
-              Ajustar
-            </Link>
-          )}
+          <Link
+            href="/tasas"
+            className="text-[9px] font-semibold text-emerald-600 hover:underline dark:text-emerald-400"
+          >
+            Ajustar
+          </Link>
         </div>
 
         <div className="space-y-2">

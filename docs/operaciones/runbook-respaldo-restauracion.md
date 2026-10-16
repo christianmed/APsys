@@ -82,19 +82,21 @@ Si se cuenta con el dump SQL:
 psql -h db.[NUEVO-PROYECTO].supabase.co -U postgres -d postgres -f apsys_backup_YYYY-MM-DD.sql
 ```
 
-Si se cuenta con el backup JSON del Nivel 2:
-1. Verificar la integridad del archivo contra su manifiesto:
-   ```bash
-   node -e "
-     const crypto = require('crypto');
-     const fs = require('fs');
-     const data = fs.readFileSync('backups/apsys-backup-[TIMESTAMP].json');
-     const meta = JSON.parse(fs.readFileSync('backups/apsys-backup-[TIMESTAMP].meta.json'));
-     const hash = crypto.createHash('sha256').update(data).digest('hex');
-     if (hash === meta.sha256) console.log('✅ Integridad verificada OK');
-     else console.error('❌ Error: checksum mismatch');
-   "
-   ```
+Si se cuenta con el backup JSON del Nivel 2 (`scripts/backup-supabase.mjs`):
+
+El sistema cuenta con la herramienta automatizada `scripts/restore-supabase.mjs`, que verifica automáticamente la firma criptográfica SHA-256 e inserta las filas respetando el orden de claves foráneas:
+
+**Opción A — Restauración directa contra Supabase:**
+```bash
+node scripts/restore-supabase.mjs backups/apsys-backup-[TIMESTAMP].json
+```
+
+**Opción B — Convertir el JSON a un script SQL (`.sql`):**
+Si prefieres inspeccionar o ejecutar las sentencias SQL en el SQL Editor de Supabase:
+```bash
+node scripts/restore-supabase.mjs backups/apsys-backup-[TIMESTAMP].json --to-sql
+```
+Esto generará el archivo `backups/apsys-backup-[TIMESTAMP].sql` con transacciones atómicas `begin; ... commit;` y cláusulas `on conflict (id) do nothing;`.
 
 #### Paso 4: Actualizar Variables de Entorno en Vercel
 1. Ir a **Vercel Dashboard → APSys → Settings → Environment Variables**.

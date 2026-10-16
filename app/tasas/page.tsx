@@ -48,13 +48,11 @@ function formatoFechaCompleta(iso: string): string {
  * formulario para nueva tasa (gerencial) y el histórico inmutable de vigencias.
  */
 export default async function TasasPage() {
-  const { user, perfil, supabase } = await obtenerUsuarioSesion();
+  const { user, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
     redirect("/login");
   }
-
-  const esGerencial = perfil?.rol === "gerencial";
 
   // Consultar histórico de tasas
   // Consulta paralela del histórico y de tasas BCV en vivo para precargar instantáneamente
@@ -80,8 +78,10 @@ export default async function TasasPage() {
     }),
   );
 
-  const tasaVigente = obtenerTasaVigenteParaFecha(historial, new Date());
-  const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, new Date());
+  const ahora = new Date();
+  const ahoraTimestamp = ahora.getTime();
+  const tasaVigente = obtenerTasaVigenteParaFecha(historial, ahora);
+  const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, ahora);
 
   return (
     <AuthenticatedShell>
@@ -170,21 +170,10 @@ export default async function TasasPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Columna 1: Sincronización BCV en Vivo */}
           <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            {esGerencial ? (
-              <BcvSyncPanel
-                tasaActualUsd={tasaVigente?.valor_bs_por_usd}
-                tasasIniciales={tasasBcvIniciales}
-              />
-            ) : (
-              <div className="space-y-3">
-                <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
-                  Tasa BCV en Vivo
-                </h3>
-                <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-                  La sincronización automática con BCV está disponible únicamente para el perfil <strong>gerencial</strong>.
-                </div>
-              </div>
-            )}
+            <BcvSyncPanel
+              tasaActualUsd={tasaVigente?.valor_bs_por_usd}
+              tasasIniciales={tasasBcvIniciales}
+            />
           </div>
 
           {/* Columna 2: Histórico Inmutable de Tasas */}
@@ -218,11 +207,18 @@ export default async function TasasPage() {
                     <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
                       {historial.map((t) => {
                         const esLaVigente = tasaVigente?.id === t.id;
+                        const esLaProgramada =
+                          tasaProgramada?.id === t.id ||
+                          new Date(t.vigente_desde).getTime() > ahoraTimestamp;
                         return (
                           <tr
                             key={t.id}
                             className={`transition-colors hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40 ${
-                              esLaVigente ? "bg-emerald-50/30 dark:bg-emerald-950/10 font-bold" : ""
+                              esLaVigente
+                                ? "bg-emerald-50/30 dark:bg-emerald-950/10 font-bold"
+                                : esLaProgramada
+                                ? "bg-amber-50/30 dark:bg-amber-950/10 font-bold"
+                                : ""
                             }`}
                           >
                             <td className="px-6 py-4 font-mono font-bold text-zinc-900 dark:text-white">
@@ -234,7 +230,11 @@ export default async function TasasPage() {
                             <td className="px-6 py-4 text-center">
                               {esLaVigente ? (
                                 <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                                  Vigente
+                                  Vigente (Hoy)
+                                </span>
+                              ) : esLaProgramada ? (
+                                <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                                  Programada (Mañana)
                                 </span>
                               ) : (
                                 <span className="text-[11px] text-zinc-400">Histórica</span>

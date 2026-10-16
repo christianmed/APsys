@@ -25,6 +25,12 @@ describe("SidebarTasasCard (Acordeones de Tasas BCV)", () => {
     expect(screen.getByText("Ajustar")).toBeInTheDocument();
   });
 
+  it("renderiza el enlace 'Ajustar' también para el perfil operativo", () => {
+    render(<SidebarTasasCard {...propsBase} esGerencial={false} />);
+
+    expect(screen.getByText("Ajustar")).toBeInTheDocument();
+  });
+
   it("mantiene el acordeón de Hoy abierto por defecto sin la palabra 'vigente' ni 'en vigencia'", () => {
     render(<SidebarTasasCard {...propsBase} />);
 
@@ -82,5 +88,20 @@ describe("SidebarTasasCard (Acordeones de Tasas BCV)", () => {
     // Mañana debe estar abierto según localStorage
     expect(screen.getByText("Bs. 879.12")).toBeInTheDocument();
     expect(screen.getByText("Bs. 977.68")).toBeInTheDocument();
+  });
+
+  it("enciende el indicador de Mañana si existe tasa EUR aunque no exista USD", () => {
+    render(
+      <SidebarTasasCard
+        {...propsBase}
+        tasaSiguiente={undefined}
+        tasaEurSiguiente={980.5}
+      />,
+    );
+
+    const botonManana = screen.getByRole("button", { name: /Mañana/i });
+    expect(botonManana).toBeInTheDocument();
+    const indicador = botonManana.querySelector(".bg-amber-500");
+    expect(indicador).not.toBeNull();
   });
 });

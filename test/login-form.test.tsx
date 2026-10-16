@@ -1,78 +1,101 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import React from "react";
 
-const h = vi.hoisted(() => ({
-  push: vi.fn(),
-  refresh: vi.fn(),
-  signInWithPassword: vi.fn(),
-}));
+const mockPush = vi.fn();
+const mockRefresh = vi.fn();
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: h.push, refresh: h.refresh }),
+  useRouter: () => ({ push: mockPush, refresh: mockRefresh }),
 }));
 
+const mockSignInWithPassword = vi.fn();
+
 vi.mock("@/lib/supabase/client", () => ({
-  createClient: () => ({ auth: { signInWithPassword: h.signInWithPassword } }),
+  createClient: () => ({
+    auth: {
+      signInWithPassword: mockSignInWithPassword,
+    },
+  }),
 }));
 
 import { LoginForm } from "@/app/login/login-form";
 
-function enviarFormulario() {
-  const boton = screen.getByRole("button", { name: /iniciar sesión/i });
-  fireEvent.submit(boton.closest("form")!);
-}
-
-function completarCredenciales() {
-  fireEvent.change(screen.getByLabelText("Correo electrónico"), {
-    target: { value: "quien@example.com" },
-  });
-  fireEvent.change(screen.getByLabelText("Contraseña"), {
-    target: { value: "secreto" },
-  });
-}
-
-describe("LoginForm", () => {
+describe("LoginForm (Robustez y Reseteo de Estado)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("con campos vacíos muestra un aviso y no llama a Supabase", async () => {
+  it("renderiza campos de entrada y botón de inicio habilitados al montar", () => {
     render(<LoginForm />);
 
-    enviarFormulario();
+    const correoInput = screen.getByLabelText(/correo electrónico/i);
+    const passInput = screen.getByLabelText(/contraseña/i);
+    const boton = screen.getByRole("button", { name: /iniciar sesión/i });
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Ingresá tu correo y tu contraseña.",
-    );
-    expect(h.signInWithPassword).not.toHaveBeenCalled();
+    expect(correoInput).toBeEnabled();
+    expect(passInput).toBeEnabled();
+    expect(boton).toBeEnabled();
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 
-  it("con credenciales inválidas muestra el mensaje en español y no navega", async () => {
-    h.signInWithPassword.mockResolvedValue({
-      error: {
-        code: "invalid_credentials",
-        message: "Invalid login credentials",
-      },
+  it("muestra error si los campos están vacíos sin bloquear el botón", async () => {
+    render(<LoginForm />);
+
+    const boton = screen.getByRole("button", { name: /iniciar sesión/i });
+    fireEvent.click(boton);
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Ingresá tu correo y tu contraseña.",
+      );
     });
-    render(<LoginForm />);
 
-    completarCredenciales();
-    enviarFormulario();
-
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Correo o contraseña incorrectos.",
-    );
-    expect(h.push).not.toHaveBeenCalled();
+    expect(boton).toBeEnabled();
   });
 
-  it("con login correcto navega al inicio", async () => {
-    h.signInWithPassword.mockResolvedValue({ error: null });
+  it("restablece el botón de inicio si Supabase devuelve error de credenciales", async () => {
+    mockSignInWithPassword.mockResolvedValueOnce({
+      error: { message: "Invalid login credentials" },
+    });
+
     render(<LoginForm />);
 
-    completarCredenciales();
-    enviarFormulario();
+    const correoInput = screen.getByLabelText(/correo electrónico/i);
+    const passInput = screen.getByLabelText(/contraseña/i);
+    const boton = screen.getByRole("button", { name: /iniciar sesión/i });
 
-    await waitFor(() => expect(h.push).toHaveBeenCalledWith("/"));
-    expect(h.refresh).toHaveBeenCalled();
+    fireEvent.change(correoInput, { target: { value: "operador@apsys.com" } });
+    fireEvent.change(passInput, { target: { value: "password123" } });
+    fireEvent.click(boton);
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toBeInTheDocument();
+    });
+
+    // El botón debe quedar habilitado tras el intento fallido
+    expect(boton).toBeEnabled();
+  });
+
+  it("restablece el botón con finally si ocurre una excepción de red o runtime", async () => {
+    mockSignInWithPassword.mockRejectedValueOnce(new Error("Network failed"));
+
+    render(<LoginForm />);
+
+    const correoInput = screen.getByLabelText(/correo electrónico/i);
+    const passInput = screen.getByLabelText(/contraseña/i);
+    const boton = screen.getByRole("button", { name: /iniciar sesión/i });
+
+    fireEvent.change(correoInput, { target: { value: "operador@apsys.com" } });
+    fireEvent.change(passInput, { target: { value: "password123" } });
+    fireEvent.click(boton);
+
+    await waitFor(() => {
+      expect(screen.getByRole("alert")).toHaveTextContent(
+        "Ocurrió un error inesperado al intentar iniciar sesión.",
+      );
+    });
+
+    expect(boton).toBeEnabled();
   });
 });

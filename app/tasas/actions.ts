@@ -11,6 +11,7 @@ import {
   esTasaBcvFutura,
 } from "@/lib/tasas/tasas";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 
 export type EstadoSincronizacionBcv = {
   exito?: boolean;
@@ -42,10 +43,11 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
     .eq("usuario_id", user.id)
     .maybeSingle();
 
-  if (perfil?.rol !== "gerencial") {
+  const rol = perfil?.rol;
+  if (rol !== "gerencial" && rol !== "operativo") {
     return {
       error:
-        "Solo los usuarios con perfil gerencial pueden sincronizar la tasa BCV.",
+        "Solo los usuarios autenticados con rol operativo o gerencial pueden sincronizar la tasa BCV.",
     };
   }
 
@@ -63,9 +65,9 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
   const valorRedondeado = Math.round(tasaBcv.valorBs * 10000) / 10000;
 
   const esFutura = esTasaBcvFutura(tasaBcv.fechaActualizacion);
-  const fechaVigencia = esFutura
-    ? calcularVigenciaDesdeFechaBcv(tasaBcv.fechaActualizacion)
-    : new Date().toISOString();
+  // La vigencia oficial del BCV rige desde las 00:00:00 (12:00 a. m. hora Caracas) de la fecha indicada.
+  // Tanto para la jornada de hoy como para la de mañana, se ancla al inicio de operaciones bancarias.
+  const fechaVigencia = calcularVigenciaDesdeFechaBcv(tasaBcv.fechaActualizacion);
 
   // Verificar si ya existe una tasa registrada para esta misma fecha de vigencia
   const { data: tasaExistente } = await supabase
@@ -79,20 +81,41 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
       exito: true,
       mensaje: esFutura
         ? `La tasa oficial de mañana (${tasaBcv.fechaActualizacion}) ya está registrada: Bs. ${valorRedondeado.toFixed(4)} / USD.`
-        : `La tasa oficial de hoy ya está al día: Bs. ${valorRedondeado.toFixed(4)} / USD.`,
+        : `La tasa oficial de hoy (${tasaBcv.fechaActualizacion}) ya está al día: Bs. ${valorRedondeado.toFixed(4)} / USD.`,
       valorSincronizado: valorRedondeado,
     };
   }
 
-  const { error: insertError } = await supabase.from("tasas_cambio").insert({
-    valor_bs_por_usd: valorRedondeado,
-    vigente_desde: fechaVigencia,
-  });
+  let insertError: { code?: string; message?: string } | null = null;
+
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  if (serviceRoleKey && supabaseUrl) {
+    const adminClient = createAdminClient(supabaseUrl, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const res = await adminClient.from("tasas_cambio").insert({
+      valor_bs_por_usd: valorRedondeado,
+      vigente_desde: fechaVigencia,
+    });
+    insertError = res.error;
+  } else {
+    const res = await supabase.from("tasas_cambio").insert({
+      valor_bs_por_usd: valorRedondeado,
+      vigente_desde: fechaVigencia,
+    });
+    insertError = res.error;
+  }
 
   if (insertError) {
     console.error("[sincronizarTasaBcv] Error al insertar:", insertError);
+    const detalle =
+      insertError.code === "42501"
+        ? "Permiso denegado por políticas RLS en Supabase. Debes ejecutar la migración 0005 en el SQL Editor de Supabase para autorizar al rol operativo."
+        : "Error al guardar la tasa sincronizada en la base de datos.";
     return {
-      error: "Error al guardar la tasa sincronizada en la base de datos.",
+      error: detalle,
     };
   }
 

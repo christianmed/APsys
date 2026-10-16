@@ -36,6 +36,7 @@ export function AuthenticatedShell({ children }: Props) {
   const handleCerrarSesion = async () => {
     await signOut();
     router.push("/login");
+    router.refresh?.();
   };
 
   const usuarioEmail = user?.email ?? "Usuario";
