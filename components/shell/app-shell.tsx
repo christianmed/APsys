@@ -79,7 +79,7 @@ export function AppShell({
             </div>
           </Link>
           <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-mono text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-            v0.9.1
+            v1.0.0
           </span>
         </div>
 

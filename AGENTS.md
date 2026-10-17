@@ -13,7 +13,10 @@ Para evitar la saturación de la ventana de contexto (_context window_), el agen
 3. **Especificación previa a la implementación:** Ninguna funcionalidad nueva se implementa directamente en código sin una especificación o contrato aprobado.
 4. **Desarrollo Incremental:** Los cambios deben realizarse en rebanadas verticales pequeñas y comprobables (`incremental-implementation`), evitando commits masivos o monolíticos.
 5. **Verificación obligatoria:** Todo cambio debe validarse mediante pruebas automatizadas y chequeo de tipos antes de considerarse completado.
-6. **Sincronización Mandatoria de Manuales y Documentación:** Siempre que se agregue, modifique o ajuste una funcionalidad del sistema (reglas de negocio, navegación, permisos, flujos de pantalla o dinámicas operativas), el agente o desarrollador DEBE actualizar automáticamente y en el mismo ciclo el manual de usuario (`docs/capacitacion/guia-rapida-usuarios.md`) o runbook operativo correspondiente. Ningún cambio con impacto en la operación se da por terminado sin su documentación alineada.
+6. **Sincronización Mandatoria de Manuales y Documentación:** Siempre que se agregue, modifique o ajuste una funcionalidad del sistema (reglas de negocio, navegación, permisos, flujos de pantalla, esquemas de BD, índices, validaciones o arquitectura backend), el agente o desarrollador DEBE actualizar automáticamente y en el mismo ciclo:
+   - El manual de usuario (`docs/capacitacion/guia-rapida-usuarios.md`) para dinámicas operativas.
+   - El manual técnico de arquitectura (`docs/arquitectura/manual-tecnico-sistema.md`) para esquemas, índices, validaciones, flujos de datos y diseño técnico.
+   Ningún cambio con impacto en la operación o en la arquitectura se da por terminado sin su documentación alineada.
 
 ---
 
@@ -64,6 +67,14 @@ Para evitar la saturación de la ventana de contexto (_context window_), el agen
 - **Para revisión puntual de un PR o cambio:** Invoca a **`@code-reviewer`** o ejecuta `/review` para una evaluación en 5 ejes (Correctness, Readability, Architecture, Security, Performance).
 - **Para cambios críticos o pase a producción:** Ejecuta **/ship**. Realizará un _fan-out_ paralelo con tres subagentes aislados (`code-reviewer`, `security-auditor` y `test-engineer`) y emitirá una decisión formal de lanzamiento (**GO | NO-GO**) con plan de rollback.
 
+### 2.1 Vía Rápida (Fast Track / Fast Lanes) para Cambios Menores
+
+Para tareas de bajo riesgo que NO alteran modelos de datos ni contratos de API públicos (ej. correcciones cosméticas de CSS/Tailwind, ajustes de responsividad móvil, refactorización interna sin cambio de comportamiento, o corrección de textos/copy):
+
+- **Bypass de Especificación:** No se requiere convocar a `@system-architect` ni redactar una especificación formal en `docs/specs/`.
+- **Ruta Directa TDD / Incremental:** El agente principal implementa directamente en Fase 3 aplicando TDD o verificación visual con Browser Subagent.
+- **Compuerta de Salida:** Se mantienen obligatorios `npm test`, `npm run typecheck` y registro de tareas en `tasks/todo.md`.
+
 ---
 
 ## 3. Reglas de Modificación de Archivos y Entorno
@@ -88,7 +99,9 @@ Una tarea sólo se marca como concluida cuando el agente haya verificado:
 - [ ] Todos los tests nuevos y preexistentes se ejecutan y aprueban exitosamente (`npm test` o test runner local).
 - [ ] Cero errores de compilación / tipos (`tsc --noEmit` o equivalente del stack).
 - [ ] No existen advertencias críticas de linter ni de consola del navegador.
-- [ ] Manuales y documentación de usuario/operaciones actualizados con el nuevo comportamiento.
+- [ ] Manuales y documentación actualizados con el nuevo comportamiento:
+  - Manual de usuario (`docs/capacitacion/guia-rapida-usuarios.md`) o runbook operativo (`docs/operaciones/`).
+  - Manual técnico de arquitectura (`docs/arquitectura/manual-tecnico-sistema.md`).
 - [ ] La revisión en los 5 ejes ha sido superada o el cambio superó la compuerta `/ship`.
 
 <!-- BEGIN:nextjs-agent-rules -->

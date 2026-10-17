@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@supabase/supabase-js";
+import { enviarAlertaTelegram } from "@/lib/notificaciones/telegram";
 import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
 import {
   calcularVigenciaDesdeFechaBcv,
@@ -66,7 +67,13 @@ export async function GET(request: Request) {
   try {
     tasasCompletas = await obtenerTasasBcvCompletas({ forzarRefresco: true });
   } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : "Error desconocido";
     console.error("[cron/sincronizar-tasas] Excepción al consultar BCV:", error);
+    await enviarAlertaTelegram({
+      titulo: "Fallo en Sincronización Automática BCV",
+      mensaje: "Ocurrió una excepción al consultar las APIs de tasas oficiales (DolarVZLA y Fallback).",
+      detalles: errorMsg,
+    });
     return NextResponse.json(
       { exito: false, error: "Error de comunicación al consultar el servicio BCV" },
       { status: 502 },
@@ -75,6 +82,10 @@ export async function GET(request: Request) {
 
   const tasaUsd = tasasCompletas?.usd;
   if (!tasaUsd || !tasaUsd.valorBs || tasaUsd.valorBs <= 0) {
+    await enviarAlertaTelegram({
+      titulo: "Tasa BCV No Disponible",
+      mensaje: "La respuesta del servicio BCV no contenía una cotización USD válida en la ejecución del cron.",
+    });
     return NextResponse.json(
       { exito: false, error: "No se pudo obtener la tasa oficial del BCV en este momento" },
       { status: 502 },
@@ -95,6 +106,11 @@ export async function GET(request: Request) {
 
   if (queryError) {
     console.error("[cron/sincronizar-tasas] Error al consultar tasas_cambio:", queryError);
+    await enviarAlertaTelegram({
+      titulo: "Error de Base de Datos al Sincronizar Tasas",
+      mensaje: "Fallo al verificar tasas existentes en la tabla tasas_cambio de Supabase.",
+      detalles: queryError.message,
+    });
     return NextResponse.json(
       { exito: false, error: "Error al verificar tasas existentes en la base de datos" },
       { status: 500 },
@@ -121,6 +137,11 @@ export async function GET(request: Request) {
 
   if (insertError) {
     console.error("[cron/sincronizar-tasas] Error al insertar tasa:", insertError);
+    await enviarAlertaTelegram({
+      titulo: "Error al Guardar Nueva Tasa BCV",
+      mensaje: `No se pudo persistir la nueva vigencia en Supabase (valor: Bs. ${valorRedondeado}).`,
+      detalles: insertError.message,
+    });
     return NextResponse.json(
       { exito: false, error: `Error al persistir tasa: ${insertError.message}` },
       { status: 500 },

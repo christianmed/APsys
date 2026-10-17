@@ -67,6 +67,12 @@ describe("proxy: middleware de sesión rápido con JWT local y propagación de h
     expect(response.status).toBe(200);
   });
 
+  it("permite acceso a /api/cron sin sesión (autorización manejada por CRON_SECRET)", async () => {
+    const request = new NextRequest("http://localhost:3000/api/cron/sincronizar-tasas");
+    const response = await proxy(request);
+    expect(response.status).toBe(200);
+  });
+
   it("redirige a /login si no hay sesión y se intenta acceder a una ruta privada", async () => {
     process.env.NEXT_PUBLIC_SUPABASE_URL = "https://xyz.supabase.co";
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = "dummy-key";

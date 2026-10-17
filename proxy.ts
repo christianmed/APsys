@@ -16,7 +16,8 @@ export async function proxy(request: NextRequest) {
   const esRutaPublica =
     pathname === "/login" ||
     pathname.startsWith("/api/supabase-health") ||
-    pathname.startsWith("/api/tasas");
+    pathname.startsWith("/api/tasas") ||
+    pathname.startsWith("/api/cron");
 
   // =========================================================================
   // 1. VÍA RÁPIDA (Opción A): Validación local de JWT en memoria (< 1ms)

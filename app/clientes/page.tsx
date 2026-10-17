@@ -3,12 +3,16 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
+import { CursorPagination } from "@/components/ui/cursor-pagination";
+import { procesarPaginacionCursor } from "@/lib/paginacion/cursor";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
 // se bloquea la ruta con la opción documentada (`instant = false`),
 // igual que en / y /login.
 export const instant = false;
+
+const TAMANO_PAGINA_CLIENTES = 25;
 
 const CLASES_INPUT =
   "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-zinc-400 dark:focus-visible:ring-zinc-100/15";
@@ -18,8 +22,7 @@ const CLASES_BOTON_SECUNDARIO =
 
 /**
  * Listado de clientes (RF-01): búsqueda por nombre o teléfono (formulario
- * GET) y, sin término, los últimos 50 registros. Cada tarjeta abre el
- * detalle/edición del cliente.
+ * GET) con paginación por cursor. Cada tarjeta abre el detalle/edición del cliente.
  */
 export default async function ClientesPage({
   searchParams,
@@ -32,7 +35,7 @@ export default async function ClientesPage({
     redirect("/login");
   }
 
-  const { q: qCrudo } = await searchParams;
+  const { q: qCrudo, cursor: cursorCrudo } = await searchParams;
 
   // El `or()` de PostgREST usa comas y paréntesis como sintaxis, y `%`/`_` son
   // comodines de ilike: se eliminan del término para que la búsqueda no rompa
@@ -42,20 +45,32 @@ export default async function ClientesPage({
     .replace(/[,()%_]/g, "")
     .slice(0, 80);
 
-  const { data: clientes } = q
-    ? await supabase
-        .from("clientes")
-        .select("id,nombre,telefono,notas,pedidos(id,total_usd,anulado)")
-        .or(`nombre.ilike.%${q}%,telefono.ilike.%${q}%`)
-        .order("nombre")
-        .limit(50)
-    : await supabase
-        .from("clientes")
-        .select("id,nombre,telefono,notas,pedidos(id,total_usd,anulado)")
-        .order("creado_en", { ascending: false })
-        .limit(50);
+  const cursor = (
+    Array.isArray(cursorCrudo) ? cursorCrudo[0] : (cursorCrudo ?? "")
+  ).trim();
 
-  const lista = clientes ?? [];
+  let query = supabase
+    .from("clientes")
+    .select("id,nombre,telefono,notas,creado_en,pedidos(id,total_usd,anulado)");
+
+  if (q) {
+    query = query.or(`nombre.ilike.%${q}%,telefono.ilike.%${q}%`);
+  }
+
+  query = query.order("creado_en", { ascending: false });
+
+  if (cursor) {
+    query = query.lt("creado_en", cursor);
+  }
+
+  query = query.limit(TAMANO_PAGINA_CLIENTES + 1);
+
+  const { data: clientes } = await query;
+  const { datos: lista, siguienteCursor } = procesarPaginacionCursor(
+    clientes ?? [],
+    TAMANO_PAGINA_CLIENTES,
+    "creado_en",
+  );
 
   return (
     <AuthenticatedShell>
@@ -164,6 +179,14 @@ export default async function ClientesPage({
             {q ? `Sin resultados para «${q}»` : "No hay clientes todavía"}
           </p>
         )}
+
+        <CursorPagination
+          baseUrl="/clientes"
+          searchParams={{ q }}
+          cursorActivo={cursor ? cursor : null}
+          siguienteCursor={siguienteCursor}
+          totalEnPagina={lista.length}
+        />
       </div>
     </AuthenticatedShell>
   );
