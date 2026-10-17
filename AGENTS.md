@@ -13,7 +13,10 @@ Para evitar la saturación de la ventana de contexto (_context window_), el agen
 3. **Especificación previa a la implementación:** Ninguna funcionalidad nueva se implementa directamente en código sin una especificación o contrato aprobado.
 4. **Desarrollo Incremental:** Los cambios deben realizarse en rebanadas verticales pequeñas y comprobables (`incremental-implementation`), evitando commits masivos o monolíticos.
 5. **Verificación obligatoria:** Todo cambio debe validarse mediante pruebas automatizadas y chequeo de tipos antes de considerarse completado.
-6. **Sincronización Mandatoria de Manuales y Documentación:** Siempre que se agregue, modifique o ajuste una funcionalidad del sistema (reglas de negocio, navegación, permisos, flujos de pantalla o dinámicas operativas), el agente o desarrollador DEBE actualizar automáticamente y en el mismo ciclo el manual de usuario (`docs/capacitacion/guia-rapida-usuarios.md`) o runbook operativo correspondiente. Ningún cambio con impacto en la operación se da por terminado sin su documentación alineada.
+6. **Sincronización Mandatoria de Manuales y Documentación:** Siempre que se agregue, modifique o ajuste una funcionalidad del sistema (reglas de negocio, navegación, permisos, flujos de pantalla, esquemas de BD, índices, validaciones o arquitectura backend), el agente o desarrollador DEBE actualizar automáticamente y en el mismo ciclo:
+   - El manual de usuario (`docs/capacitacion/guia-rapida-usuarios.md`) para dinámicas operativas.
+   - El manual técnico de arquitectura (`docs/arquitectura/manual-tecnico-sistema.md`) para esquemas, índices, validaciones, flujos de datos y diseño técnico.
+   Ningún cambio con impacto en la operación o en la arquitectura se da por terminado sin su documentación alineada.
 
 ---
 
@@ -96,7 +99,9 @@ Una tarea sólo se marca como concluida cuando el agente haya verificado:
 - [ ] Todos los tests nuevos y preexistentes se ejecutan y aprueban exitosamente (`npm test` o test runner local).
 - [ ] Cero errores de compilación / tipos (`tsc --noEmit` o equivalente del stack).
 - [ ] No existen advertencias críticas de linter ni de consola del navegador.
-- [ ] Manuales y documentación de usuario/operaciones actualizados con el nuevo comportamiento.
+- [ ] Manuales y documentación actualizados con el nuevo comportamiento:
+  - Manual de usuario (`docs/capacitacion/guia-rapida-usuarios.md`) o runbook operativo (`docs/operaciones/`).
+  - Manual técnico de arquitectura (`docs/arquitectura/manual-tecnico-sistema.md`).
 - [ ] La revisión en los 5 ejes ha sido superada o el cambio superó la compuerta `/ship`.
 
 <!-- BEGIN:nextjs-agent-rules -->
