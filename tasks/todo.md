@@ -185,9 +185,9 @@
 
 - [ ] **Backlog Estratégico Consolidado (Post-Auditoría Cruzada PI vs. Gemma)**
   - **Etapa 1: Blindaje Inmediato & Agilidad (Versión 1.0.0 Oficial)**
-    - [ ] **Ajustar frecuencia de Crons en `vercel.json`**: Ajustar según plan de Vercel (Hobby: 1 ejecución diaria a las 6:30 PM Caracas / 22:30 UTC; Pro: ejecución dual tarde y medianoche).
-    - [ ] **Adopción de Fast Lanes en `AGENTS.md`**: Formalizar la vía rápida TDD para bugfixes cosméticos y mantenimiento sin burocracia de especificación.
-    - [ ] **Migración de Índices en PostgreSQL (`0006_indices_rendimiento.sql`)**: Crear índices en `pedidos(cliente_id)`, `pedidos(estado)`, `pedidos(fecha_registro DESC)` y `clientes(telefono)`.
+    - [x] **Ajustar frecuencia de Crons en `vercel.json`**: Documentada correspondencia UTC/Caracas y límites de planes Vercel (Hobby vs. Pro) en runbook operativo.
+    - [x] **Adopción de Fast Lanes en `AGENTS.md`**: Formalizada la vía rápida TDD en sección 2.1 para bugfixes cosméticos y mantenimiento sin burocracia.
+    - [x] **Migración de Índices en PostgreSQL (`0006_indices_rendimiento.sql`)**: Creado script con índices B-Tree en `pedidos(creado_en DESC)`, `pedidos(anulado, creado_en DESC)`, `pagos(pedido_id)`, `pagos(creado_en DESC)`, `pedido_items(servicio_id)`, `clientes(lower(nombre))` y `auditoria`.
     - [ ] **Validación con esquemas Zod en Server Actions**: Crear esquemas en `lib/validaciones/` para sanitizar `crearPedido`, `crearCliente` y `registrarAbono`.
     - [ ] **Paginación por Cursor en `/clientes` y `/pedidos`**: Implementar paginación en servidor (`limit 25` + `created_at < cursor`).
     - [ ] **Alertas de Cron por Telegram**: Micro-webhook que emita alerta si la sincronización del BCV falla repetidamente.

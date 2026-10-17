@@ -64,6 +64,14 @@ Para evitar la saturación de la ventana de contexto (_context window_), el agen
 - **Para revisión puntual de un PR o cambio:** Invoca a **`@code-reviewer`** o ejecuta `/review` para una evaluación en 5 ejes (Correctness, Readability, Architecture, Security, Performance).
 - **Para cambios críticos o pase a producción:** Ejecuta **/ship**. Realizará un _fan-out_ paralelo con tres subagentes aislados (`code-reviewer`, `security-auditor` y `test-engineer`) y emitirá una decisión formal de lanzamiento (**GO | NO-GO**) con plan de rollback.
 
+### 2.1 Vía Rápida (Fast Track / Fast Lanes) para Cambios Menores
+
+Para tareas de bajo riesgo que NO alteran modelos de datos ni contratos de API públicos (ej. correcciones cosméticas de CSS/Tailwind, ajustes de responsividad móvil, refactorización interna sin cambio de comportamiento, o corrección de textos/copy):
+
+- **Bypass de Especificación:** No se requiere convocar a `@system-architect` ni redactar una especificación formal en `docs/specs/`.
+- **Ruta Directa TDD / Incremental:** El agente principal implementa directamente en Fase 3 aplicando TDD o verificación visual con Browser Subagent.
+- **Compuerta de Salida:** Se mantienen obligatorios `npm test`, `npm run typecheck` y registro de tareas en `tasks/todo.md`.
+
 ---
 
 ## 3. Reglas de Modificación de Archivos y Entorno
