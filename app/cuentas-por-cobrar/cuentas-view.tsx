@@ -113,18 +113,18 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
           </span>
         }
         actions={
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
             <Link
               href="/recordatorios"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 text-xs font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 text-xs font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200 truncate"
             >
-              Recordatorios Retiro
+              <span className="truncate">Recordatorios</span>
             </Link>
             <Link
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 truncate"
             >
-              Ver Pedidos
+              <span className="truncate">Ver Pedidos</span>
             </Link>
           </div>
         }
@@ -274,13 +274,13 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       </div>
 
       {/* Controles de Filtros y Búsqueda */}
-      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 lg:flex-row lg:items-center lg:justify-between min-w-0 max-w-full">
         {/* Pestañas de tramo */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none min-w-0 max-w-full">
           <button
             type="button"
             onClick={() => setTramoSeleccionado("todos")}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
               tramoSeleccionado === "todos"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -293,7 +293,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
               key={t}
               type="button"
               onClick={() => setTramoSeleccionado(t)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                 tramoSeleccionado === t
                   ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
                   : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
@@ -305,15 +305,15 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         </div>
 
         {/* Buscador y orden */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="relative min-w-[220px] flex-1 sm:w-64">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto min-w-0">
+          <div className="relative w-full sm:w-64 min-w-0">
             <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
             <input
               type="text"
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar cliente, orden o tlf..."
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white pl-9 pr-3 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-white dark:focus:ring-white"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white pl-9 pr-3 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-white dark:focus:ring-white min-w-0"
             />
           </div>
 
@@ -323,7 +323,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             options={OPCIONES_ORDEN_CUENTAS}
             variant="header"
             size="sm"
-            className="min-w-[200px]"
+            className="w-full sm:w-auto min-w-0 sm:min-w-[200px]"
           />
         </div>
       </div>

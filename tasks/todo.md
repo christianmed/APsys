@@ -174,14 +174,14 @@
   - [x] Paso 4 (Actualización de Manuales y Runbook): Documentar la generación y configuración de `CRON_SECRET` y `SUPABASE_SERVICE_ROLE_KEY` en `docs/operaciones/runbook-respaldo-restauracion.md` y `docs/capacitacion/guia-rapida-usuarios.md`.
   - [x] Paso 5 (DoD y Calidad): Validar suite de pruebas (100% verde), `typecheck`, `lint` y `build`.
 
-- [ ] **Fase 28: Pulido Crítico de Responsividad y Consistencia Visual Móvil (Mobile-First Polish)**
-  - [ ] Paso 1 (Shell & Viewport): Declarar viewport meta con `width: 'device-width', initialScale: 1` en `app/layout.tsx` y aplicar `min-w-0 max-w-full overflow-x-hidden` en `components/shell/app-shell.tsx`.
-  - [ ] Paso 2 (PageHeader Universal): Ajustar `components/shell/page-header.tsx` para permitir que el título fluya en 2 líneas limpias sin truncar (`text-xl sm:text-2xl`) y reubicar `actions` con cuadrícula móvil `grid-cols-2 gap-2 w-full` sin `shrink-0` desbordante.
-  - [ ] Paso 3 (Dashboard Gerencial de Ingresos): En `app/dashboard/dashboard-view.tsx`, optimizar la botonera superior en cuadrícula 2x2, apilar verticalmente los inputs de fechas en móvil (`flex flex-col gap-2 w-full`) y hacer fluido el botón de descarga CSV.
-  - [ ] Paso 4 (Cuentas por Cobrar): En `app/cuentas-por-cobrar/cuentas-view.tsx`, apilar verticalmente el buscador y el selector `CustomSelect` en móvil (`flex-col w-full gap-2.5`), y organizar las tarjetas KPI para móvil.
-  - [ ] Paso 5 (Rotación de Servicios): En `app/dashboard/rotacion/rotacion-view.tsx`, apilar verticalmente los filtros de fecha y el selector de ordenamiento, asegurando que el carrusel de períodos tenga scroll horizontal táctil sin forzar overflow.
-  - [ ] Paso 6 (Verificación E2E en Navegador Móvil): Inspección automatizada en 390x844 con browser subagent constatando `scrollWidth === clientWidth` y cero desbordamiento horizontal en las 12 rutas.
-  - [ ] Paso 7 (Compuerta de Calidad DoD): Ejecutar `npm test` (100% verde), `npm run typecheck` (0 errores) y `npm run lint`.
+- [x] **Fase 28: Pulido Crítico de Responsividad y Consistencia Visual Móvil (Mobile-First Polish)**
+  - [x] Paso 1 (Shell & Viewport): Declarar viewport meta con `width: 'device-width', initialScale: 1` en `app/layout.tsx` y aplicar `min-w-0 max-w-full overflow-x-hidden` en `components/shell/app-shell.tsx`.
+  - [x] Paso 2 (PageHeader Universal): Ajustar `components/shell/page-header.tsx` para permitir que el título fluya en 2 líneas limpias sin truncar (`text-xl sm:text-2xl`) y reubicar `actions` con cuadrícula móvil `grid-cols-2 gap-2 w-full` sin `shrink-0` desbordante.
+  - [x] Paso 3 (Dashboard Gerencial de Ingresos): En `app/dashboard/dashboard-view.tsx`, optimizar la botonera superior en cuadrícula 2x2, apilar verticalmente los inputs de fechas en móvil (`flex flex-col gap-2 w-full`) y hacer fluido el botón de descarga CSV.
+  - [x] Paso 4 (Cuentas por Cobrar): En `app/cuentas-por-cobrar/cuentas-view.tsx`, apilar verticalmente el buscador y el selector `CustomSelect` en móvil (`flex-col w-full gap-2.5`), y organizar las tarjetas KPI para móvil.
+  - [x] Paso 5 (Rotación de Servicios): En `app/dashboard/rotacion/rotacion-view.tsx`, apilar verticalmente los filtros de fecha y el selector de ordenamiento, asegurando que el carrusel de períodos tenga scroll horizontal táctil sin forzar overflow.
+  - [x] Paso 6 (Verificación E2E en Navegador Móvil): Inspección automatizada en 390x844 con browser subagent constatando `scrollWidth === clientWidth` y cero desbordamiento horizontal en las 12 rutas.
+  - [x] Paso 7 (Compuerta de Calidad DoD): Ejecutar `npm test` (100% verde — 216 tests), `npm run typecheck` (0 errores) y compilar con éxito.
 
 - [ ] **Backlog Estratégico Consolidado (Post-Auditoría Cruzada PI vs. Gemma)**
   - **Etapa 1: Blindaje Inmediato & Agilidad (Versión 1.0.0 Oficial)**

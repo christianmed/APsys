@@ -327,9 +327,9 @@ export function AppShell({
       {/* =========================================================================
           3. CONTENIDO PRINCIPAL
           ========================================================================= */}
-      <div className="flex flex-1 flex-col md:pl-64">
-        <main className="flex-1 px-4 py-6 sm:px-8 sm:py-8 pt-20 md:pt-8 pb-24 md:pb-8">
-          <div className="mx-auto max-w-6xl">{children}</div>
+      <div className="flex flex-1 flex-col md:pl-64 min-w-0 max-w-full overflow-x-hidden">
+        <main className="flex-1 min-w-0 max-w-full px-4 py-6 sm:px-8 sm:py-8 pt-20 md:pt-8 pb-24 md:pb-8">
+          <div className="mx-auto max-w-6xl w-full min-w-0">{children}</div>
         </main>
       </div>
 
