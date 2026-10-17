@@ -129,9 +129,9 @@ export function DashboardView({
       />
 
       {/* Barra de Filtros de Período */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 min-w-0 max-w-full">
         {/* Presets rápidos con scroll horizontal nativo en pantallas táctiles */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none">
+        <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1 shrink-0">
             Período:
           </span>
@@ -184,28 +184,34 @@ export function DashboardView({
         {/* Rango de fechas manual */}
         <form
           onSubmit={aplicarRangoPersonalizado}
-          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto"
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto min-w-0"
         >
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 w-full sm:w-auto">
-            <input
-              type="date"
-              aria-label="Fecha inicial"
-              value={fechaDesde}
-              onChange={(e) => setFechaDesde(e.target.value)}
-              className="h-9 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-            />
-            <span className="text-xs text-zinc-400 text-center">hasta</span>
-            <input
-              type="date"
-              aria-label="Fecha final"
-              value={fechaHasta}
-              onChange={(e) => setFechaHasta(e.target.value)}
-              className="h-9 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-            />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto min-w-0">
+            <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
+              <span className="text-xs font-medium text-zinc-500 sm:hidden w-12 shrink-0">Desde:</span>
+              <input
+                type="date"
+                aria-label="Fecha inicial"
+                value={fechaDesde}
+                onChange={(e) => setFechaDesde(e.target.value)}
+                className="h-9 w-full sm:w-36 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 min-w-0"
+              />
+            </div>
+            <span className="hidden sm:inline text-xs text-zinc-400 text-center">hasta</span>
+            <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
+              <span className="text-xs font-medium text-zinc-500 sm:hidden w-12 shrink-0">Hasta:</span>
+              <input
+                type="date"
+                aria-label="Fecha final"
+                value={fechaHasta}
+                onChange={(e) => setFechaHasta(e.target.value)}
+                className="h-9 w-full sm:w-36 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 min-w-0"
+              />
+            </div>
           </div>
           <button
             type="submit"
-            className="inline-flex h-9 items-center justify-center rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex h-9 w-full sm:w-auto items-center justify-center rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 shrink-0"
           >
             Filtrar
           </button>
@@ -213,8 +219,8 @@ export function DashboardView({
       </div>
 
       {/* Botones de Exportación de Reportes (RF-17) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 min-w-0">
+        <div className="flex items-center gap-2 min-w-0">
           <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             Exportar reporte del período:
           </span>
@@ -223,23 +229,23 @@ export function DashboardView({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
+        <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center min-w-0">
           <a
             href={`/api/reportes/exportar?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
             download
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 truncate"
           >
-            <Download className="size-3.5 text-zinc-500 dark:text-zinc-400" />
-            Descargar CSV
+            <Download className="size-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
+            <span className="truncate">Descargar CSV</span>
           </a>
 
           <Link
             href={`/reportes/imprimir?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
             target="_blank"
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 truncate"
           >
-            <Printer className="size-3.5" />
-            Imprimir / PDF
+            <Printer className="size-3.5 shrink-0" />
+            <span className="truncate">Imprimir / PDF</span>
           </Link>
         </div>
       </div>
