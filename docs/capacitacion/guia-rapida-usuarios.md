@@ -1,7 +1,7 @@
 # Guía Rápida de Uso de APSys por Perfil
 
 **Sistema:** APSys — Taller de Gráfica & Impresión  
-**Versión:** 0.9.2  
+**Versión:** 0.9.3  
 **Audiencia:** Personal de Mostrador, Operarios de Taller y Gerencia
 
 ---
