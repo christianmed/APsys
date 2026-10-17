@@ -276,7 +276,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       {/* Controles de Filtros y Búsqueda */}
       <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 lg:flex-row lg:items-center lg:justify-between min-w-0 max-w-full">
         {/* Pestañas de tramo */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none min-w-0 max-w-full">
+        <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <button
             type="button"
             onClick={() => setTramoSeleccionado("todos")}

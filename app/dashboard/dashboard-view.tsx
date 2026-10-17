@@ -131,7 +131,7 @@ export function DashboardView({
       {/* Barra de Filtros de Período */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 min-w-0 max-w-full">
         {/* Presets rápidos con scroll horizontal nativo en pantallas táctiles */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 lg:pb-0 scrollbar-none min-w-0 max-w-full">
+        <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1 shrink-0">
             Período:
           </span>

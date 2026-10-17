@@ -47,3 +47,5 @@ next-env.d.ts
 # herramientas locales del agente (AutoClaw/ZWork)
 .zwork/
 *.code-workspace
+
+certificates
