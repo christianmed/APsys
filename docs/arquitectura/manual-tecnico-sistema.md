@@ -28,7 +28,7 @@ APSys está construido sobre una arquitectura moderna orientada a la velocidad d
 [ Navegador Web / Mobile ]
          │
          ▼  (HTTPS / Next.js Proxy)
-[ Next.js 15 App Router ] ── (Validación JWT Local < 1ms) ──► Proxy Headers (x-user-id, x-user-role)
+[ Next.js 16 App Router ] ── (Validación JWT Local < 1ms) ──► Proxy Headers (x-user-id, x-user-role)
          │
          ├── [ Contextos de Cliente (Client-First) ]
          │      ├── AuthContext (Sesión y rol reactivo sin parpadeo)
@@ -48,7 +48,7 @@ APSys está construido sobre una arquitectura moderna orientada a la velocidad d
 ```
 
 ### Componentes Principales:
-- **Framework Frontend & SSR:** Next.js 15 con React 19, compilado con Turbopack.
+- **Framework Frontend & SSR:** Next.js 16 (v16.4.0) con React 19 (v19.3.0), compilado de forma nativa con Turbopack.
 - **Base de Datos & Auth:** Supabase (PostgreSQL 15 administrado, Supabase Auth con JWTs RFC 7519, Supabase SSR `@supabase/ssr`).
 - **Sistema de Diseño:** Tailwind CSS v4, Paleta oficial Zinc, Iconografía Lucide React.
 - **Testing & QA:** Vitest + React Testing Library (más de 225 pruebas unitarias automatizadas).
