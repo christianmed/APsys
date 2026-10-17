@@ -1,11 +1,17 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import React from "react";
 import { SidebarTasasCard } from "@/components/shell/sidebar-tasas-card";
 
 describe("SidebarTasasCard (Acordeones de Tasas BCV)", () => {
   beforeEach(() => {
     localStorage.clear();
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-14T12:00:00-04:00"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   const propsBase = {
@@ -103,5 +109,19 @@ describe("SidebarTasasCard (Acordeones de Tasas BCV)", () => {
     expect(botonManana).toBeInTheDocument();
     const indicador = botonManana.querySelector(".bg-amber-500");
     expect(indicador).not.toBeNull();
+  });
+
+  it("en fin de semana (sábado 17/10 con tasa de viernes 16/10 y lunes 19/10), adapta las etiquetas sin decir 'Hoy' ni 'Mañana'", () => {
+    vi.setSystemTime(new Date("2026-10-17T11:00:00-04:00"));
+    render(
+      <SidebarTasasCard
+        {...propsBase}
+        fechaHoy="2026-10-16"
+        fechaSiguiente="2026-10-19"
+      />,
+    );
+
+    expect(screen.getByText("Vigente • 16/10/2026")).toBeInTheDocument();
+    expect(screen.getByText("Lunes, 19/10/2026")).toBeInTheDocument();
   });
 });

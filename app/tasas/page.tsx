@@ -11,6 +11,7 @@ import {
   formatearTasaBs,
   obtenerTasaVigenteParaFecha,
   obtenerTasaProgramadaParaFecha,
+  describirEstadoVigencia,
   type TasaHistorica,
 } from "@/lib/tasas/tasas";
 import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
@@ -207,9 +208,12 @@ export default async function TasasPage() {
                     <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
                       {historial.map((t) => {
                         const esLaVigente = tasaVigente?.id === t.id;
-                        const esLaProgramada =
-                          tasaProgramada?.id === t.id ||
-                          new Date(t.vigente_desde).getTime() > ahoraTimestamp;
+                        const estadoVigencia = describirEstadoVigencia({
+                          fechaVigencia: t.vigente_desde,
+                          esLaVigente,
+                          fechaReferencia: ahora,
+                        });
+                        const esLaProgramada = estadoVigencia.esProgramada;
                         return (
                           <tr
                             key={t.id}
@@ -230,11 +234,11 @@ export default async function TasasPage() {
                             <td className="px-6 py-4 text-center">
                               {esLaVigente ? (
                                 <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                                  Vigente (Hoy)
+                                  {estadoVigencia.etiquetaBadge}
                                 </span>
                               ) : esLaProgramada ? (
                                 <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-                                  Programada (Mañana)
+                                  {estadoVigencia.etiquetaBadge}
                                 </span>
                               ) : (
                                 <span className="text-[11px] text-zinc-400">Histórica</span>

@@ -6,6 +6,8 @@ import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
 import {
   calcularVigenciaDesdeFechaBcv,
   esTasaBcvFutura,
+  calcularDiferenciaDiasCaracas,
+  obtenerNombreDiaSemanaCaracas,
 } from "@/lib/tasas/tasas";
 
 /**
@@ -96,6 +98,8 @@ export async function GET(request: Request) {
   const valorRedondeado = Math.round(tasaUsd.valorBs * 10000) / 10000;
   const fechaVigencia = calcularVigenciaDesdeFechaBcv(tasaUsd.fechaActualizacion);
   const esFutura = esTasaBcvFutura(tasaUsd.fechaActualizacion);
+  const diffDias = calcularDiferenciaDiasCaracas(tasaUsd.fechaActualizacion);
+  const nombreDia = diffDias === 1 ? "mañana" : `el ${obtenerNombreDiaSemanaCaracas(tasaUsd.fechaActualizacion)}`;
 
   // 5. Verificación de Idempotencia: ¿Ya existe una tasa para esta fecha?
   const { data: existente, error: queryError } = await adminClient
@@ -122,7 +126,7 @@ export async function GET(request: Request) {
       exito: true,
       accion: "al_dia",
       mensaje: esFutura
-        ? `La tasa de mañana (${tasaUsd.fechaActualizacion}) ya estaba registrada.`
+        ? `La tasa para ${nombreDia} (${tasaUsd.fechaActualizacion}) ya estaba registrada.`
         : `La tasa de hoy (${tasaUsd.fechaActualizacion}) ya estaba al día.`,
       valor: valorRedondeado,
       fechaVigencia,
@@ -169,7 +173,7 @@ export async function GET(request: Request) {
   revalidatePath("/cuentas-por-cobrar");
 
   const mensaje = esFutura
-    ? `Tasa oficial programada para mañana (${tasaUsd.fechaActualizacion}): Bs. ${valorRedondeado.toFixed(4)} / USD.`
+    ? `Tasa oficial programada para ${nombreDia} (${tasaUsd.fechaActualizacion}): Bs. ${valorRedondeado.toFixed(4)} / USD.`
     : `Tasa oficial de hoy sincronizada (${tasaUsd.fechaActualizacion}): Bs. ${valorRedondeado.toFixed(4)} / USD.`;
 
   return NextResponse.json({

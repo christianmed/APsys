@@ -3,6 +3,7 @@
 import { Banknote, ChevronDown, Euro } from "lucide-react";
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import { formatearEtiquetaSidebar } from "@/lib/tasas/tasas";
 
 export interface SidebarTasasCardProps {
   tasaHoy?: number;
@@ -12,43 +13,6 @@ export interface SidebarTasasCardProps {
   fechaHoy?: string;
   fechaSiguiente?: string;
   esGerencial?: boolean;
-}
-
-/** Formatea una fecha YYYY-MM-DD o ISO a "DD/MM/AAAA" */
-function formatearFechaCorta(fechaStr?: string): string {
-  if (!fechaStr) {
-    const d = new Date();
-    return d.toLocaleDateString("es-VE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  }
-  const partes = fechaStr.trim().slice(0, 10).split("-");
-  if (partes.length === 3) {
-    const [y, m, d] = partes;
-    return `${d}/${m}/${y}`;
-  }
-  try {
-    return new Date(fechaStr).toLocaleDateString("es-VE", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  } catch {
-    return fechaStr;
-  }
-}
-
-/** Obtiene la fecha calculada de mañana en formato DD/MM/AAAA */
-function obtenerFechaManana(): string {
-  const manana = new Date();
-  manana.setDate(manana.getDate() + 1);
-  return manana.toLocaleDateString("es-VE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
 }
 
 // -----------------------------------------------------------------------------
@@ -138,10 +102,14 @@ export function SidebarTasasCard({
     }
   };
 
-  const fechaTextoHoy = `Hoy, ${formatearFechaCorta(fechaHoy)}`;
-  const fechaTextoManana = `Mañana, ${
-    fechaSiguiente ? formatearFechaCorta(fechaSiguiente) : obtenerFechaManana()
-  }`;
+  const fechaTextoHoy = formatearEtiquetaSidebar({
+    fechaVigencia: fechaHoy,
+    esTasaActiva: true,
+  });
+  const fechaTextoManana = formatearEtiquetaSidebar({
+    fechaVigencia: fechaSiguiente,
+    esTasaActiva: false,
+  });
 
   const hayTasaManana = Boolean(
     (tasaSiguiente && tasaSiguiente > 0) || (tasaEurSiguiente && tasaEurSiguiente > 0)

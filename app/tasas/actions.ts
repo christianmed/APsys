@@ -9,6 +9,8 @@ import {
 import {
   calcularVigenciaDesdeFechaBcv,
   esTasaBcvFutura,
+  calcularDiferenciaDiasCaracas,
+  obtenerNombreDiaSemanaCaracas,
 } from "@/lib/tasas/tasas";
 import { createClient } from "@/lib/supabase/server";
 import { createClient as createAdminClient } from "@supabase/supabase-js";
@@ -76,11 +78,14 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
     .eq("vigente_desde", fechaVigencia)
     .maybeSingle();
 
+  const diffDias = calcularDiferenciaDiasCaracas(tasaBcv.fechaActualizacion);
+  const nombreDia = diffDias === 1 ? "mañana" : `el ${obtenerNombreDiaSemanaCaracas(tasaBcv.fechaActualizacion)}`;
+
   if (tasaExistente && Number(tasaExistente.valor_bs_por_usd) === valorRedondeado) {
     return {
       exito: true,
       mensaje: esFutura
-        ? `La tasa oficial de mañana (${tasaBcv.fechaActualizacion}) ya está registrada: Bs. ${valorRedondeado.toFixed(4)} / USD.`
+        ? `La tasa oficial para ${nombreDia} (${tasaBcv.fechaActualizacion}) ya está registrada: Bs. ${valorRedondeado.toFixed(4)} / USD.`
         : `La tasa oficial de hoy (${tasaBcv.fechaActualizacion}) ya está al día: Bs. ${valorRedondeado.toFixed(4)} / USD.`,
       valorSincronizado: valorRedondeado,
     };
@@ -126,7 +131,7 @@ export async function sincronizarTasaBcv(): Promise<EstadoSincronizacionBcv> {
   revalidatePath("/cuentas-por-cobrar");
 
   const mensaje = esFutura
-    ? `Tasa BCV programada para mañana (${tasaBcv.fechaActualizacion}): Bs. ${valorRedondeado.toFixed(4)} / USD. Entrará en vigor automáticamente a las 00:00 (hora Caracas), manteniendo intacta la tasa de hoy.`
+    ? `Tasa BCV programada para ${nombreDia} (${tasaBcv.fechaActualizacion}): Bs. ${valorRedondeado.toFixed(4)} / USD. Entrará en vigor automáticamente a las 00:00 (hora Caracas), manteniendo intacta la tasa de hoy.`
     : `Tasa BCV sincronizada para hoy: Bs. ${valorRedondeado.toFixed(4)} / USD.`;
 
   return {
