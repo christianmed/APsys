@@ -82,7 +82,19 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
 
 ## Fases Consolidadas de Evolución (Post-Auditoría Cruzada PI vs. Gemma)
 
-### Fase 28: Blindaje Técnico, Rendimiento y Gobernanza Ágil (Versión 1.0.0 Oficial)
+### Fase 28: Pulido Crítico de Responsividad y Consistencia Visual Móvil (Mobile-First Polish) [Prioridad Inmediata]
+
+- **Objetivo:** Eliminar el desbordamiento horizontal en pantallas móviles (360px - 390px) en las vistas de `/dashboard`, `/cuentas-por-cobrar` y `/dashboard/rotacion`, unificando su comportamiento con la excelencia visual de `/taller`, `/pedidos` e `/inicio` antes de la presentación oficial con el cliente.
+- **Acciones Clave:**
+  1. **Blindaje de Shell y Viewport:** Declarar `export const viewport: Viewport` con `width: 'device-width', initialScale: 1` en `app/layout.tsx` y aplicar `min-w-0 max-w-full overflow-x-hidden` en `app-shell.tsx`.
+  2. **PageHeader Universal Adaptable:** Reestructurar `components/shell/page-header.tsx` para evitar que `actions` con `shrink-0` estire la tarjeta, permitiendo que los títulos largos fluyan en 2 líneas limpias sin truncarse.
+  3. **Dashboard Gerencial (`/dashboard`):** Botonera de acciones en cuadrícula compacta 2x2 para móvil, inputs de fecha apilados verticalmente a ancho completo (`flex-col`) y exportación CSV fluida.
+  4. **Cuentas por Cobrar (`/cuentas-por-cobrar`):** Buscador de clientes y `CustomSelect` apilados en columna a ancho completo (`w-full`), eliminando la colisión horizontal.
+  5. **Rotación de Servicios (`/dashboard/rotacion`):** Ordenamiento y filtros de fecha en columna vertical móvil.
+  6. **Validación Visual E2E en Navegador:** Inspección automatizada en 390x844 con browser subagent constatando `scrollWidth === clientWidth` y cero desbordamiento horizontal en las 12 rutas.
+  7. **Compuerta DoD:** `npm test` (100% verde), `npm run typecheck` (0 errores) y `npm run lint`.
+
+### Fase 29: Blindaje Técnico, Rendimiento y Gobernanza Ágil (Versión 1.0.0 Oficial)
 
 - **Objetivo:** Asegurar la estabilidad a largo plazo del sistema, optimizar las consultas de base de datos a `O(log n)` y desburocratizar el desarrollo diario.
 - **Acciones Clave:**
@@ -91,9 +103,8 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   3. **Validación Zod en Server Actions:** Implementar esquemas Zod en `lib/validaciones/` para sanitizar `crearPedido`, `crearCliente` y `registrarAbono`.
   4. **Paginación por Cursor:** Implementar paginación en servidor (`limit 25` + `created_at < cursor`) para `/clientes` y `/pedidos`.
   5. **Alertas de Cron por Telegram:** Micro-webhook que emita alerta si la sincronización del BCV falla repetidamente.
-  6. **Limpieza de Archivos Sueltos:** Archivar `Analisis-PI.md`, `Analisis-Gemma.md` y `pruebna.md` en `docs/analisis/2026-10-16/`.
 
-### Fase 29: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 30: Potencia Comercial y Finanzas (Versión 1.1.0)
 
 - **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
 - **Acciones Clave:**
@@ -101,7 +112,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
   3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
 
-### Fase 30: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 31: Planta Inteligente y Manufactura (Versión 1.2.0)
 
 - **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
 - **Acciones Clave:**
