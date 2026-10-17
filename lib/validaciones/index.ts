@@ -6,3 +6,5 @@ export * from "./comun";
 export * from "./cliente";
 export * from "./pedido";
 export * from "./pago";
+export * from "./servicio";
+

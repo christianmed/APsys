@@ -80,7 +80,6 @@ export default async function TasasPage() {
   );
 
   const ahora = new Date();
-  const ahoraTimestamp = ahora.getTime();
   const tasaVigente = obtenerTasaVigenteParaFecha(historial, ahora);
   const tasaProgramada = obtenerTasaProgramadaParaFecha(historial, ahora);
 

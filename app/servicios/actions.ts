@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { validarEliminacionServicio } from "@/lib/validaciones";
 import { validarDatosServicio } from "./validaciones";
 
 /**
@@ -154,4 +155,68 @@ export async function actualizarServicio(
 
   revalidatePath("/servicios");
   redirect("/servicios");
+}
+
+/**
+ * Eliminación segura de un servicio (RF-04).
+ * Solo el perfil gerencial puede ejecutarla; verifica que el servicio no posea pedidos
+ * históricos asociados en `pedido_items`. Si tiene pedidos vinculados, bloquea la acción
+ * e instruye la baja lógica (desactivar el servicio).
+ */
+export async function eliminarServicio(
+  id: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (!(await esGerencial(supabase, user.id))) {
+    return {
+      ok: false,
+      error: "Solo el perfil gerencial puede eliminar servicios del catálogo.",
+    };
+  }
+
+  // 1. Contar pedidos vinculados en pedido_items
+  const { count, error: countError } = await supabase
+    .from("pedido_items")
+    .select("id", { count: "exact", head: true })
+    .eq("servicio_id", id);
+
+  if (countError) {
+    return {
+      ok: false,
+      error: "No se pudo verificar la vinculación del servicio con pedidos.",
+    };
+  }
+
+  // 2. Validar con regla de integridad
+  const validacion = validarEliminacionServicio({
+    pedidosAsociadosCount: count ?? 0,
+  });
+  if (!validacion.valido) {
+    return { ok: false, error: validacion.error };
+  }
+
+  // 3. Borrado físico si no tiene pedidos vinculados
+  const { error: deleteError } = await supabase
+    .from("servicios")
+    .delete()
+    .eq("id", id);
+
+  if (deleteError) {
+    return {
+      ok: false,
+      error: "No se pudo eliminar el servicio del catálogo. Intenta nuevamente.",
+    };
+  }
+
+  revalidatePath("/servicios");
+  revalidatePath("/pedidos/nuevo");
+  return { ok: true };
 }

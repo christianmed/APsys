@@ -14,7 +14,6 @@ describe("Lógica de Calendario Bancario y Dinámica de Vigencias (Fase 30)", ()
   // 20/10/2026 = Martes
   // 21/10/2026 = Miércoles
 
-  const fechaViernes16 = new Date("2026-10-16T15:00:00-04:00");
   const fechaSabado17 = new Date("2026-10-17T11:00:00-04:00");
   const fechaDomingo18 = new Date("2026-10-18T14:30:00-04:00");
   const fechaMartes20 = new Date("2026-10-20T10:00:00-04:00");

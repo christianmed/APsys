@@ -419,3 +419,54 @@ El módulo de tasas de cambio está diseñado como una capacidad autónoma, modu
 5. **Blueprint para Replicación con IA (`docs/arquitectura/modulo-tasas-bcv-blueprint.md`):**  
    Documento rector que contiene el **Prompt Maestro** para clonar este módulo íntegro en otros proyectos mediante herramientas de IA (Claude, Gemini, ChatGPT, Antigravity) con un solo comando.
 
+---
+
+## 11. Blindaje Estricto de Entregas (Saldo $0 Obligatorio) y Catálogo de Servicios
+
+### 11.1 Regla de Negocio: Entrega Física Exclusiva con Saldo Cero ($0.00)
+
+Para garantizar la integridad financiera del taller y erradicar entregas con saldo pendiente por error humano:
+
+1. **Máquina de Estados de Pedidos (`lib/pedidos/estados.ts`):**
+   - La función `validarCambioEstado` evalúa el parámetro `saldoPendienteUsd`.
+   - Si `nuevoEstado === "entregado"` y `saldoPendienteUsd > 0.005`, la transición es rechazada formalmente:
+     `{ valido: false, error: "No se puede entregar el pedido: tiene un saldo pendiente de $X.XX. Debe liquidarse el pago antes de realizar la entrega física." }`.
+   - Transiciones a estados operativos anteriores (`recibido` → `en_produccion` → `listo`) están permitidas aún con saldo pendiente, garantizando que el flujo de manufactura no se detenga.
+2. **Server Action `cambiarEstadoPedido` (`app/pedidos/actions.ts`):**
+   - Cuando se solicita avanzar a `"entregado"`, consulta la tabla `pagos` y `tasas_cambio`, calcula la sumatoria de pagos recibidos en USD o Bs y computa el `saldoPendienteUsd`.
+   - Si existe saldo pendiente, aborta inmediatamente antes de actualizar la tabla `pedidos`.
+3. **Acción Atómica `cobrarYEntregarPedido` (`app/pedidos/actions.ts`):**
+   - Diseñada para la agilidad de mostrador y taller (≤ 3 segundos).
+   - Recibe `{ pedidoId, datosPago: { monto, moneda, referencia } }`.
+   - Valida que el monto satisfaga la totalidad de la deuda pendiente (con tolerancia de 1 centavo para redondeos).
+   - Inserta el registro correspondiente en la tabla `pagos` y actualiza el pedido a `estado = "entregado"`, fijando `entregado_en = now()`.
+   - Revalida instantáneamente las rutas `/pedidos`, `/taller`, `/clientes`, `/clientes/[id]`, `/cuentas-por-cobrar` y `/dashboard`.
+
+### 11.2 Experiencia en Tablero Kanban de Taller (`app/taller/taller-tablero.tsx`)
+
+- **Pedidos en columna "Listo" con Saldo Pendiente (`saldo_usd > 0`):**
+  - El botón principal verde de entrega se transmuta dinámicamente en un botón ámbar de alta visibilidad:
+    `[ 💵 Cobrar Saldo y Entregar (Resta: $X.XX) ]`.
+  - Al presionarlo, despliega el componente modal `CobrarYEntregarModal` (`app/taller/cobrar-entregar-modal.tsx`), el cual calcula en tiempo real la deuda en USD y Bs a la tasa del pedido, permitiendo registrar la cobranza y entregar la orden sin abandonar el tablero.
+- **Pedidos en columna "Listo" 100% Pagados (`saldo_usd === 0`):**
+  - Presenta el botón verde directo: `[ 📦 1 TOQUE: Entregar al Cliente ]`.
+
+### 11.3 Supresión de Enlace de Cobro en Historial de Cliente (`/clientes/[id]`)
+
+- En la ficha de detalle e historial del cliente (`app/clientes/[id]/historial-cliente-view.tsx`), el botón WhatsApp **"Cobrar"** queda condicionado a `pedido.estado !== 'entregado'`.
+- Dado que un pedido entregado ya está completamente saldado, se evita enviar mensajes de cobro extemporáneos o erróneos a los clientes.
+
+### 11.4 Catálogo de Servicios: Prioridad, Baja Lógica y Borrado Seguro
+
+1. **Prioridad en Catálogo (Posición):**
+   - El campo `orden` en la tabla `servicios` se expone en la interfaz como `Prioridad en Catálogo (Posición)` con texto explicativo. Los números menores (1, 2, 3...) priorizan la visibilidad del servicio en los selectores desplegables al crear órdenes.
+2. **Baja Lógica (`activo: boolean`):**
+   - Desactivar un servicio lo oculta inmediatamente de `/pedidos/nuevo` sin alterar ni borrar las filas de `pedido_items` vinculadas a órdenes históricas.
+3. **Eliminación Física Segura (`eliminarServicio` en `app/servicios/actions.ts`):**
+   - Solo autorizada para perfil `gerencial`.
+   - Consulta el conteo de registros en `pedido_items` asociados al `servicio_id`.
+   - **Si `COUNT(pedido_items) === 0`:** Permite la eliminación permanente del registro en la tabla `servicios` (ideal para depurar servicios de prueba).
+   - **Si `COUNT(pedido_items) > 0`:** Bloquea la acción invocando `validarEliminacionServicio` (`lib/validaciones/servicio.ts`), explicando al operador la imposibilidad técnica de borrado físico y sugiriendo la baja lógica.
+   - En el formulario `ServicioForm`, los servicios con pedidos asociados ocultan el botón de eliminación y muestran un banner informativo de **Protección de Integridad Histórica**.
+
+

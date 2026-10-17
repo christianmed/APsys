@@ -42,6 +42,12 @@ export default async function EditarServicioPage({
     notFound();
   }
 
+  // Verificar si existen pedidos vinculados a este servicio
+  const { count: pedidosAsociados } = await supabase
+    .from("pedido_items")
+    .select("id", { count: "exact", head: true })
+    .eq("servicio_id", id);
+
   return (
     <AuthenticatedShell>
       <div className="mx-auto max-w-xl space-y-6">
@@ -65,6 +71,7 @@ export default async function EditarServicioPage({
               orden: servicio.orden,
               activo: servicio.activo,
             }}
+            pedidosAsociados={pedidosAsociados ?? 0}
           />
         </section>
       </div>

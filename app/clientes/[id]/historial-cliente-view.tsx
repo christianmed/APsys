@@ -219,7 +219,9 @@ export function HistorialClienteView({
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
                 {metricas.historial_pedidos.map((pedido) => {
                   const tieneSaldo = pedido.saldo_usd > 0 && !pedido.anulado;
-                  const { enlaceWhatsApp } = tieneSaldo
+                  // En pedidos entregados NUNCA debe ofrecerse botón de cobro (un pedido entregado ya está saldado)
+                  const debeCobrar = tieneSaldo && pedido.estado !== "entregado";
+                  const { enlaceWhatsApp } = debeCobrar
                     ? generarMensajeCobranza({
                         cliente_nombre: clienteNombre,
                         cliente_telefono: clienteTelefono,

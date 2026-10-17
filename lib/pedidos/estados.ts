@@ -109,14 +109,28 @@ export function validarCambioEstado({
   nuevoEstado,
   rolUsuario,
   motivoCancelacion,
+  saldoPendienteUsd,
 }: {
   estadoActual: EstadoPedido;
   nuevoEstado: EstadoPedido;
   rolUsuario: string;
   motivoCancelacion?: string | null;
+  saldoPendienteUsd?: number;
 }): ValidacionCambioEstadoResultado {
   if (!ESTADOS_VALIDOS.includes(nuevoEstado)) {
     return { valido: false, error: "El estado especificado no es válido." };
+  }
+
+  // Regla de Entrega Estricta: el saldo debe ser igual a cero ($0.00)
+  if (
+    nuevoEstado === "entregado" &&
+    typeof saldoPendienteUsd === "number" &&
+    saldoPendienteUsd > 0.005
+  ) {
+    return {
+      valido: false,
+      error: `No se puede entregar el pedido: registra un saldo pendiente de $${saldoPendienteUsd.toFixed(2)}. Debe liquidarse el pago antes de realizar la entrega.`,
+    };
   }
 
   // Regla de cancelación: solo gerencial con motivo obligatorio

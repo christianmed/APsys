@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Banknote,
   Camera,
   CheckCircle2,
   Clock,
@@ -21,6 +22,8 @@ import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
 import { PageHeader } from "@/components/shell/page-header";
 import { CamaraEscanerModal } from "./camara-escaner-modal";
+import { CobrarYEntregarModal } from "./cobrar-entregar-modal";
+import { formatearMonedaUSD } from "@/lib/cobranzas/cuentas-por-cobrar";
 import {
   ESTADOS_METADATA,
   type EstadoPedido,
@@ -62,6 +65,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
   const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
   const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
+  const [pedidoParaCobrar, setPedidoParaCobrar] = useState<PedidoTaller | null>(null);
   const [prevPedidosIniciales, setPrevPedidosIniciales] = useState(pedidosIniciales);
   const [pedidos, setPedidos] = useState<PedidoTaller[]>(pedidosIniciales);
   const [idEnProceso, setIdEnProceso] = useState<string | null>(null);
@@ -196,6 +200,12 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
   });
 
   const handleAvanzar = (pedido: PedidoTaller) => {
+    // Si el pedido está listo y tiene saldo pendiente, activar modal de cobro y entrega
+    if (pedido.estado === "listo" && (pedido.saldo_usd ?? 0) > 0) {
+      setPedidoParaCobrar(pedido);
+      return;
+    }
+
     const siguiente = obtenerSiguienteEstadoSugerido(pedido.estado);
     if (!siguiente) return;
 
@@ -519,16 +529,34 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                         tasaBsPorUsd={pedido.tasa_bs}
                         variante="full"
                       />
-                      <button
-                        type="button"
-                        disabled={cargandoEste}
-                        onClick={() => handleAvanzar(pedido)}
-                        data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-base font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-98 disabled:opacity-50"
-                      >
-                        <Package className="size-5" />
-                        {cargandoEste ? "Guardando..." : "1 TOQUE: Entregar al Cliente"}
-                      </button>
+                      {(pedido.saldo_usd ?? 0) > 0 ? (
+                        <button
+                          type="button"
+                          disabled={cargandoEste}
+                          onClick={() => setPedidoParaCobrar(pedido)}
+                          data-testid={`btn-cobrar-entregar-${pedido.numero_orden}`}
+                          className="flex h-14 w-full flex-col items-center justify-center rounded-xl bg-amber-600 px-4 text-white shadow-sm transition hover:bg-amber-500 active:scale-98 disabled:opacity-50"
+                        >
+                          <div className="flex items-center gap-1.5 text-sm font-black">
+                            <Banknote className="size-5" />
+                            <span>Cobrar Saldo y Entregar</span>
+                          </div>
+                          <span className="text-xs font-semibold text-amber-100">
+                            Resta por cobrar: {formatearMonedaUSD(pedido.saldo_usd ?? 0)}
+                          </span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={cargandoEste}
+                          onClick={() => handleAvanzar(pedido)}
+                          data-testid={`btn-avanzar-${pedido.numero_orden}`}
+                          className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-base font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-98 disabled:opacity-50"
+                        >
+                          <Package className="size-5" />
+                          {cargandoEste ? "Guardando..." : "1 TOQUE: Entregar al Cliente"}
+                        </button>
+                      )}
                       <button
                         type="button"
                         disabled={cargandoEste}
@@ -551,6 +579,26 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
             );
           })}
         </div>
+      )}
+
+      {/* Modal de cobro de saldo y entrega rápida en taller */}
+      {pedidoParaCobrar && (
+        <CobrarYEntregarModal
+          pedidoId={pedidoParaCobrar.id}
+          numeroOrden={pedidoParaCobrar.numero_orden}
+          clienteNombre={pedidoParaCobrar.clientes?.nombre ?? "Cliente"}
+          saldoUsd={pedidoParaCobrar.saldo_usd ?? 0}
+          tasaBs={pedidoParaCobrar.tasa_bs ?? 40.0}
+          abierto={true}
+          alCerrar={() => setPedidoParaCobrar(null)}
+          alCompletar={(id) => {
+            setPedidos((prev) =>
+              prev.map((p) =>
+                p.id === id ? { ...p, estado: "entregado", saldo_usd: 0 } : p,
+              ),
+            );
+          }}
+        />
       )}
     </div>
   );

@@ -338,15 +338,46 @@ export async function cambiarEstadoPedido(
 
   const rol = perfil?.rol ?? "operativo";
 
-  // Consultar estado actual del pedido
+  // Consultar estado actual del pedido con datos de cobranza si pasa a entregado
   const { data: pedido, error: errorPedido } = await supabase
     .from("pedidos")
-    .select("id, estado, listo_en, entregado_en, anulado")
+    .select(`
+      id,
+      cliente_id,
+      estado,
+      listo_en,
+      entregado_en,
+      anulado,
+      total_usd,
+      tasas_cambio ( valor_bs_por_usd ),
+      pagos ( monto, moneda )
+    `)
     .eq("id", pedidoId)
     .maybeSingle();
 
   if (errorPedido || !pedido) {
     return { ok: false, error: "El pedido solicitado no existe." };
+  }
+
+  // Calcular saldo pendiente si se intenta entregar
+  let saldoPendienteUsd: number | undefined = undefined;
+  if (nuevoEstado === "entregado") {
+    const tasaObj = pedido.tasas_cambio as { valor_bs_por_usd?: number | string } | null;
+    const tasaValor = Number(tasaObj?.valor_bs_por_usd) || 40.0;
+    const listaPagos =
+      (pedido.pagos as unknown as Array<{
+        monto: number | string;
+        moneda: string;
+      }>) ?? [];
+
+    const totalPagadoUsd = listaPagos.reduce((acc, pago) => {
+      const monto = Number(pago.monto) || 0;
+      if (pago.moneda === "USD") return acc + monto;
+      return acc + (tasaValor > 0 ? monto / tasaValor : 0);
+    }, 0);
+
+    const totalUsd = Number(pedido.total_usd) || 0;
+    saldoPendienteUsd = Math.max(0, Math.round((totalUsd - totalPagadoUsd) * 100) / 100);
   }
 
   // Validar transición con la máquina de estados
@@ -355,6 +386,7 @@ export async function cambiarEstadoPedido(
     nuevoEstado,
     rolUsuario: rol,
     motivoCancelacion,
+    saldoPendienteUsd,
   });
 
   if (!validacion.valido) {
@@ -411,6 +443,142 @@ export async function cambiarEstadoPedido(
   revalidatePath(`/comanda/${pedidoId}`);
   revalidatePath("/dashboard");
   revalidatePath("/cuentas-por-cobrar");
+  revalidatePath("/clientes");
+  if (pedido.cliente_id) {
+    revalidatePath(`/clientes/${pedido.cliente_id}`);
+  }
+
+  return { ok: true };
+}
+
+/**
+ * Registra el cobro restante y entrega el pedido atómicamente en un solo paso (RF-05 / RF-02).
+ * Ideal para agilidad de mostrador y taller: liquida el saldo en USD o Bs y cambia el estado a 'entregado'.
+ */
+export async function cobrarYEntregarPedido(
+  pedidoId: string,
+  datosPago: {
+    monto: number;
+    moneda: "USD" | "Bs";
+    referencia?: string | null;
+  },
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (!pedidoId || typeof datosPago.monto !== "number" || isNaN(datosPago.monto) || datosPago.monto <= 0) {
+    return { ok: false, error: "El monto a cobrar debe ser un número mayor a 0." };
+  }
+
+  // 1. Obtener pedido y pagos existentes
+  const { data: pedido, error: errorPedido } = await supabase
+    .from("pedidos")
+    .select(`
+      id,
+      cliente_id,
+      estado,
+      listo_en,
+      entregado_en,
+      anulado,
+      total_usd,
+      tasa_id,
+      tasas_cambio ( valor_bs_por_usd ),
+      pagos ( monto, moneda )
+    `)
+    .eq("id", pedidoId)
+    .maybeSingle();
+
+  if (errorPedido || !pedido) {
+    return { ok: false, error: "El pedido solicitado no existe." };
+  }
+
+  if (pedido.anulado || pedido.estado === "cancelado") {
+    return { ok: false, error: "No se puede cobrar un pedido cancelado o anulado." };
+  }
+
+  const tasaObj = pedido.tasas_cambio as { valor_bs_por_usd?: number | string } | null;
+  const tasaValor = Number(tasaObj?.valor_bs_por_usd) || 40.0;
+  const listaPagos =
+    (pedido.pagos as unknown as Array<{
+      monto: number | string;
+      moneda: string;
+    }>) ?? [];
+
+  const totalPagadoUsd = listaPagos.reduce((acc, pago) => {
+    const monto = Number(pago.monto) || 0;
+    if (pago.moneda === "USD") return acc + monto;
+    return acc + (tasaValor > 0 ? monto / tasaValor : 0);
+  }, 0);
+
+  const totalUsd = Number(pedido.total_usd) || 0;
+  const saldoActualUsd = Math.max(0, Math.round((totalUsd - totalPagadoUsd) * 100) / 100);
+
+  // Calcular valor abonado en USD
+  const abonoUsd =
+    datosPago.moneda === "USD"
+      ? datosPago.monto
+      : tasaValor > 0
+        ? datosPago.monto / tasaValor
+        : 0;
+
+  // Tolerancia de 1 centavo para redondeos monetarios
+  const nuevoSaldoUsd = saldoActualUsd - abonoUsd;
+  if (nuevoSaldoUsd > 0.01) {
+    return {
+      ok: false,
+      error: `El monto ingresado ($${abonoUsd.toFixed(2)}) no cubre la totalidad del saldo pendiente ($${saldoActualUsd.toFixed(2)}).`,
+    };
+  }
+
+  // 2. Insertar el pago
+  const { error: errorPago } = await supabase.from("pagos").insert({
+    pedido_id: pedidoId,
+    monto: datosPago.monto,
+    moneda: datosPago.moneda,
+    referencia: datosPago.referencia?.trim() || "Cobro al entregar en taller",
+    tasa_id: pedido.tasa_id || null,
+  });
+
+  if (errorPago) {
+    return {
+      ok: false,
+      error: "Ocurrió un error al registrar el pago del pedido.",
+    };
+  }
+
+  // 3. Marcar pedido como entregado
+  const ahora = new Date().toISOString();
+  const { error: errorUpdate } = await supabase
+    .from("pedidos")
+    .update({
+      estado: "entregado",
+      entregado_en: ahora,
+      listo_en: pedido.listo_en || ahora,
+    })
+    .eq("id", pedidoId);
+
+  if (errorUpdate) {
+    return {
+      ok: false,
+      error: "El pago fue registrado pero ocurrió un error al actualizar el estado a entregado.",
+    };
+  }
+
+  revalidatePath("/pedidos");
+  revalidatePath("/taller");
+  revalidatePath(`/comanda/${pedidoId}`);
+  revalidatePath("/dashboard");
+  revalidatePath("/cuentas-por-cobrar");
+  revalidatePath("/clientes");
+  if (pedido.cliente_id) {
+    revalidatePath(`/clientes/${pedido.cliente_id}`);
+  }
 
   return { ok: true };
 }

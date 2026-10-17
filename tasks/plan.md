@@ -114,7 +114,18 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   4. **Panel de Sincronización:** Textos contextuales en `app/tasas/bcv-sync-panel.tsx` que indiquen con exactitud cuándo entra en vigencia la tasa.
   5. **Compuerta DoD:** `npm test` (100% verde), `npm run typecheck` (0 errores) y sincronización mandatoria de manuales técnicos y de usuario.
 
-### Fase 31: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 31: Blindaje Estricto de Entregas (Saldo $0 Obligatorio) y UX de Catálogo de Servicios
+
+- **Objetivo:** Garantizar que ninguna orden pueda ser marcada como entregada en el taller o en la comanda si posee saldo pendiente, facilitando el cobro instantáneo en mostrador (`Cobrar Saldo y Entregar`), y mejorar la claridad del catálogo de servicios con borrado seguro de servicios sin pedidos.
+- **Acciones Clave:**
+  1. **Regla de Servidor Estricta:** Validar que `saldo === 0` antes de autorizar el paso a `entregado` en `lib/pedidos/estados.ts` y `app/pedidos/actions.ts`.
+  2. **Acción Atómica `cobrarYEntregarPedido`:** Permitir registrar el saldo restante y entregar en una sola transacción sin abandonar la pantalla.
+  3. **UX de Taller Kanban:** En `app/taller/taller-tablero.tsx`, mostrar botón `Cobrar Saldo y Entregar` con modal ágil para órdenes con saldo en "Listo para Retiro".
+  4. **Historial de Clientes Limpio:** En `app/clientes/[id]/historial-cliente-view.tsx`, suprimir el botón de cobrar en órdenes entregadas.
+  5. **Catálogo de Servicios:** En `app/servicios/servicio-form.tsx`, renombrar `Orden` a `Prioridad en Catálogo (Posición)` con texto de ayuda, explicar `Activo` e incorporar `eliminarServicio` seguro para servicios huérfanos.
+  6. **Compuerta DoD:** Tests unitarios (TDD), `npm test`, `npm run typecheck`, compilación y actualización de manuales.
+
+### Fase 32: Potencia Comercial y Finanzas (Versión 1.1.0)
 
 - **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
 - **Acciones Clave:**
@@ -122,7 +133,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
   3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
 
-### Fase 32: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 33: Planta Inteligente y Manufactura (Versión 1.2.0)
 
 - **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
 - **Acciones Clave:**

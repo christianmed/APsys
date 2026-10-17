@@ -52,12 +52,27 @@ El tablero de taller está diseñado para pantallas táctiles y uso con una sola
    - Al finalizar corte, laminado y empaque, pulsa **"Marcar Listo"**.
 3. **Notificación al Cliente:**
    - Al pasar a "Listo", aparece el botón verde **"WhatsApp"**. Pulsa para abrir el chat con el mensaje preformateado de retiro y saldo pendiente.
-4. **Columna "Listo para Retiro":**
-   - Cuando el cliente se presente en el mostrador, verifica el pago del saldo y pulsa **"Entregar"**.
+4. **Columna "Listo para Retiro" y Regla Estricta de Entrega con Saldo Cero:**
+   - **Regla Estricta del Sistema:** Un pedido NO puede entregarse si tiene saldo pendiente (`saldo > 0`). El sistema bloquea de raíz cualquier intento de entrega con deuda para evitar fugas de caja.
+   - **Pedidos con Saldo Pendiente:** El botón de acción se muestra como `[ 💵 Cobrar Saldo y Entregar ]`. Al presionarlo, se abre un modal rápido (≤ 3 segundos) prellenado con el saldo exacto en USD y su equivalente en Bs a la tasa del pedido. Permite elegir la moneda, registrar el comprobante/referencia (Efectivo, Pago Móvil, etc.) y liquidar la deuda registrando la entrega de inmediato.
+   - **Pedidos 100% Saldados:** Muestra el botón verde directo `[ 📦 1 TOQUE: Entregar al Cliente ]`.
+5. **Historial de Pedidos en Ficha de Cliente (`/clientes/[id]`):**
+   - En pedidos ya entregados, el sistema **nunca muestra el botón de cobro por WhatsApp**, dado que la orden se encuentra completamente saldada al momento del despacho físico.
 
 ---
 
-## 3. Gestión y Dinámica de Tasas de Cambio (`/tasas`) — Operador & Gerencia
+## 3. Gestión del Catálogo de Servicios (`/servicios`) — Perfil Gerencial
+
+### Prioridad en Catálogo y Disponibilidad
+- **Prioridad en Catálogo (Posición):** Define el orden numérico en el cual se lista cada servicio en los selectores al crear pedidos (`/pedidos/nuevo`). Los números más bajos (1, 2, 3...) aparecen primero, permitiendo priorizar los productos más vendidos.
+- **Servicio Activo en Catálogo (Baja Lógica):** Al desmarcar esta casilla, el servicio se oculta del selector de nuevas órdenes sin eliminar ni afectar las órdenes históricas que lo hayan utilizado.
+- **Eliminación Segura vs. Protección de Integridad:**
+  - **Servicios sin órdenes vinculadas (0 pedidos):** Muestra el botón `[ Eliminar servicio definitivamente ]`, permitiendo su borrado físico permanente de la base de datos (ideal para servicios de prueba o creados por error).
+  - **Servicios con pedidos asociados:** El botón de eliminación se oculta y el sistema muestra un recuadro informativo de **Protección de Integridad Histórica**, indicando el número exacto de pedidos asociados y recordando que para retirarlo del menú basta con desmarcar la casilla de "Servicio Activo".
+
+---
+
+## 4. Gestión y Dinámica de Tasas de Cambio (`/tasas`) — Operador & Gerencia
 
 ### Ciclo Diario y Doble Vigencia del BCV
 
@@ -94,7 +109,7 @@ Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un es
 
 ---
 
-## 4. Perfil Gerencial / Administración (Finanzas y Control)
+## 5. Perfil Gerencial / Administración (Finanzas y Control)
 
 ### Widget de Tasas Referenciales BCV (Barra Lateral)
 

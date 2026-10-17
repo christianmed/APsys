@@ -201,6 +201,16 @@
   - [x] Paso 5: Actualizar tarjeta de Histórico en `app/tasas/page.tsx` con badges dinámicos precisos (`Vigente (Hoy)`, `Vigente (Fin de semana)`, `Programada (Lunes)`, etc.).
   - [x] Paso 6: Actualizar `app/tasas/bcv-sync-panel.tsx` con textos operativos dinámicos según el día hábil de entrada en vigencia.
   - [x] Paso 7: Verificación integral DoD (`npm test`, `npm run typecheck`).
-  - [x] Paso 8: Sincronización mandatoria de manuales (`docs/arquitectura/manual-tecnico-sistema.md` y `docs/capacitacion/guia-rapida-usuarios.md`).
+- [x] **Fase 31: Blindaje Estricto de Entregas (Saldo $0 Obligatorio) y UX de Catálogo de Servicios**
+  - [x] Paso 1 (TDD - Rojo): Crear pruebas unitarias para bloqueo de entrega si `saldo > 0` (`test/pedidos-entrega-saldo.test.ts`) y borrado seguro de servicios (`test/servicios-eliminacion.test.ts`).
+  - [x] Paso 2 (TDD - Verde): Implementar validación en `lib/pedidos/estados.ts` y `app/pedidos/actions.ts` impidiendo transición a `entregado` con deuda pendiente.
+  - [x] Paso 3 (Server Action): Implementar acción `cobrarYEntregarPedido` en `app/pedidos/actions.ts` para registrar pago y entregar en un solo paso atómico.
+  - [x] Paso 4 (UX Taller Kanban): Actualizar `app/taller/taller-tablero.tsx` con botón `[ 💵 Cobrar Saldo y Entregar ]` y modal de cobro rápido cuando `saldo_usd > 0`.
+  - [x] Paso 5 (UX Historial Clientes): En `app/clientes/[id]/historial-cliente-view.tsx`, suprimir el botón de cobrar por WhatsApp en pedidos entregados.
+  - [x] Paso 6 (Catálogo de Servicios): En `app/servicios/servicio-form.tsx` renombrar `Orden` a `Prioridad en Catálogo (Posición)` con ayuda visual, explicar casilla `Activo` e implementar borrado seguro (`eliminarServicio`) para servicios sin pedidos asociados.
+  - [x] Paso 7: Sanear orden `ORD-1005` de Dylan registrando el pago restante de $10.00.
+  - [x] Paso 8: Verificación integral DoD (`npm test` 273/273 tests verde, `npm run typecheck`, `npm run lint`, `npm run build`).
+  - [x] Paso 9: Sincronización mandatoria de manuales (`docs/arquitectura/manual-tecnico-sistema.md` y `docs/capacitacion/guia-rapida-usuarios.md`).
+
 
 
