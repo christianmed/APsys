@@ -19,18 +19,22 @@ import { BotonAvisoWhatsApp } from "./boton-aviso-whatsapp";
 import { PedidosBuscador } from "./pedidos-buscador";
 import { AnularPedidoModal } from "./anular-pedido-modal";
 import { AuditoriaModal } from "./auditoria-modal";
+import { CursorPagination } from "@/components/ui/cursor-pagination";
+import { procesarPaginacionCursor } from "@/lib/paginacion/cursor";
 
 export const instant = false;
 
+const TAMANO_PAGINA_PEDIDOS = 25;
+
 type Props = {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; cursor?: string }>;
 };
 
 /**
  * Listado de pedidos, búsqueda por número/escáner y cobranza (RF-01, RF-02, RF-06 / T-012).
  */
 export default async function PedidosPage({ searchParams }: Props) {
-  const { q } = await searchParams;
+  const { q, cursor } = await searchParams;
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
   if (!user) {
@@ -40,6 +44,9 @@ export default async function PedidosPage({ searchParams }: Props) {
   const rolUsuario = perfil?.rol ?? "operativo";
 
   const busqueda = sanearTerminoBusquedaOrden(q);
+  const cursorNum = cursor ? Number(cursor) : null;
+  const cursorValido =
+    cursorNum !== null && !isNaN(cursorNum) && cursorNum > 0 ? cursorNum : null;
 
   let query = supabase
     .from("pedidos")
@@ -68,6 +75,11 @@ export default async function PedidosPage({ searchParams }: Props) {
     )
     .order("numero_orden", { ascending: false });
 
+  // Paginación por cursor si se navega a páginas posteriores
+  if (cursorValido) {
+    query = query.lt("numero_orden", cursorValido);
+  }
+
   // Si se buscó un número de orden específico (o escaneó un código de barras)
   if (busqueda.esNumeroOrden && busqueda.numeroOrden !== null) {
     query = query.eq("numero_orden", busqueda.numeroOrden);
@@ -89,8 +101,15 @@ export default async function PedidosPage({ searchParams }: Props) {
     }
   }
 
+  // Limitamos a TAMANO_PAGINA + 1 para detectar si existe página siguiente
+  query = query.limit(TAMANO_PAGINA_PEDIDOS + 1);
+
   const { data: pedidos } = await query;
-  const lista = pedidos ?? [];
+  const { datos: lista, siguienteCursor } = procesarPaginacionCursor(
+    pedidos ?? [],
+    TAMANO_PAGINA_PEDIDOS,
+    "numero_orden",
+  );
 
   return (
     <AuthenticatedShell>
@@ -314,6 +333,14 @@ export default async function PedidosPage({ searchParams }: Props) {
             })}
           </div>
         )}
+
+        <CursorPagination
+          baseUrl="/pedidos"
+          searchParams={{ q }}
+          cursorActivo={cursorValido}
+          siguienteCursor={siguienteCursor}
+          totalEnPagina={lista.length}
+        />
       </div>
     </AuthenticatedShell>
   );

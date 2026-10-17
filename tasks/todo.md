@@ -190,7 +190,7 @@
     - [x] **Migración de Índices en PostgreSQL (`0006_indices_rendimiento.sql`)**: Creado script con índices B-Tree en `pedidos(creado_en DESC)`, `pedidos(anulado, creado_en DESC)`, `pagos(pedido_id)`, `pagos(creado_en DESC)`, `pedido_items(servicio_id)`, `clientes(lower(nombre))` y `auditoria`.
     - [x] **Validación y Sanitización Centralizada en Server Actions**: Creado módulo `lib/validaciones/` (`cliente.ts`, `pedido.ts`, `pago.ts`, `comun.ts`) con suite unitaria de 13 pruebas (TDD) para sanitizar y blindar la entrada de datos.
     - [x] **Manual Técnico y Arquitectura del Sistema (`docs/arquitectura/manual-tecnico-sistema.md`)**: Creado y establecido el manual técnico exhaustivo con detalles de arquitectura, esquemas de BD, índices de rendimiento PostgreSQL, validaciones, flujos de datos y diseño del sistema.
-    - [ ] **Paginación por Cursor en `/clientes` y `/pedidos`**: Implementar paginación en servidor (`limit 25` + `created_at < cursor`).
+    - [x] **Paginación por Cursor en `/clientes` y `/pedidos`**: Implementada paginación de alto rendimiento Keyset (`LIMIT 25 + 1`) con índices B-Tree, extractor de cursor, componente `CursorPagination` (`[ ← Inicio ]`, `[ Siguiente → ]`) y 11 pruebas unitarias.
     - [ ] **Alertas de Cron por Telegram**: Micro-webhook que emita alerta si la sincronización del BCV falla repetidamente.
     - [x] **Archivar documentos sueltos de auditoría**: Mover `Analisis-PI.md`, `Analisis-Gemma.md` y `pruebna.md` a `docs/analisis/2026-10-16/`.
   - **Etapa 2: Potencia Comercial y Finanzas (Versión 1.1.0 — Sprint 1)**
