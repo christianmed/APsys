@@ -286,9 +286,20 @@ APSys cuenta con un motor autónomo de tasas de cambio diseñado específicament
 - **Autenticación del Cron:** Requiere la cabecera `Authorization: Bearer <CRON_SECRET>`.
 - **Ejecución con Privilegios Elevados:** Utiliza `SUPABASE_SERVICE_ROLE_KEY` para insertar la nueva tasa en la base de datos saltándose temporalmente las restricciones de RLS que requieren sesión interactiva de usuario.
 - **Configuración en `vercel.json`:**
-  - `22:30 UTC` (6:30 PM Caracas): Sincronización vespertina para capturar la tasa del día siguiente.
-  - `04:05 UTC` (12:05 AM Caracas): Sincronización de medianoche para confirmar la transición de vigencias.
-  - _Nota operativa:_ En el plan Vercel Hobby está permitido 1 cron diario; en Vercel Pro se ejecutan ambos turnos sin limitación.
+  - `30 22 * * 1-5` (22:30 UTC / 6:30 PM Caracas, Lunes a Viernes): Sincronización vespertina optimizada para capturar la tasa del día siguiente, 100% compatible con el límite de 1 cron diario del plan **Vercel Hobby**.
+  - En entornos con Vercel Pro, puede habilitarse adicionalmente el turno de medianoche (`5 4 * * *` / 12:05 AM Caracas).
+
+### 6.3 Micro-Webhook de Alertas por Telegram (`lib/notificaciones/telegram.ts`)
+
+Para que el personal de gerencia y tecnología tenga visibilidad inmediata ante incidencias sin intervención humana, se integró un micro-cliente HTTP nativo de Telegram:
+
+- **Cero Dependencias de Terceros:** Construido con `fetch` nativo sobre `https://api.telegram.org/bot<TOKEN>/sendMessage`.
+- **Comportamiento Fail-Safe:** Si las variables `TELEGRAM_BOT_TOKEN` o `TELEGRAM_CHAT_ID` no están presentes (o si Telegram sufre una caída de red), la función captura el error limpiamente y no bloquea ni rompe la ejecución del cron.
+- **Disparadores de Alerta en `app/api/cron/sincronizar-tasas/route.ts`:**
+  1. Caída o timeout simultáneo de DolarVZLA y el fallback de DolarApi.
+  2. Respuesta malformada o vacía del servicio BCV.
+  3. Errores de lectura o escritura en las tablas de Supabase (`tasas_cambio`).
+- **Formato del Mensaje:** Alerta en HTML con fecha/hora de Caracas, detalle técnico del error y acción recomendada.
 
 ---
 

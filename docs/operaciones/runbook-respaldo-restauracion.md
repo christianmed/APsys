@@ -177,3 +177,25 @@ Para monitorear las ejecuciones:
 
 - En Vercel: **Project Dashboard → Logs / Crons**.
 - En Supabase: Consultar la tabla `auditoria` filtrando por `origen = 'cron_automatico_bcv'`.
+
+### 6.3 Configuración de Alertas Inmediatas por Telegram (Fallo en Sincronización)
+
+Si la API del BCV o la red externa fallan, el sistema envía una alerta instantánea a tu móvil vía Telegram:
+
+1. **Crear el Bot de Telegram (`TELEGRAM_BOT_TOKEN`):**
+   - En la aplicación Telegram, busca el usuario oficial **`@BotFather`** (con insignia azul).
+   - Envía el comando `/newbot`.
+   - Asígnale un nombre visible (ej: `APSys Alertas`).
+   - Elige un nombre de usuario que termine en `bot` (ej: `APSysAlertasBot` o `ApsysTallerBot`).
+   - BotFather responderá entregándote el **HTTP API Token** (ej: `7890123456:AAFdE-xyz...`).
+2. **Obtener tu Identificador de Chat (`TELEGRAM_CHAT_ID`):**
+   - Busca en Telegram el bot **`@userinfobot`** y pulsa `/start`.
+   - Te responderá con tu **Id numérico** (ej: `123456789`).
+   - **Paso obligatorio:** Entra al bot que creaste en el paso 1 y presiona **Iniciar** (`/start`). Los bots de Telegram solo pueden enviar mensajes a usuarios que hayan iniciado conversación con ellos.
+3. **Cargar en Variables de Entorno:**
+   - En tu archivo local `.env.local` y en **Vercel → Project Settings → Environment Variables**:
+     ```env
+     TELEGRAM_BOT_TOKEN=7890123456:AAFdE-xyz...
+     TELEGRAM_CHAT_ID=123456789
+     ```
+   - Si no se configuran estas variables, el sistema opera con normalidad (fail-safe) registrando las incidencias únicamente en logs.
