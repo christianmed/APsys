@@ -63,23 +63,31 @@ El tablero de taller está diseñado para pantallas táctiles y uso con una sola
 
 En Venezuela, el Banco Central publica la tasa oficial bajo el siguiente ciclo operativo:
 
-1. **En la mañana:** Rige la tasa fijada para el día hábil en curso (con vigencia legal desde las 12:00 a. m. de hoy).
-2. **En la tarde (3:30 p. m. a 5:30 p. m.):** El BCV publica la tasa oficial del **siguiente día hábil**.
+1. **Jornada Regular (Lunes a Jueves):**
+   - **En la mañana:** Rige la tasa fijada para el día hábil en curso (vigencia legal desde las 12:00 a. m. de hoy).
+   - **En la tarde (3:30 p. m. a 5:30 p. m.):** El BCV publica la tasa oficial del día siguiente.
+2. **Fin de Semana y Días Feriados (Viernes a Domingo):**
+   - El viernes por la tarde, el BCV emite la tasa que entrará en vigencia legal el **lunes de la semana siguiente**.
+   - Durante el sábado y domingo, **la tasa de viernes permanece plenamente vigente y activa** para facturar y cotizar.
+   - El sistema reconoce inteligentemente el fin de semana y no muestra textos equívocos como "Hoy" en sábado, sino **`Vigente (Fin de semana)`** o **`Vigente • DD/MM/AAAA`**.
+   - La tasa futura del lunes se muestra como **`Programada (Lunes)`** o **`Lunes, DD/MM/AAAA (Próx. Día Hábil)`**.
 
 ### Estados en el Histórico de Tasas
 
-Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un estado visual explícito:
+Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un estado visual explícito y consciente del calendario:
 
-- 🟢 **Vigente (Hoy):** La tasa oficial activa para la jornada en curso. Se toma por defecto para cálculos y cobros del día.
-- 🟡 **Programada (Mañana):** La tasa oficial emitida para el siguiente día hábil (inicia a las 12:00 a. m. del día siguiente). Se mantiene en espera y **se activa de forma automática a medianoche (12:00 a. m.)** sin requerir ninguna acción del usuario.
-- ⚪ **Histórica:** Tasas de días anteriores conservadas inmutablemente. Garantiza que ninguna orden o abono previo sufra variaciones en sus montos en bolívares.
+- 🟢 **Vigente (Hoy):** La tasa oficial activa para la jornada en curso entre semana.
+- 🟢 **Vigente (Fin de semana):** La tasa activa fijada el viernes que rige durante sábado y domingo.
+- 🟡 **Programada (Mañana):** La tasa oficial emitida entre semana para el siguiente día hábil.
+- 🟡 **Programada (Lunes / Próx. Día Hábil):** La tasa oficial emitida el viernes para el inicio de la semana siguiente.
+- ⚪ **Histórica:** Tasas de fechas pasadas conservadas inmutablemente para auditoría de pedidos y pagos previos.
 
 ### ¿Cómo aplicar o utilizar la tasa del día siguiente?
 
 - **Paso 1:** Al final de la tarde, haz clic en **"Consultar Tasas BCV en Vivo"**.
-- **Paso 2:** Si el BCV ya publicó para mañana, el botón mostrará: **"Programar Bs. XXX.XXXX para Mañana (Día Hábil)"**. Al pulsar el botón, la tasa queda registrada en la base de datos con inicio a las 12:00 a. m. del día siguiente.
-- **Paso 3 (Opcional):** Si necesitas cobrar un pedido en ese momento usando esa tasa anticipada, ve a `/pedidos/nuevo` y activa la píldora **"Mañana (Bs. XXX.XX)"** en el selector de tasa.
-- **Paso 4 (Automático):** Al llegar las 12:00 a. m. (medianoche), el sistema promueve automáticamente esa tasa como la nueva tasa **Vigente** para todo el sistema.
+- **Paso 2:** Si el BCV ya publicó para la siguiente jornada, el botón indicará dinámicamente el día exacto: ej. **"Programar Bs. XXX.XXXX para Lunes (Día Hábil)"** o **"para Mañana (Día Hábil)"**. Al pulsar el botón, la tasa queda registrada en la base de datos con inicio a las 12:00 a. m.
+- **Paso 3 (Opcional):** Si necesitas cotizar un pedido usando esa tasa anticipada, ve a `/pedidos/nuevo` y activa la píldora en el selector interactivo de tasa.
+- **Paso 4 (Automático):** Al llegar las 12:00 a. m. de la fecha programada, el sistema promueve automáticamente esa tasa como la nueva tasa **Vigente** para todo el sistema sin intervención humana.
 
 > 💡 **Sincronización Automática en Segundo Plano (Cron Job):**  
 > Aunque ningún operador o administrador esté conectado al sistema, una tarea automática se ejecuta a las 6:30 p. m. y a las 12:05 a. m. para registrar la tasa oficial directamente en la base de datos de Supabase. El botón en `/tasas` queda disponible como respaldo inmediato para forzar una sincronización manual al instante.
@@ -91,9 +99,9 @@ Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un es
 ### Widget de Tasas Referenciales BCV (Barra Lateral)
 
 - En la barra lateral se ubica el widget interactivo con dos acordeones independientes:
-  - **Hoy:** Tasa vigente en USD y EUR con indicador verde.
-  - **Mañana:** Tasa programada emitida por el BCV para el día siguiente con indicador ámbar.
-- Los acordeones **memorizan su estado abierto o cerrado** al navegar entre cualquier página del sistema.
+  - **Tasa Activa:** Muestra `Hoy, DD/MM/AAAA` entre semana, o `Vigente • DD/MM/AAAA` en fines de semana para USD y EUR con indicador verde esmeralda.
+  - **Tasa Siguiente:** Muestra `Mañana, DD/MM/AAAA` o el día de la semana correspondiente (ej. `Lunes, DD/MM/AAAA`) con indicador ámbar.
+- Los acordeones **memorizan su estado abierto o cerrado** en el navegador (`localStorage`) al navegar entre cualquier página del sistema.
 
 ### Cuentas por Cobrar (`/cuentas-por-cobrar`)
 

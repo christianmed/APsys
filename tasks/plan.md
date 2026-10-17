@@ -104,7 +104,17 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   4. **Paginación por Cursor:** Implementar paginación en servidor (`limit 25` + `created_at < cursor`) para `/clientes` y `/pedidos`.
   5. **Alertas de Cron por Telegram:** Micro-webhook que emita alerta si la sincronización del BCV falla repetidamente.
 
-### Fase 30: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 30: Módulo Autónomo de Tasas BCV y Dinámica de Calendario Fin de Semana
+
+- **Objetivo:** Resolver el desacople entre el calendario bancario venezolano (viernes a lunes / feriados) y las etiquetas estáticas ("Hoy", "Mañana"), e independizar el módulo de tasas para su fácil replicabilidad en otros proyectos empresariales vía IA.
+- **Acciones Clave:**
+  1. **Blueprint Modular para IA (`docs/arquitectura/modulo-tasas-bcv-blueprint.md`):** Redactar la especificación integral del módulo (SQL, API, Cron, UI, Hooks, Conversores y el Prompt exacto para cualquier IA).
+  2. **Lógica de Calendario Bancario Desacoplada (TDD Rojo-Verde):** Crear `describirEstadoVigencia` y `describirEtiquetaFecha` en `lib/tasas/tasas.ts` con cobertura de fin de semana, lunes bancario y feriados.
+  3. **Sidebar y Tarjeta de Histórico Inteligentes:** Actualizar `components/shell/sidebar-tasas-card.tsx` y `app/tasas/page.tsx` para mostrar etiquetas dinámicas como `"Vigente (Fin de semana)"`, `"Vigente (16 oct)"` o `"Programada (Lunes)"`.
+  4. **Panel de Sincronización:** Textos contextuales en `app/tasas/bcv-sync-panel.tsx` que indiquen con exactitud cuándo entra en vigencia la tasa.
+  5. **Compuerta DoD:** `npm test` (100% verde), `npm run typecheck` (0 errores) y sincronización mandatoria de manuales técnicos y de usuario.
+
+### Fase 31: Potencia Comercial y Finanzas (Versión 1.1.0)
 
 - **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
 - **Acciones Clave:**
@@ -112,10 +122,11 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
   3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
 
-### Fase 31: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 32: Planta Inteligente y Manufactura (Versión 1.2.0)
 
 - **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
 - **Acciones Clave:**
   1. **WhatsApp Cloud API Desatendido:** Disparo automático de mensaje al cliente cuando la orden se marca como "Listo para Retiro", sin interacción manual.
   2. **Módulo de Inventario de Bobinas y Merma:** Control de metros lineales disponibles de lona y vinil con descuento automático por orden procesada y cálculo de merma por corte.
   3. **Estimación Predictiva en Taller Kanban:** Cálculo automático del tiempo estimado de entrega basado en la carga histórica de m² en producción.
+

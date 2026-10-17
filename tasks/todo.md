@@ -193,11 +193,14 @@
     - [x] **Paginación por Cursor en `/clientes` y `/pedidos`**: Implementada paginación de alto rendimiento Keyset (`LIMIT 25 + 1`) con índices B-Tree, extractor de cursor, componente `CursorPagination` (`[ ← Inicio ]`, `[ Siguiente → ]`) y 11 pruebas unitarias.
     - [x] **Alertas de Cron por Telegram**: Micro-webhook nativo en `lib/notificaciones/telegram.ts` integrado en el handler cron de Vercel con comportamiento fail-safe y 4 pruebas unitarias.
     - [x] **Archivar documentos sueltos de auditoría**: Mover `Analisis-PI.md`, `Analisis-Gemma.md` y `pruebna.md` a `docs/analisis/2026-10-16/`.
-  - **Etapa 2: Potencia Comercial y Finanzas (Versión 1.1.0 — Sprint 1)**
-    - [ ] **Generador de Presupuestos Formales en PDF Vectorial**: Endpoint descargable con membrete, especificaciones de m², acabados y montos en USD y Bs.
-    - [ ] **Desglose de Pagos Mixtos y Multimoneda**: Tabla `pedido_pagos` para abonos combinados (Efectivo USD + Zelle + Pago Móvil Bs con tasa congelada y referencia bancaria).
-    - [ ] **Suite E2E Playwright de Flujo Completo**: Automatizar recorrido de usuario comercial y de planta.
-  - **Etapa 3: Planta Inteligente y Manufactura (Versión 1.2.0 — Sprint 2)**
-    - [ ] **WhatsApp Cloud API Desatendido**: Webhook automático de aviso de retiro al pasar la orden a "Listo para Retiro" en Taller Kanban.
-    - [ ] **Módulo de Inventario de Bobinas y Merma**: Control de metros lineales y cálculo automático de desperdicio por corte.
-    - [ ] **Estimación Predictiva en Taller**: Estimación de entrega basada en la carga de m² en producción.
+- [x] **Fase 30: Módulo Autónomo de Tasas BCV y Dinámica de Calendario Fin de Semana**
+  - [x] Paso 1 (Especificación y Blueprint): Redactar `docs/arquitectura/modulo-tasas-bcv-blueprint.md` con prompt para IA y guía completa de integración modular (DB, backend, UI, conversores).
+  - [x] Paso 2 (TDD - Rojo): Crear suite de pruebas unitarias `test/tasas-calendario.test.ts` para verificar la resolución de vigencias de fin de semana, lunes bancario y feriados.
+  - [x] Paso 3 (TDD - Verde): Implementar funciones puras de resolución de calendario en `lib/tasas/tasas.ts` (`describirEstadoVigencia`, `describirEtiquetaFecha`).
+  - [x] Paso 4: Actualizar `components/shell/sidebar-tasas-card.tsx` con etiquetas de calendario inteligentes (Fin de semana vs. Próx. día hábil/Lunes).
+  - [x] Paso 5: Actualizar tarjeta de Histórico en `app/tasas/page.tsx` con badges dinámicos precisos (`Vigente (Hoy)`, `Vigente (Fin de semana)`, `Programada (Lunes)`, etc.).
+  - [x] Paso 6: Actualizar `app/tasas/bcv-sync-panel.tsx` con textos operativos dinámicos según el día hábil de entrada en vigencia.
+  - [x] Paso 7: Verificación integral DoD (`npm test`, `npm run typecheck`).
+  - [x] Paso 8: Sincronización mandatoria de manuales (`docs/arquitectura/manual-tecnico-sistema.md` y `docs/capacitacion/guia-rapida-usuarios.md`).
+
+

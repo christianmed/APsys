@@ -12,7 +12,11 @@ import {
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTasas } from "@/context/tasas-context";
-import { esTasaBcvFutura } from "@/lib/tasas/tasas";
+import {
+  esTasaBcvFutura,
+  calcularDiferenciaDiasCaracas,
+  obtenerNombreDiaSemanaCaracas,
+} from "@/lib/tasas/tasas";
 import {
   consultarTasasBcvEnVivo,
   sincronizarTasaBcv,
@@ -70,6 +74,15 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
   const esFutura = tasaUsdEnVivo
     ? esTasaBcvFutura(tasaUsdEnVivo.fechaActualizacion)
     : false;
+  const diffDias = tasaUsdEnVivo
+    ? calcularDiferenciaDiasCaracas(tasaUsdEnVivo.fechaActualizacion)
+    : 0;
+  const nombreDiaFuturo =
+    diffDias === 1
+      ? "Mañana"
+      : tasaUsdEnVivo?.fechaActualizacion
+      ? obtenerNombreDiaSemanaCaracas(tasaUsdEnVivo.fechaActualizacion)
+      : "el Próximo Día Hábil";
 
   return (
     <div className="space-y-4">
@@ -201,13 +214,13 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
                   <>
                     <Loader2 className="size-4 animate-spin" />
                     {esFutura
-                      ? "Programando tasa de mañana..."
+                      ? `Programando tasa para ${nombreDiaFuturo}...`
                       : "Aplicando tasa de hoy..."}
                   </>
                 ) : esFutura ? (
                   <>
                     <Clock className="size-4" />
-                    Programar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} para Mañana (Día Hábil)
+                    Programar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} para {nombreDiaFuturo} (Día Hábil)
                   </>
                 ) : (
                   <>
@@ -219,7 +232,7 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
 
               {esFutura && (
                 <div className="rounded-xl border border-amber-200 bg-amber-50/90 p-2.5 text-center text-[11px] leading-relaxed text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300">
-                  <span className="font-bold">Nota operativa:</span> Esta tasa oficial entrará en vigencia automática a las <strong>12:00 a. m. de mañana</strong>. La tasa de hoy permanece vigente para el cierre del día. Ya puedes usar la tasa de mañana para cotizar o facturar en <strong>Nuevo Pedido</strong> usando el selector interactivo.
+                  <span className="font-bold">Nota operativa:</span> Esta tasa oficial entrará en vigencia automática el <strong>{nombreDiaFuturo} a las 12:00 a. m.</strong> La tasa actual permanece vigente para el cierre del día. Ya puedes usar la tasa programada para cotizar o facturar en <strong>Nuevo Pedido</strong> usando el selector interactivo.
                 </div>
               )}
             </div>

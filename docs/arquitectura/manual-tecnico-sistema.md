@@ -397,3 +397,25 @@ Para aplicar scripts de optimización o migraciones estructurales:
 3. Abrir o pegar el contenido de la migración (ej. `supabase/migrations/0006_indices_rendimiento.sql`).
 4. Presionar **Run**.
 5. Verificar el mensaje `Success. No rows returned` y constatar la creación de los índices en **Database > Indexes**.
+
+---
+
+## 10. Módulo Autónomo de Tasas BCV y Dinámica de Calendario Bancario
+
+El módulo de tasas de cambio está diseñado como una capacidad autónoma, modular y portable para cualquier sistema transaccional que liquide en Bolívares (VES) y Dólares (USD).
+
+### 10.1 Arquitectura Desacoplada y Componentes
+
+1. **Persistencia e Inmutabilidad (`tasas_cambio`):**  
+   Almacena cada vigencia con precisión `NUMERIC(16, 4)` y fecha/hora con zona horaria (`TIMESTAMPTZ`). Los pedidos retienen la tasa histórica exacta de su creación o abono.
+2. **Servicio de Integración y Caché (`lib/tasas/bcv-service.ts`):**  
+   Consumo unificado de `https://rates.dolarvzla.com/bcv/current.json` (USD + EUR) con fallback automático de alta disponibilidad a `https://ve.dolarapi.com/v1`. Dispone de caché en memoria RAM con TTL de 15 minutos en el servidor para evitar llamadas HTTP redundantes en cada petición SSR.
+3. **Lógica Pura y Calendario Bancario (`lib/tasas/tasas.ts`):**  
+   - `calcularDiferenciaDiasCaracas`: Calcula la distancia exacta en días naturales calendario según la zona horaria `America/Caracas` (UTC-4), blindado contra saltos horarios.
+   - `describirEstadoVigencia`: Clasifica dinámicamente cada registro histórico (`vigente_hoy`, `vigente_fin_de_semana`, `programada_manana`, `programada_proximo_dia_habil`, `historica`).
+   - `formatearEtiquetaSidebar`: Genera las etiquetas de los acordeones del Sidebar (`Hoy`, `Vigente • DD/MM`, `Mañana`, `Lunes, DD/MM`).
+4. **Automatización Desatendida (`app/api/cron/sincronizar-tasas/route.ts`):**  
+   Vercel Cron ejecutado a las 6:30 p. m. (detección vespertina) y 12:05 a. m. (inicio de jornada) con cabecera `CRON_SECRET` y webhook de contingencia por Telegram.
+5. **Blueprint para Replicación con IA (`docs/arquitectura/modulo-tasas-bcv-blueprint.md`):**  
+   Documento rector que contiene el **Prompt Maestro** para clonar este módulo íntegro en otros proyectos mediante herramientas de IA (Claude, Gemini, ChatGPT, Antigravity) con un solo comando.
+
