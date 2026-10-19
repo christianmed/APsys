@@ -54,7 +54,7 @@ export function AnularPedidoModal({ pedidoId, numeroOrden }: Props) {
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-150"
         >
-          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 space-y-4">
+          <div className="w-full max-w-md rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-[#24283b] dark:bg-[#1a1b26] space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5 text-rose-600 dark:text-rose-400">
                 <span className="rounded-xl bg-rose-100 p-2 dark:bg-rose-950/60">

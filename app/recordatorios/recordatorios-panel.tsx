@@ -4,12 +4,15 @@ import {
   AlertCircle,
   AlertTriangle,
   Bell,
+  CheckCircle2,
   Clock,
+  DollarSign,
   ExternalLink,
   MessageCircle,
   Package,
   Search,
   User,
+  Wallet,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -99,66 +102,114 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
         }
       />
 
-      {/* Tarjetas de Métricas Resumen */}
+      {/* Tarjetas de Métricas Resumen (Homologadas a KpiCards del Dashboard) */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            Total Listos sin Retirar
-          </span>
-          <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+              Total Listos
+            </span>
+            <span className="flex size-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-[#1f202c] dark:border dark:border-[#24283b] dark:text-[#7aa2f7]">
+              <Package className="size-4" />
+            </span>
+          </div>
+          <p className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             {totalListos}
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setFiltro(filtro === "atencion_48h" ? "todos" : "atencion_48h")}
-          className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-98 ${
-            filtro === "atencion_48h"
-              ? "border-amber-500 bg-amber-50/70 dark:border-amber-600 dark:bg-amber-950/40 ring-2 ring-amber-500"
-              : "border-zinc-200 bg-white hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:bg-[#1f202c]/50"
-          }`}
-        >
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-[#e0af68]">
               Atención (≥ 48 h)
             </span>
-            <AlertTriangle className="size-4 text-amber-600" />
+            <span className="flex size-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-[#1f202c] dark:border dark:border-[#24283b] dark:text-[#e0af68]">
+              <AlertTriangle className="size-4" />
+            </span>
           </div>
-          <p className="mt-1 text-2xl font-bold text-amber-900 dark:text-amber-200">
+          <p className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             {conteoAtencion}
           </p>
-        </button>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => setFiltro(filtro === "urgente_72h" ? "todos" : "urgente_72h")}
-          className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-98 ${
-            filtro === "urgente_72h"
-              ? "border-red-500 bg-red-50/70 dark:border-red-600 dark:bg-red-950/40 ring-2 ring-red-500"
-              : "border-zinc-200 bg-white hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:bg-[#1f202c]/50"
-          }`}
-        >
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-red-700 dark:text-red-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-red-700 dark:text-[#f7768e]">
               Urgente (≥ 72 h)
             </span>
-            <AlertCircle className="size-4 text-red-600" />
+            <span className="flex size-9 items-center justify-center rounded-xl bg-red-50 text-red-600 dark:bg-[#1f202c] dark:border dark:border-[#24283b] dark:text-[#f7768e]">
+              <AlertCircle className="size-4" />
+            </span>
           </div>
-          <p className="mt-1 text-2xl font-bold text-red-900 dark:text-red-200">
+          <p className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             {conteoUrgente}
           </p>
-        </button>
+        </div>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-            Saldo Retenido por Cobrar
-          </span>
-          <p className="mt-1 text-2xl font-bold text-emerald-700 dark:text-emerald-400">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-[#9ece6a]">
+              Saldo Retenido
+            </span>
+            <span className="flex size-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-[#1f202c] dark:border dark:border-[#24283b] dark:text-[#9ece6a]">
+              <Wallet className="size-4" />
+            </span>
+          </div>
+          <p className="mt-3 text-2xl font-bold tracking-tight text-emerald-700 dark:text-emerald-400">
             ${saldoTotalRetenidoUsd.toFixed(2)}{" "}
             <span className="text-xs font-medium text-zinc-400">USD</span>
           </p>
         </div>
+      </div>
+
+      {/* Pestañas de Filtros Rápidos (Segmented Control Explícito) */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-zinc-200 pb-3 dark:border-[#24283b]">
+        <button
+          type="button"
+          onClick={() => setFiltro("todos")}
+          className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition ${
+            filtro === "todos"
+              ? "bg-zinc-900 text-white shadow-xs dark:border dark:border-[#7aa2f7]/50 dark:bg-[#1f202c] dark:text-[#7aa2f7]"
+              : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-[#1f202c] dark:hover:text-zinc-200"
+          }`}
+        >
+          <span>Todos los listos</span>
+          <span className="rounded-full bg-zinc-200/80 px-2 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-[#16161e] dark:text-zinc-300">
+            {totalListos}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFiltro("atencion_48h")}
+          className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition ${
+            filtro === "atencion_48h"
+              ? "bg-amber-100 text-amber-900 shadow-xs dark:border dark:border-[#e0af68]/50 dark:bg-[#1f202c] dark:text-[#e0af68]"
+              : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-[#1f202c] dark:hover:text-zinc-200"
+          }`}
+        >
+          <AlertTriangle className="size-3.5" />
+          <span>Atención (≥ 48 h)</span>
+          <span className="rounded-full bg-amber-200/80 px-2 py-0.5 text-[10px] font-bold text-amber-900 dark:bg-[#16161e] dark:text-[#e0af68]">
+            {conteoAtencion}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFiltro("urgente_72h")}
+          className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-xs font-semibold transition ${
+            filtro === "urgente_72h"
+              ? "bg-red-100 text-red-900 shadow-xs dark:border dark:border-[#f7768e]/50 dark:bg-[#1f202c] dark:text-[#f7768e]"
+              : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-[#1f202c] dark:hover:text-zinc-200"
+          }`}
+        >
+          <AlertCircle className="size-3.5" />
+          <span>Urgente (≥ 72 h)</span>
+          <span className="rounded-full bg-red-200/80 px-2 py-0.5 text-[10px] font-bold text-red-900 dark:bg-[#16161e] dark:text-[#f7768e]">
+            {conteoUrgente}
+          </span>
+        </button>
       </div>
 
       {/* Lista de Pedidos en Espera */}
@@ -256,12 +307,14 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
                   {/* Estado Financiero */}
                   <div className="text-xs">
                     {pedido.saldoUsd <= 0.009 ? (
-                      <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-                        ✅ 100% Pagado ($0.00 pendiente)
+                      <span className="inline-flex items-center gap-1 font-semibold text-emerald-600 dark:text-[#9ece6a]">
+                        <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-[#9ece6a]" />
+                        100% Pagado ($0.00 pendiente)
                       </span>
                     ) : (
-                      <span className="font-semibold text-red-600 dark:text-red-400">
-                        💵 Saldo pendiente: ${pedido.saldoUsd.toFixed(2)} USD
+                      <span className="inline-flex items-center gap-1 font-semibold text-red-600 dark:text-[#f7768e]">
+                        <DollarSign className="size-3.5 text-red-600 dark:text-[#f7768e]" />
+                        Saldo pendiente: ${pedido.saldoUsd.toFixed(2)} USD
                         {pedido.tasaBsPorUsd ? (
                           <span className="font-normal text-zinc-500 ml-1">
                             (aprox. Bs.{" "}
@@ -284,13 +337,13 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid={`btn-recordatorio-${pedido.numeroOrden}`}
-                      className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-xs font-bold text-white shadow-sm transition hover:bg-[#20ba59] active:scale-98"
+                      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-emerald-300/80 bg-emerald-50 px-4 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:border-emerald-700/60 dark:hover:bg-[#252b42]"
                     >
-                      <MessageCircle className="size-4 fill-white/20" />
-                      Enviar Recordatorio (1 Clic)
+                      <MessageCircle className="size-4 text-emerald-600 dark:text-[#9ece6a]" />
+                      <span>Enviar Recordatorio</span>
                     </a>
                   ) : (
-                    <span className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-100 px-3 text-xs text-zinc-400 dark:border-[#24283b] dark:bg-[#1f202c]">
+                    <span className="inline-flex h-10 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-100 px-3 text-xs text-zinc-400 dark:border-[#24283b] dark:bg-[#1f202c]">
                       Sin teléfono registrado
                     </span>
                   )}

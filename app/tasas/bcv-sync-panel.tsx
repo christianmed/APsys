@@ -204,10 +204,10 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
                 type="button"
                 onClick={handleSincronizar}
                 disabled={sincronizando || consultando}
-                className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold text-white shadow-sm transition disabled:opacity-60 ${
+                className={`inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold shadow-xs transition active:scale-98 disabled:opacity-60 ${
                   esFutura
-                    ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700"
-                    : "bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                    ? "border border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#e0af68] dark:hover:bg-[#252b42] dark:hover:border-amber-600/60"
+                    : "border border-emerald-300/80 bg-emerald-50 text-emerald-950 hover:bg-emerald-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42] dark:hover:border-emerald-600/60"
                 }`}
               >
                 {sincronizando ? (

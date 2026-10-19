@@ -289,6 +289,17 @@ APSys cuenta con un motor autónomo de tasas de cambio diseñado específicament
   - `30 22 * * 1-5` (22:30 UTC / 6:30 PM Caracas, Lunes a Viernes): Sincronización vespertina optimizada para capturar la tasa del día siguiente, 100% compatible con el límite de 1 cron diario del plan **Vercel Hobby**.
   - En entornos con Vercel Pro, puede habilitarse adicionalmente el turno de medianoche (`5 4 * * *` / 12:05 AM Caracas).
 
+### 6.2.1 Auto-Sincronización Transparente Post-Medianoche (`/api/tasas/auto-sync`)
+
+Para blindar al negocio en caso de que el operador olvide sincronizar manualmente la tasa antes de las 11:59 PM y ante la ausencia de cron jobs en servidores de desarrollo local o planes limitados:
+
+1. **Ventana Manual (4:00 PM – 11:59 PM):** Durante la tarde, el BCV emite la tasa del día hábil siguiente (`esFutura = true`). El sistema la expone en el acordeón ámbar del Sidebar y en los formularios, pero respeta la ventana manual para que el operador decida cuándo aplicarla.
+2. **Corte Estricto a las 12:00 a. m. (Caracas UTC-4):** Al cambiar el día calendario, la nueva tasa se convierte en la oficial y obligatoria por ley para la jornada en curso.
+3. **Auto-Adopción en Memoria y Persistencia Silenciosa:** Cuando cualquier cliente abre o navega por la aplicación pasadas las 12:00 a. m.:
+   - `context/tasas-context.tsx` detecta si la tasa en base de datos es de una fecha anterior o es inferior a la tasa oficial emitida por el BCV para el día de hoy.
+   - Si detecta rezago, adopta de inmediato el valor en memoria y despacha una llamada transparente a `POST /api/tasas/auto-sync`.
+   - El endpoint valida con `SUPABASE_SERVICE_ROLE_KEY`, verifica idempotencia para evitar escrituras duplicadas, persiste el nuevo registro en `tasas_cambio`, añade la traza en `auditoria` y revalida las rutas con `revalidatePath`.
+
 ### 6.3 Micro-Webhook de Alertas por Telegram (`lib/notificaciones/telegram.ts`)
 
 Para que el personal de gerencia y tecnología tenga visibilidad inmediata ante incidencias sin intervención humana, se integró un micro-cliente HTTP nativo de Telegram:
@@ -372,6 +383,26 @@ El sistema visual de APSys está optimizado para funcionar tanto en computadoras
   }
   ```
 - Permite desplazamiento táctil horizontal 100% fluido en móviles sin barras grises que afeen la interfaz.
+
+### 8.4 Arquitectura Visual de Tarjetas de Pedidos y Estandarización Iconográfica
+
+- **Desacoplamiento de `EstadoControl` (`app/pedidos/estado-control.tsx`):**
+  - Componente polimórfico que soporta tres modos de presentación: `modo="completo"`, `modo="solo_badge"` y `modo="solo_boton"`.
+  - Permite separar el indicador de estado informativo del disparador de mutación transaccional.
+- **Layout Ergonómico de Doble Columna (`app/pedidos/page.tsx`):**
+  - **Columna Izquierda (Identidad y Operación):** Muestra el número de orden `#` con su badge de estado a su derecha (`solo_badge`), nombre del cliente, teléfono y timestamp. Inmediatamente debajo de la fecha se sitúa el botón de avance operativo (`solo_boton`: `Iniciar producción`, `Listo para Retiro`, `Entregar pedido`) con tokens Tokyo Night (`#1f202c`, borde `#2f3654`, hover `#252b42`) y micro-iconos Lucide (`Play`, `CheckCircle2`, `PackageCheck`).
+  - **Columna Derecha (Finanzas y Utilidades):** Despliega el total general en USD, seguido de las píldoras de saldo con iconografía vectorial (`100% Pagado`, `Abonado: $xx.xx`, `Resta: $xx.xx`, `Sin abono`), y justo debajo la botonera utilitaria alineada a la derecha: `[Comanda]`, `[Aviso WhatsApp]`, `[Auditoría]` y `[Anular]`.
+- **Estandarización Iconográfica Global (Cero Emoticones):**
+  - Se prohíbe el uso de emojis Unicode en la interfaz y en las plantillas de notificación del sistema.
+  - Todas las representaciones de estado, moneda, advertencia y acciones emplean exclusivamente iconos SVG vectoriales de la librería `lucide-react`, asegurando coherencia visual, renderizado nítido en pantallas de alta densidad y compatibilidad total entre sistemas operativos y navegadores.
+
+### 8.5 Prevención de Hydration Mismatch en Conmutadores de Tema (`ThemeToggleButton`)
+
+- **Causa Raíz de Desincronización SSR vs. Cliente:** Durante el Server-Side Rendering (SSR) en Next.js, el servidor desconoce el almacenamiento local del cliente (`localStorage`) y genera el HTML asumiendo el tema por defecto (`dark`, renderizando `<Sun />` y `aria-label="Cambiar a tema claro"`). Cuando el usuario navega habiendo configurado el tema claro (`light`), el renderizado inicial en el cliente evaluaba `localStorage` de inmediato, generando un árbol DOM con `<Moon />` y provocando el error `Hydration failed because the server rendered HTML didn't match the client`.
+- **Solución Arquitectónica con `React.useSyncExternalStore`:**
+  - Se evitó el antipatrón de llamar a `setState` síncrono dentro de un `useEffect` (prohibido por las reglas de rendimiento de React 19 y Next.js 16).
+  - Se implementó `React.useSyncExternalStore(emptySubscribe, () => true, () => false)` para determinar el estado de montaje del cliente.
+  - Garantiza que durante SSR y el paso de hidratación inicial se renderice un placeholder neutro con dimensiones y clases idénticas, activando el conmutador dinámico de forma determinista y sin parpadeo de layout (*Layout Shift*).
 
 ---
 

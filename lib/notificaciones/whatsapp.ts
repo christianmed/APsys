@@ -74,29 +74,29 @@ export function generarMensajeAvisoRetiro({
   const clienteLimpio = nombreCliente.trim() || "Cliente";
 
   const lineas: string[] = [
-    `👋 *Hola ${clienteLimpio}*, le escribimos de *APSys Gráfica*.`,
+    `*Hola ${clienteLimpio}*, le escribimos de *APSys Gráfica*.`,
     "",
-    `🎉 ¡Su pedido *#${ordenStr}* está terminado y *listo para ser retirado* en nuestro taller!`,
+    `¡Su pedido *#${ordenStr}* está terminado y *listo para ser retirado* en nuestro taller!`,
     "",
   ];
 
   if (saldoUsd <= 0.009) {
-    lineas.push(`✅ *Saldo pendiente:* $0.00 USD (Pagado completamente).`);
+    lineas.push(`*Saldo pendiente:* $0.00 USD (Pagado completamente).`);
   } else {
-    lineas.push(`💵 *Total del trabajo:* $${formatearMoneda(totalUsd)} USD`);
-    lineas.push(`💳 *Saldo pendiente:* $${formatearMoneda(saldoUsd)} USD`);
+    lineas.push(`*Total del trabajo:* $${formatearMoneda(totalUsd)} USD`);
+    lineas.push(`*Saldo pendiente:* $${formatearMoneda(saldoUsd)} USD`);
 
     if (tasaBsPorUsd && tasaBsPorUsd > 0) {
       const saldoBs = Math.round(saldoUsd * tasaBsPorUsd * 100) / 100;
       lineas.push(
-        `🇻🇪 *Equivalente en Bs:* Bs. ${formatearMoneda(saldoBs)} (tasa: ${formatearMoneda(tasaBsPorUsd)} Bs/$)`,
+        `*Equivalente en Bs:* Bs. ${formatearMoneda(saldoBs)} (tasa: ${formatearMoneda(tasaBsPorUsd)} Bs/$)`,
       );
     }
   }
 
   lineas.push("");
   lineas.push(
-    "📍 Puede pasar a retirar su pedido en nuestro horario habitual. ¡Muchas gracias por confiar en nosotros!",
+    "Puede pasar a retirar su pedido en nuestro horario habitual. ¡Muchas gracias por confiar en nosotros!",
   );
 
   return lineas.join("\n");

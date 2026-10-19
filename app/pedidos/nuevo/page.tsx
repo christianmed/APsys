@@ -55,15 +55,13 @@ export default async function NuevoPedidoPage() {
           }
         />
 
-        <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <PedidoForm
-            clientes={clientes ?? []}
-            servicios={servicios ?? []}
-            tasaCambio={tasaVigente.valor_bs_por_usd}
-            tasaVigente={tasaVigente}
-            tasaProgramada={tasaProgramada}
-          />
-        </div>
+        <PedidoForm
+          clientes={clientes ?? []}
+          servicios={servicios ?? []}
+          tasaCambio={tasaVigente.valor_bs_por_usd}
+          tasaVigente={tasaVigente}
+          tasaProgramada={tasaProgramada}
+        />
       </div>
     </AuthenticatedShell>
   );

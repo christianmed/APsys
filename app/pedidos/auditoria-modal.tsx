@@ -51,7 +51,7 @@ export function AuditoriaModal({ pedidoId, numeroOrden }: Props) {
       <button
         type="button"
         onClick={handleAbrir}
-        className="inline-flex h-8 items-center justify-center gap-1 rounded-lg border border-zinc-200 bg-white px-2.5 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+        className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
         title="Ver registro de auditoría inmutable"
       >
         <History className="size-3.5 text-zinc-400" />
@@ -64,11 +64,11 @@ export function AuditoriaModal({ pedidoId, numeroOrden }: Props) {
           aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-150"
         >
-          <div className="w-full max-w-lg rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-zinc-800 dark:bg-zinc-900 space-y-4">
+          <div className="w-full max-w-lg rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-[#24283b] dark:bg-[#1a1b26] space-y-4">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-center gap-2.5 text-zinc-900 dark:text-white">
-                <span className="rounded-xl bg-zinc-100 p-2 dark:bg-zinc-800">
-                  <ShieldCheck className="size-5 text-indigo-600 dark:text-indigo-400" />
+                <span className="rounded-xl bg-zinc-100 p-2 dark:bg-[#1f202c] dark:border dark:border-[#24283b]">
+                  <ShieldCheck className="size-5 text-indigo-600 dark:text-[#7aa2f7]" />
                 </span>
                 <div>
                   <h3 className="text-base font-bold text-zinc-900 dark:text-white">

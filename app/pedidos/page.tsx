@@ -1,7 +1,10 @@
 import {
+  AlertTriangle,
+  Check,
+  CheckCircle2,
   ClipboardList,
   Clock,
-  CreditCard,
+  DollarSign,
   Package,
   Plus,
   Printer,
@@ -216,7 +219,7 @@ export default async function PedidosPage({ searchParams }: Props) {
                   key={pedido.id}
                   className="flex flex-col gap-4 p-5 transition-colors hover:bg-zinc-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-[#1f202c]/50"
                 >
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex flex-wrap items-center gap-3">
                       <span className="font-mono text-base font-bold text-zinc-900 dark:text-zinc-50">
                         #{pedido.numero_orden}
@@ -226,6 +229,7 @@ export default async function PedidosPage({ searchParams }: Props) {
                         estadoActual={pedido.estado as EstadoPedido}
                         rolUsuario={rolUsuario}
                         anulado={pedido.anulado}
+                        modo="solo_badge"
                       />
                     </div>
 
@@ -243,6 +247,17 @@ export default async function PedidosPage({ searchParams }: Props) {
                       {fecha}
                     </p>
 
+                    {/* Botón de avance operativo de estado reubicado debajo de la fecha */}
+                    <div className="pt-1">
+                      <EstadoControl
+                        pedidoId={pedido.id}
+                        estadoActual={pedido.estado as EstadoPedido}
+                        rolUsuario={rolUsuario}
+                        anulado={pedido.anulado}
+                        modo="solo_boton"
+                      />
+                    </div>
+
                     {pedido.anulado && pedido.motivo_anulacion ? (
                       <p className="inline-block rounded-md bg-rose-50 px-2.5 py-1 text-xs text-rose-700 dark:bg-rose-950/40 dark:text-rose-300">
                         <span className="font-semibold">Motivo de anulación:</span>{" "}
@@ -251,8 +266,8 @@ export default async function PedidosPage({ searchParams }: Props) {
                     ) : null}
                   </div>
 
-                  {/* Resumen financiero del pedido */}
-                  <div className="flex items-center justify-between gap-6 sm:flex-col sm:items-end">
+                  {/* Resumen financiero y botones de acción complementaria */}
+                  <div className="flex flex-col gap-2.5 sm:items-end">
                     <div className="text-left sm:text-right">
                       <span className="block text-xs font-medium text-zinc-500 dark:text-zinc-400">
                         Total
@@ -262,62 +277,68 @@ export default async function PedidosPage({ searchParams }: Props) {
                       </span>
                     </div>
 
-                    <div className="text-right">
+                    {/* Píldoras semánticas financieras sin emoticones */}
+                    <div className="flex flex-wrap items-center gap-1.5 sm:justify-end">
                       {esPagado ? (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-500/15 dark:text-green-300">
-                          Pagado
+                        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-800 dark:bg-emerald-500/15 dark:text-[#9ece6a]">
+                          <CheckCircle2 className="size-3 text-emerald-600 dark:text-[#9ece6a]" />
+                          100% Pagado
                         </span>
                       ) : tieneAbonoParcial ? (
-                        <div className="space-y-0.5">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
+                        <>
+                          <span className="inline-flex items-center gap-1 rounded-full border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-xs font-medium text-blue-800 dark:border-blue-500/30 dark:bg-blue-500/15 dark:text-[#7aa2f7]">
+                            <Check className="size-3 text-blue-600 dark:text-[#7aa2f7]" />
+                            Abonado: ${totalPagadoUsd.toFixed(2)}
+                          </span>
+                          <span className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/15 dark:text-[#e0af68]">
+                            <AlertTriangle className="size-3 text-amber-600 dark:text-[#e0af68]" />
                             Resta: ${saldoUsd.toFixed(2)}
                           </span>
-                          <p className="text-[10px] text-zinc-500 dark:text-zinc-400">
-                            Abonado: ${totalPagadoUsd.toFixed(2)}
-                          </p>
-                        </div>
+                        </>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                          <CreditCard className="size-3" /> Saldo pendiente
+                        <span className="inline-flex items-center gap-1 rounded-full border border-rose-500/30 bg-rose-500/10 px-2.5 py-0.5 text-xs font-medium text-rose-800 dark:border-rose-500/30 dark:bg-rose-500/15 dark:text-[#f7768e]">
+                          <DollarSign className="size-3 text-rose-600 dark:text-[#f7768e]" />
+                          Sin abono (Resta ${saldoUsd.toFixed(2)})
                         </span>
                       )}
+                    </div>
 
-                      <div className="mt-2 flex flex-wrap items-center gap-2">
-                        {pedido.estado === "listo" && !pedido.anulado && (
-                          <BotonAvisoWhatsApp
-                            telefono={clienteData?.telefono}
-                            nombreCliente={clienteData?.nombre ?? "Cliente"}
+                    {/* Botones de acción del pedido reubicados a la derecha */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5 sm:justify-end">
+                      <Link
+                        href={`/comanda/${pedido.id}`}
+                        className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-300 bg-white px-3 text-xs font-medium text-zinc-700 shadow-2xs transition-colors hover:border-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
+                      >
+                        <Printer className="size-3.5" />
+                        Comanda
+                      </Link>
+
+                      {pedido.estado === "listo" && !pedido.anulado && (
+                        <BotonAvisoWhatsApp
+                          telefono={clienteData?.telefono}
+                          nombreCliente={clienteData?.nombre ?? "Cliente"}
+                          numeroOrden={pedido.numero_orden}
+                          totalUsd={totalUsd}
+                          saldoUsd={saldoUsd}
+                          tasaBsPorUsd={tasaValor}
+                        />
+                      )}
+
+                      {rolUsuario === "gerencial" && (
+                        <>
+                          <AuditoriaModal
+                            pedidoId={pedido.id}
                             numeroOrden={pedido.numero_orden}
-                            totalUsd={totalUsd}
-                            saldoUsd={saldoUsd}
-                            tasaBsPorUsd={tasaValor}
                           />
-                        )}
 
-                        <Link
-                          href={`/comanda/${pedido.id}`}
-                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
-                        >
-                          <Printer className="size-3.5" />
-                          Comanda
-                        </Link>
-
-                        {rolUsuario === "gerencial" && (
-                          <>
-                            <AuditoriaModal
+                          {!pedido.anulado && (
+                            <AnularPedidoModal
                               pedidoId={pedido.id}
                               numeroOrden={pedido.numero_orden}
                             />
-
-                            {!pedido.anulado && (
-                              <AnularPedidoModal
-                                pedidoId={pedido.id}
-                                numeroOrden={pedido.numero_orden}
-                              />
-                            )}
-                          </>
-                        )}
-                      </div>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

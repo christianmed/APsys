@@ -1,4 +1,4 @@
-import { Plus, Search, Users } from "lucide-react";
+import { Plus, Users } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/shell/page-header";
 import { CursorPagination } from "@/components/ui/cursor-pagination";
 import { procesarPaginacionCursor } from "@/lib/paginacion/cursor";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
+import { ClientesBuscador } from "./clientes-buscador";
 
 // Con Cache Components, leer la sesión (cookies) impide el shell estático:
 // se bloquea la ruta con la opción documentada (`instant = false`),
@@ -13,12 +14,6 @@ import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 export const instant = false;
 
 const TAMANO_PAGINA_CLIENTES = 25;
-
-const CLASES_INPUT =
-  "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-[#7aa2f7] dark:focus-visible:ring-[#7aa2f7]/20";
-
-const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white";
 
 /**
  * Listado de clientes (RF-01): búsqueda por nombre o teléfono (formulario
@@ -95,28 +90,7 @@ export default async function ClientesPage({
           }
         />
 
-        <form method="get" className="flex items-end gap-2">
-          <div className="min-w-0 flex-1 space-y-2">
-            <label
-              htmlFor="q"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Buscar por nombre o teléfono
-            </label>
-            <input
-              id="q"
-              name="q"
-              type="search"
-              defaultValue={q}
-              placeholder="Nombre o teléfono"
-              className={CLASES_INPUT}
-            />
-          </div>
-          <button type="submit" className={CLASES_BOTON_SECUNDARIO}>
-            <Search aria-hidden className="size-4" />
-            Buscar
-          </button>
-        </form>
+        <ClientesBuscador valorInicial={q} />
 
         {lista.length > 0 ? (
           <ul className="space-y-3">

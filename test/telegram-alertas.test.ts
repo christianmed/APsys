@@ -54,7 +54,7 @@ describe("Módulo de Notificaciones por Telegram (Alertas Cron)", () => {
     const cuerpo = JSON.parse(opciones.body);
     expect(cuerpo.chat_id).toBe("987654321");
     expect(cuerpo.parse_mode).toBe("HTML");
-    expect(cuerpo.text).toContain("🚨 <b>APSys — Fallo en Sincronización BCV</b>");
+    expect(cuerpo.text).toContain("<b>APSys — Fallo en Sincronización BCV</b>");
     expect(cuerpo.text).toContain("Timeout al consultar rates.dolarvzla.com");
     expect(cuerpo.text).toContain("Error de red código 504");
   });

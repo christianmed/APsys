@@ -345,3 +345,47 @@
     - [x] Compilación Next.js (npm run build - exitosa).
     - [x] Actualizar docs/arquitectura/manual-tecnico-sistema.md con la Sección 14 (Sistema de Diseño Integral APSys).
     - [x] Actualizar docs/capacitacion/guia-rapida-usuarios.md.
+
+- [x] **Fase 35: Estandarización de Consistencia Visual y Automatización de Tasas Post-Medianoche**
+  - [x] **Paso 1: Ciclo de Tasas y Auto-adopción Post-Medianoche (lib/tasas/tasas.ts, context/tasas-context.tsx)**
+    - [x] Corregir formateo de fecha en `formatearEtiquetaSidebar` para que si `fechaSiguiente` está ausente no muestre la fecha de hoy con "Mañana", sino `hoy + 1 día` o indicador de pendiente.
+    - [x] En `context/tasas-context.tsx`: implementar la regla de corte a las 12:00 AM (hora Caracas). Si la BD tiene tasa de una jornada anterior o `bcvUsdHoy > bdUsdHoy` y ya pasaron las 12:00 AM, auto-adoptar `bcvUsdHoy` de inmediato en memoria y disparar auto-persistencia silenciosa en Supabase vía `/api/tasas/auto-sync`.
+  - [x] **Paso 2: Pedidos - Barra de Búsqueda y Reubicación de Botones de Acción (app/pedidos/page.tsx)**
+    - [x] Reubicar los botones de acción (`AuditoriaModal`, `Comanda`, `WhatsApp`, `AnularPedidoModal`) debajo de la fecha en la columna izquierda.
+    - [x] Estandarizar botones a superficie Tokyo Night `#1f202c`, bordes `#24283b`, hover `#252b42` y contraste nítido.
+    - [x] Dejar columna derecha exclusivamente para montos y píldora de estado operativo.
+  - [x] **Paso 3: Clientes - Estandarización de la Barra de Búsqueda (app/clientes/page.tsx)**
+    - [x] Reemplazar formulario con label tosco por buscador moderno integrado tipo píldora (`rounded-xl`, fondo `#16161e`, borde `#24283b`, icono lupa integrado).
+  - [x] **Paso 4: Nueva Orden - Eliminación de Contenedor Redundante y Hover en Cancelar (app/pedidos/nuevo/page.tsx, app/pedidos/pedido-form.tsx)**
+    - [x] En `app/pedidos/nuevo/page.tsx`, remover el `div` envolvente para que las 4 tarjetas de `PedidoForm` respiren sobre el lienzo `#16161e`.
+    - [x] En `app/pedidos/pedido-form.tsx`, estilizar el botón Cancelar con la variante `ghost` con hover suave sin saltos de contraste.
+  - [x] **Paso 5: Recordatorios - Homologación de KPIs, Filtros Claros y Botón WhatsApp (app/recordatorios/recordatorios-panel.tsx)**
+    - [x] Tarjetas KPI homologadas a las dimensiones y estética del Dashboard.
+    - [x] Pestañas explícitas para filtros rápidos (`[ Todas ] [ Atención ≥48h ] [ Críticas ≥72h ]`) con estado activo evidente.
+    - [x] Botón WhatsApp estandarizado a superficie `#1f202c` con micro-icono de WhatsApp oficial.
+  - [x] **Paso 6: Tasas - Homologación de Botón de Sincronización (app/tasas/bcv-sync-panel.tsx)**
+    - [x] Reemplazar botón verde plano `bg-emerald-600` por el diseño Tokyo Night `#1f202c` con acento `#9ece6a` y hover interactivo.
+  - [x] **Paso 7: Home - Fondo de la Tarjeta Guía Rápida (app/page.tsx)**
+    - [x] Actualizar clases del footer de Guía Rápida a `dark:bg-[#1a1b26]` y `dark:border-[#24283b]`, y su botón a `dark:bg-[#1f202c] dark:border-[#24283b]`.
+- [x] **Fase 36: Reestructuración de Tarjetas de Pedidos y Erradicación Total de Emoticones en Favor de Lucide Icons**
+  - [x] **Paso 1: Reorganización del layout de tarjetas en `/pedidos` (`app/pedidos/page.tsx`, `app/pedidos/estado-control.tsx`)**
+    - [x] Desacoplar `EstadoControl` con modos `solo_badge` (al lado de `#orden`) y `solo_boton` (debajo de la fecha).
+    - [x] Ubicar el botón de acción de avance de estado (`Iniciar producción`, `Listo para Retiro`, `Entregar pedido`) en la columna izquierda debajo de la fecha.
+    - [x] Ubicar los botones utilitarios (`Comanda`, `WhatsApp`, `Auditoría`, `Anulación`) en la columna derecha debajo de las cifras financieras.
+    - [x] Diseñar e implementar píldoras de estado financiero semánticas (`100% Pagado`, `Abonado: $xx.xx`, `Resta: $xx.xx`, `Sin abono`) en la paleta Tokyo Night con iconos `CheckCircle2`, `Check`, `AlertTriangle` y `DollarSign`.
+  - [x] **Paso 2: Erradicación integral de emoticones / emojis en todo el sistema**
+    - [x] Reemplazar emojis en `app/recordatorios/recordatorios-panel.tsx` por componentes `CheckCircle2` y `DollarSign` de `lucide-react`.
+    - [x] Reemplazar emojis en `app/taller/camara-escaner-modal.tsx` por componente `Info` de `lucide-react`.
+    - [x] Reemplazar emojis de moneda en `app/taller/cobrar-entregar-modal.tsx` por componentes `DollarSign` y `Coins` de `lucide-react`.
+    - [x] Limpiar plantillas de texto de WhatsApp, recordatorios y alertas en `lib/notificaciones/` de emojis para un tono profesional homogéneo.
+    - [x] Escaneo de verificación de 0 caracteres emoji en `app/`, `components/` y `lib/`.
+  - [x] **Paso 4: Contraste de botones en Modo Claro y resolución de Hydration Mismatch**
+    - [x] Botones de avance operativo en `/pedidos` estilizados con alto contraste sólido (`bg-zinc-900 text-white hover:bg-zinc-800`) en modo claro y Tokyo Night (`dark:bg-[#1f202c] dark:border-[#2f3654]`) en modo oscuro, homólogos a Taller.
+    - [x] Botón utilitario `Comanda` optimizado con `border-zinc-300` y `hover:border-zinc-400 hover:bg-zinc-100` en modo claro para feedback visual palpable.
+  - [x] **Paso 5: Verificación DoD y pruebas automatizadas**
+    - [x] Suite completa de 300 tests en Vitest ejecutada y 100% aprobada.
+    - [x] Chequeo estricto de tipos `tsc --noEmit` con 0 errores.
+    - [x] Linter ESLint con 0 errores y 0 advertencias.
+    - [x] Inspección visual con Browser Subagent en `http://localhost:3000/pedidos` tanto en Modo Oscuro como en Modo Claro confirmando hover palpable y cero errores de consola.
+
+

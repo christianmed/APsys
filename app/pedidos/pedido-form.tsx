@@ -57,7 +57,7 @@ const CLASES_BOTON =
   "inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-6 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42]";
 
 const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-98 disabled:opacity-50 dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-200 dark:hover:bg-[#1f202c]";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-98 disabled:opacity-50 dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-300 dark:hover:border-[#7aa2f7]/50 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]";
 
 /**
  * Formulario interactivo de registro de pedidos y cobranza inicial (RF-01 / RF-02 / T-008 / T-009).

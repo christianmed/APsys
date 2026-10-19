@@ -47,7 +47,7 @@ export async function enviarAlertaTelegram({
   }).format(new Date());
 
   const textoHtml = [
-    `🚨 <b>APSys — ${sanitizarHtml(titulo)}</b>`,
+    `<b>APSys — ${sanitizarHtml(titulo)}</b>`,
     `<i>Fecha/Hora: ${fechaHora} (Caracas)</i>`,
     "",
     sanitizarHtml(mensaje),

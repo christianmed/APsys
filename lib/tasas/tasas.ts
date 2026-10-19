@@ -381,7 +381,13 @@ export function formatearEtiquetaSidebar({
   const fechaFormateada = formatearFechaCorta(fechaVigencia);
 
   if (!fechaVigencia) {
-    return esTasaActiva ? `Hoy, ${fechaFormateada}` : `Mañana, ${fechaFormateada}`;
+    if (esTasaActiva) {
+      return `Hoy, ${fechaFormateada}`;
+    }
+    const manana = new Date(fechaReferencia);
+    manana.setDate(manana.getDate() + 1);
+    const mananaFormateada = formatearFechaCorta(obtenerFechaYmdCaracas(manana));
+    return `Mañana, ${mananaFormateada}`;
   }
 
   const diff = calcularDiferenciaDiasCaracas(fechaVigencia, fechaReferencia);
@@ -402,7 +408,11 @@ export function formatearEtiquetaSidebar({
     return `${nombreDia}, ${fechaFormateada}`;
   }
 
-  return `Siguiente, ${fechaFormateada}`;
+  // Si la fecha proporcionada no es estrictamente futura (diff <= 0), calcular el día siguiente
+  const manana = new Date(fechaReferencia);
+  manana.setDate(manana.getDate() + 1);
+  const mananaFormateada = formatearFechaCorta(obtenerFechaYmdCaracas(manana));
+  return `Mañana, ${mananaFormateada}`;
 }
 
 

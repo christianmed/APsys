@@ -440,17 +440,17 @@ export default async function Home() {
         {/* =========================================================================
             5. PIE DE PÁGINA: GUÍA RÁPIDA DE USO
             ========================================================================= */}
-        <footer className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <footer className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex size-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-300">
+              <div className="flex size-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-[#7aa2f7]">
                 <BookOpen className="size-4" />
               </div>
               <div>
                 <h4 className="text-xs font-bold text-zinc-900 dark:text-zinc-100">
                   Guía Rápida de Uso del Sistema
                 </h4>
-                <p className="text-[11px] text-zinc-500">
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
                   Instrucciones paso a paso para Mostrador, Operario de Taller y Gerencia.
                 </p>
               </div>
@@ -458,7 +458,7 @@ export default async function Home() {
 
             <Link
               href="/ayuda"
-              className="inline-flex h-8 items-center justify-center rounded-lg bg-zinc-100 px-3 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200"
+              className="inline-flex h-8 items-center justify-center rounded-lg border border-transparent bg-zinc-100 px-3 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               Consultar Guía
             </Link>
