@@ -163,3 +163,33 @@ export function validarCambioEstado({
 
   return { valido: true, motivoLimpio: null };
 }
+
+export type ContadoresProduccion = {
+  porIniciar: number;
+  enProduccion: number;
+  listos: number;
+  totalActivos: number;
+};
+
+/**
+ * Calcula con precisión los contadores del flujo de producción en taller,
+ * garantizando coherencia 1:1 entre el tablero kanban y el dashboard de inicio (Fase 32).
+ */
+export function calcularContadoresProduccion(
+  pedidos: Array<{ estado?: string | null; anulado?: boolean | null }>,
+): ContadoresProduccion {
+  const activosNoAnulados = (pedidos ?? []).filter((p) => !p.anulado);
+
+  const porIniciar = activosNoAnulados.filter((p) => p.estado === "recibido").length;
+  const enProduccion = activosNoAnulados.filter((p) => p.estado === "en_produccion").length;
+  const listos = activosNoAnulados.filter((p) => p.estado === "listo").length;
+  const totalActivos = porIniciar + enProduccion + listos;
+
+  return {
+    porIniciar,
+    enProduccion,
+    listos,
+    totalActivos,
+  };
+}
+

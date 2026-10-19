@@ -23,6 +23,7 @@ import {
 } from "@/lib/dashboard/ingresos";
 
 import { PageHeader } from "@/components/shell/page-header";
+import { formatearFechaHoraCaracas } from "@/lib/fechas";
 
 type Props = {
   pagos: PagoMétrica[];
@@ -33,13 +34,7 @@ type Props = {
 
 function formatoFecha(iso: string): string {
   try {
-    return new Date(iso).toLocaleDateString("es-VE", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    return formatearFechaHoraCaracas(iso);
   } catch {
     return "";
   }

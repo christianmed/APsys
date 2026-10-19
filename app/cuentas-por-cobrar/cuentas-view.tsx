@@ -23,6 +23,7 @@ import {
   type TramoAntiguedad,
 } from "@/lib/cobranzas/cuentas-por-cobrar";
 import { PageHeader } from "@/components/shell/page-header";
+import { formatearFechaHoraCaracas } from "@/lib/fechas";
 import {
   CustomSelect,
   type CustomSelectOption,
@@ -78,11 +79,7 @@ const NOMBRES_TRAMOS: Record<
 
 function formatoFechaCorta(iso: string): string {
   try {
-    return new Date(iso).toLocaleDateString("es-VE", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    return formatearFechaHoraCaracas(iso, false);
   } catch {
     return "";
   }

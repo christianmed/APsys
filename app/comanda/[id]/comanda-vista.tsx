@@ -3,6 +3,7 @@
 import { ArrowLeft, CheckCircle2, FileText, Printer, Receipt } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { formatearFechaHoraCaracas } from "@/lib/fechas";
 
 export type FormatoImpresion = "a4" | "ticket";
 
@@ -46,16 +47,7 @@ type Props = {
 export function ComandaVista({ pedido, barcodeSvg, qrSvg }: Props) {
   const [formato, setFormato] = useState<FormatoImpresion>("a4");
 
-  const fechaFormateada = new Date(pedido.creado_en).toLocaleDateString(
-    "es-VE",
-    {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    },
-  );
+  const fechaFormateada = formatearFechaHoraCaracas(pedido.creado_en);
 
   const totalPagadoUsd = pedido.pagos.reduce((acc, p) => {
     if (p.moneda === "USD") return acc + Number(p.monto);

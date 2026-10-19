@@ -6,7 +6,22 @@
 
 ---
 
-## 1. Perfil Mostrador / Recepción (Registro y Cobranza)
+## 1. Pantalla Principal y Perfil Mostrador (Recepción y Cobranza)
+
+### Banner de Bienvenida y Fecha en Vivo (Caracas)
+- En la parte superior de la página principal (`/`), el sistema muestra la **fecha de hoy en vivo** en español venezolano (`es-VE`) vinculada estrictamente al huso horario de Venezuela (`America/Caracas`, UTC-4).
+- **Reactiva a Medianoche:** El reloj de fecha cambia automáticamente a las 12:00 a. m. sin necesidad de recargar la página. Es totalmente independiente de la ubicación del servidor en la nube y de la tasa BCV que se encuentre activa o programada.
+
+### Estado de Producción en Vivo (Sincronización 1:1 con Taller)
+- Las tarjetas de métricas en la pantalla principal reflejan en tiempo real el estado exacto del taller:
+  - **Por Iniciar:** Órdenes recibidas que esperan inicio de trabajo (`recibido`). Coincide con la primera columna del taller.
+  - **En Producción:** Órdenes en máquinas de impresión, ploteo o mesa de corte (`en_produccion`). Coincide con la segunda columna del taller.
+  - **Listos para Retiro:** Órdenes terminadas y empaquetadas que esperan ser retiradas por el cliente (`listo`).
+  - **Total de Trabajos Activos:** Suma exacta de los tres estados en proceso.
+
+---
+
+## 2. Perfil Mostrador / Recepción (Registro y Cobranza)
 
 ### Registrar una Nueva Orden de Trabajo (< 2 minutos)
 
@@ -38,30 +53,36 @@ Para garantizar que el sistema cargue de manera instantánea sin congelar el nav
 
 ---
 
-## 2. Perfil Taller / Producción (Impresión y Acabados)
+## 3. Perfil Taller / Producción (Impresión y Acabados)
 
 ### Operar el Tablero Kanban (`/taller`)
 
 El tablero de taller está diseñado para pantallas táctiles y uso con una sola mano:
 
-1. **Columna "Por Imprimir / Registrado":**
+1. **Columna "Por Iniciar":**
    - Muestra las órdenes entrantes ordenadas por urgencia.
-   - Escanea el código de barras o pulsa **"Comenzar Impresión"** cuando cargues el rollo/material.
-2. **Columna "En Impresión / Taller":**
+   - Escanea el código de barras o pulsa **"Iniciar Producción"** cuando cargues el rollo/material.
+2. **Columna "En Producción":**
    - Indica trabajos que están en máquina o en mesa de acabado.
    - Al finalizar corte, laminado y empaque, pulsa **"Marcar Listo"**.
-3. **Notificación al Cliente:**
-   - Al pasar a "Listo", aparece el botón verde **"WhatsApp"**. Pulsa para abrir el chat con el mensaje preformateado de retiro y saldo pendiente.
+3. **Notificación al Cliente (WhatsApp Refinado):**
+   - Al pasar a "Listo", aparece el botón sobrio en tono esmeralda **"WhatsApp"**. Pulsa para abrir el chat con el mensaje preformateado de retiro y saldo pendiente, sin colores saturados que distraigan.
 4. **Columna "Listo para Retiro" y Regla Estricta de Entrega con Saldo Cero:**
    - **Regla Estricta del Sistema:** Un pedido NO puede entregarse si tiene saldo pendiente (`saldo > 0`). El sistema bloquea de raíz cualquier intento de entrega con deuda para evitar fugas de caja.
    - **Pedidos con Saldo Pendiente:** El botón de acción se muestra como `[ 💵 Cobrar Saldo y Entregar ]`. Al presionarlo, se abre un modal rápido (≤ 3 segundos) prellenado con el saldo exacto en USD y su equivalente en Bs a la tasa del pedido. Permite elegir la moneda, registrar el comprobante/referencia (Efectivo, Pago Móvil, etc.) y liquidar la deuda registrando la entrega de inmediato.
-   - **Pedidos 100% Saldados:** Muestra el botón verde directo `[ 📦 1 TOQUE: Entregar al Cliente ]`.
-5. **Historial de Pedidos en Ficha de Cliente (`/clientes/[id]`):**
+   - **Pedidos 100% Saldados:** Muestra el botón directo `[ 📦 Entregar al Cliente ]`.
+5. **Conmutador Visual de Aspecto en Taller (Selector de 3 Estilos):**
+   - En la cabecera de `/taller` se ubica una barra conmutadora que permite evaluar tres estilos visuales profesionales para las tarjetas y botones:
+     - **Estilo A (Minimalista):** Look sobrio y elegante estilo Linear / Vercel con botones oscuros y micro-bordes.
+     - **Estilo B (Pastel Tonal):** Look suave estilo Apple HIG con fondos tintados claros y alto contraste de lectura.
+     - **Estilo C (Jerárquico):** Look progresivo estilo Stripe, con botones ligeros en preparación y botones sólidos en cobro y entrega.
+   - La opción seleccionada se guarda en el navegador del usuario para no tener que reconfigurarla.
+6. **Historial de Pedidos en Ficha de Cliente (`/clientes/[id]`):**
    - En pedidos ya entregados, el sistema **nunca muestra el botón de cobro por WhatsApp**, dado que la orden se encuentra completamente saldada al momento del despacho físico.
 
 ---
 
-## 3. Gestión del Catálogo de Servicios (`/servicios`) — Perfil Gerencial
+## 4. Gestión del Catálogo de Servicios (`/servicios`) — Perfil Gerencial
 
 ### Prioridad en Catálogo y Disponibilidad
 - **Prioridad en Catálogo (Posición):** Define el orden numérico en el cual se lista cada servicio en los selectores al crear pedidos (`/pedidos/nuevo`). Los números más bajos (1, 2, 3...) aparecen primero, permitiendo priorizar los productos más vendidos.
@@ -72,7 +93,7 @@ El tablero de taller está diseñado para pantallas táctiles y uso con una sola
 
 ---
 
-## 4. Gestión y Dinámica de Tasas de Cambio (`/tasas`) — Operador & Gerencia
+## 5. Gestión y Dinámica de Tasas de Cambio (`/tasas`) — Operador & Gerencia
 
 ### Ciclo Diario y Doble Vigencia del BCV
 
@@ -109,7 +130,7 @@ Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un es
 
 ---
 
-## 5. Perfil Gerencial / Administración (Finanzas y Control)
+## 6. Perfil Gerencial / Administración (Finanzas y Control)
 
 ### Widget de Tasas Referenciales BCV (Barra Lateral)
 

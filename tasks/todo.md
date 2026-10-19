@@ -212,5 +212,44 @@
   - [x] Paso 8: Verificación integral DoD (`npm test` 273/273 tests verde, `npm run typecheck`, `npm run lint`, `npm run build`).
   - [x] Paso 9: Sincronización mandatoria de manuales (`docs/arquitectura/manual-tecnico-sistema.md` y `docs/capacitacion/guia-rapida-usuarios.md`).
 
+- [x] **Fase 32: Arquitectura Centralizada de Fechas Caracas, Consistencia Total de Métricas y Conmutador de Estilos de Taller**
+  - [x] **Paso 1 (TDD - Rojo: Fechas y Límites de Tiempo):**
+    - [x] Crear `test/fechas-caracas.test.ts` verificando:
+      - Formateo de fecha calendario y fecha-hora con zona `America/Caracas` en español venezolano (`es-VE`).
+      - Inmunidad a desfases por servidor UTC a horas nocturnas (8:00 p. m. - 11:59 p. m.).
+      - Cálculo exacto de límites de inicio/fin de día, semana y mes en huso de Caracas (`obtenerInicioFinDiaCaracas`, etc.).
+      - Generación de rangos para dashboards delegada a `lib/fechas.ts`.
+    - [x] Crear `test/fecha-en-vivo-badge.test.tsx` verificando renderizado del badge y lógica de reactividad.
+  - [x] **Paso 2 (TDD - Rojo: Consistencia de Contadores de Producción):**
+    - [x] Crear `test/home-contadores-produccion.test.ts` verificando:
+      - Contabilización estricta por estados reales (`recibido`, `en_produccion`, `listo`).
+      - Cero pedidos contabilizados bajo estados obsoletos (`registrado`, `imprimiendo`).
+      - Total activo igual a la suma canónica de taller (`recibido + en_produccion + listo`), excluyendo `entregado` y `cancelado`.
+  - [x] **Paso 3 (TDD - Verde: Módulo Unificado `lib/fechas.ts` y Badge Reactivo):**
+    - [x] Implementar `lib/fechas.ts` como única fuente de verdad temporal para la aplicación.
+    - [x] Refactorizar `lib/dashboard/ingresos.ts` para que `obtenerRangoFechasPreset` utilice directamente `lib/fechas.ts`.
+    - [x] Implementar `components/shell/fecha-en-vivo-badge.tsx` con fecha local real de Caracas y temporizador de medianoche.
+    - [x] Integrar `FechaEnVivoBadge` en el banner de bienvenida de `app/page.tsx`.
+    - [x] Estandarizar formateo de fechas con `formatearFechaCaracas` en `app/pedidos/page.tsx`, `app/comanda/[id]/comanda-vista.tsx`, `app/clientes/[id]/historial-cliente-view.tsx` y `app/dashboard/dashboard-view.tsx`.
+  - [x] **Paso 4 (TDD - Verde: Sincronización de Contadores en Home):**
+    - [x] Actualizar consultas y filtros en `app/page.tsx` para usar `recibido`, `en_produccion` y `listo`.
+    - [x] Actualizar etiquetas de tarjetas KPI: *"Por Iniciar"* (en lugar de "Por Imprimir") y *"En Producción"* (en lugar de "En Impresión").
+    - [x] Verificar consistencia 1:1 entre `/` y `/taller`.
+  - [x] **Paso 5 (UX/UI: Conmutador Visual de 3 Estilos en Taller):**
+    - [x] Diseñar los 3 estilos sobrios, minimalistas y elegantes en `app/taller/taller-tablero.tsx` y `app/pedidos/boton-aviso-whatsapp.tsx`:
+      - **Estilo A (Linear/Vercel):** Botón principal negro/zinc oscuro con micro-icono de acento; WhatsApp en outline menta; botón de cobro con badge ámbar integrado.
+      - **Estilo B (Apple HIG):** Fondos translúcidos pastel suaves (`bg-sky-50`, `bg-amber-50`, `bg-emerald-50`) con bordes definidos y texto oscuro de alto contraste.
+      - **Estilo C (Stripe):** Jerarquía progresiva con botón neutro/outline en recepción y producción, y botón sólido de certeza en cobro y entrega.
+    - [x] Implementar conmutador visual flotante/toolbar en la cabecera del taller (`[Estilo A] [Estilo B] [Estilo C]`) con persistencia en `localStorage` o URL query param para evaluación en vivo por el usuario.
+  - [x] **Paso 6 (Compuerta de Calidad DoD):**
+    - [x] Ejecutar `npx vitest run` y garantizar que todos los tests pasen al 100%.
+    - [x] Ejecutar `npm run typecheck` (0 errores de TypeScript).
+    - [x] Ejecutar `npm run lint` (0 advertencias de ESLint).
+    - [x] Ejecutar `npm run build` (compilación exitosa en Next.js).
+  - [x] **Paso 7 (Sincronización Mandatoria de Documentación):**
+    - [x] Actualizar `docs/arquitectura/manual-tecnico-sistema.md` con el módulo `lib/fechas.ts`, las métricas de estado y la arquitectura de estilos de taller.
+    - [x] Actualizar `docs/capacitacion/guia-rapida-usuarios.md` reflejando las nuevas etiquetas de producción y el comportamiento de la fecha en vivo.
+
+
 
 

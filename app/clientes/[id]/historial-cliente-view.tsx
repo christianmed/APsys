@@ -17,6 +17,7 @@ import {
   type MetricasCliente,
 } from "@/lib/clientes/historial";
 import { generarMensajeCobranza } from "@/lib/cobranzas/cuentas-por-cobrar";
+import { formatearFechaHoraCaracas } from "@/lib/fechas";
 
 type Props = {
   clienteId: string;
@@ -57,11 +58,7 @@ const BADGES_RECURRENCIA: Record<
 
 function formatoFecha(iso: string): string {
   try {
-    return new Date(iso).toLocaleDateString("es-VE", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    return formatearFechaHoraCaracas(iso, false);
   } catch {
     return "";
   }

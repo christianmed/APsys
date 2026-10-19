@@ -21,6 +21,7 @@ import { AnularPedidoModal } from "./anular-pedido-modal";
 import { AuditoriaModal } from "./auditoria-modal";
 import { CursorPagination } from "@/components/ui/cursor-pagination";
 import { procesarPaginacionCursor } from "@/lib/paginacion/cursor";
+import { formatearFechaHoraCaracas } from "@/lib/fechas";
 
 export const instant = false;
 
@@ -183,16 +184,7 @@ export default async function PedidosPage({ searchParams }: Props) {
         ) : (
           <div className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
             {lista.map((pedido) => {
-              const fecha = new Date(pedido.creado_en).toLocaleDateString(
-                "es-VE",
-                {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                },
-              );
+              const fecha = formatearFechaHoraCaracas(pedido.creado_en);
 
               const clienteData = Array.isArray(pedido.clientes)
                 ? pedido.clientes[0]

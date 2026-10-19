@@ -8,6 +8,7 @@ import {
   ExternalLink,
   Flame,
   Package,
+  Palette,
   RotateCcw,
   Search,
   Sparkles,
@@ -18,6 +19,8 @@ import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
+
+export type EstiloVisualTaller = "A" | "B" | "C";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
 import { PageHeader } from "@/components/shell/page-header";
@@ -62,6 +65,21 @@ function formatoTiempo(fechaIso: string): string {
 }
 
 export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
+  const [estiloVisual, setEstiloVisual] = useState<EstiloVisualTaller>(() => {
+    if (typeof window !== "undefined") {
+      const guardado = localStorage.getItem("apsys_taller_estilo");
+      if (guardado === "A" || guardado === "B" || guardado === "C") return guardado;
+    }
+    return "A"; // Estilo predeterminado: Opción A (Minimalista Monocromático)
+  });
+
+  const cambiarEstilo = (nuevo: EstiloVisualTaller) => {
+    setEstiloVisual(nuevo);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("apsys_taller_estilo", nuevo);
+    }
+  };
+
   const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
   const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
@@ -164,6 +182,113 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
   const conteoProduccion = pedidos.filter((p) => p.estado === "en_produccion").length;
   const conteoListo = pedidos.filter((p) => p.estado === "listo").length;
   const conteoActivos = conteoRecibido + conteoProduccion + conteoListo;
+
+  // Clases dinámicas según el aspecto visual conmutable (Fase 32)
+  const getTabClass = (tab: TabEstado) => {
+    const isActivo = tabActual === tab;
+    if (!isActivo) {
+      return "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300";
+    }
+
+    if (estiloVisual === "B") {
+      switch (tab) {
+        case "recibido":
+          return "border-sky-300 bg-sky-100 text-sky-950 shadow-xs dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-200";
+        case "en_produccion":
+          return "border-amber-300 bg-amber-100 text-amber-950 shadow-xs dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-200";
+        case "listo":
+          return "border-emerald-300 bg-emerald-100 text-emerald-950 shadow-xs dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200";
+        default:
+          return "border-zinc-900 bg-zinc-900 text-white shadow-xs dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900";
+      }
+    }
+
+    // Estilo A y C: Monocromático sólido sobrio
+    return "border-zinc-900 bg-zinc-900 text-white shadow-xs dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900";
+  };
+
+  const getBtnRecibido = () => {
+    if (estiloVisual === "B") {
+      return {
+        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 text-sm font-semibold text-sky-900 shadow-xs transition hover:bg-sky-100 active:scale-98 disabled:opacity-50 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300",
+        icon: "size-4 text-sky-600 dark:text-sky-400",
+      };
+    }
+    if (estiloVisual === "C") {
+      return {
+        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-700 shadow-xs transition hover:border-zinc-300 hover:bg-zinc-50 active:scale-98 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
+        icon: "size-4 text-zinc-400",
+      };
+    }
+    // Estilo A: Minimalista Monocromático (Linear / Vercel)
+    return {
+      btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+      icon: "size-4 text-sky-400 dark:text-sky-600",
+    };
+  };
+
+  const getBtnProduccion = () => {
+    if (estiloVisual === "B") {
+      return {
+        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 text-sm font-semibold text-amber-950 shadow-xs transition hover:bg-amber-100 active:scale-98 disabled:opacity-50 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200",
+        icon: "size-4 text-amber-600 dark:text-amber-400",
+      };
+    }
+    if (estiloVisual === "C") {
+      return {
+        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-amber-300/80 bg-amber-50/50 px-4 text-sm font-semibold text-amber-900 shadow-xs transition hover:bg-amber-100 active:scale-98 disabled:opacity-50 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200",
+        icon: "size-4 text-amber-600 dark:text-amber-400",
+      };
+    }
+    // Estilo A: Minimalista Monocromático (Linear / Vercel)
+    return {
+      btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+      icon: "size-4 text-amber-400 dark:text-amber-600",
+    };
+  };
+
+  const getBtnCobrar = () => {
+    if (estiloVisual === "B") {
+      return {
+        btn: "flex h-13 w-full flex-col items-center justify-center rounded-xl border border-amber-300 bg-amber-100/70 px-4 text-amber-950 shadow-xs transition hover:bg-amber-200/80 active:scale-98 disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-200",
+        icon: "size-4 text-amber-700 dark:text-amber-400",
+        subtext: "text-[11px] font-semibold text-amber-800 dark:text-amber-300",
+      };
+    }
+    if (estiloVisual === "C") {
+      return {
+        btn: "flex h-13 w-full flex-col items-center justify-center rounded-xl bg-amber-600 px-4 text-white shadow-xs transition hover:bg-amber-500 active:scale-98 disabled:opacity-50",
+        icon: "size-4 text-amber-100",
+        subtext: "text-[11px] font-medium text-amber-100",
+      };
+    }
+    // Estilo A: Minimalista Monocromático (Linear / Vercel)
+    return {
+      btn: "flex h-13 w-full flex-col items-center justify-center rounded-xl bg-zinc-900 px-4 text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+      icon: "size-4 text-amber-400 dark:text-amber-600",
+      subtext: "text-[11px] font-medium text-amber-300 dark:text-amber-600",
+    };
+  };
+
+  const getBtnEntregar = () => {
+    if (estiloVisual === "B") {
+      return {
+        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-emerald-100/70 px-4 text-sm font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-200 active:scale-98 disabled:opacity-50 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200",
+        icon: "size-4 text-emerald-700 dark:text-emerald-400",
+      };
+    }
+    if (estiloVisual === "C") {
+      return {
+        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50",
+        icon: "size-4 text-emerald-200",
+      };
+    }
+    // Estilo A: Minimalista Monocromático (Linear / Vercel)
+    return {
+      btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+      icon: "size-4 text-emerald-400 dark:text-emerald-600",
+    };
+  };
 
   // Filtrado de pedidos según la pestaña y la búsqueda
   const busquedaObj = sanearTerminoBusquedaOrden(busqueda);
@@ -307,16 +432,60 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         </div>
       )}
 
+      {/* Barra interactiva de prueba visual de estilos (Fase 32) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-3 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex items-center gap-2 text-xs">
+          <Palette className="size-4 text-amber-500 dark:text-amber-400" />
+          <span className="font-bold text-zinc-800 dark:text-zinc-200">
+            Aspecto Visual de Botones:
+          </span>
+          <span className="hidden sm:inline text-zinc-400 text-[11px]">
+            (Conmuta en vivo para comparar los 3 estilos propuestos)
+          </span>
+        </div>
+        <div className="inline-flex rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800">
+          <button
+            type="button"
+            onClick={() => cambiarEstilo("A")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              estiloVisual === "A"
+                ? "bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-900"
+                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            }`}
+          >
+            Estilo A: Minimalista (Linear)
+          </button>
+          <button
+            type="button"
+            onClick={() => cambiarEstilo("B")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              estiloVisual === "B"
+                ? "bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-900"
+                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            }`}
+          >
+            Estilo B: Pastel Tonal (Apple)
+          </button>
+          <button
+            type="button"
+            onClick={() => cambiarEstilo("C")}
+            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              estiloVisual === "C"
+                ? "bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-900"
+                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            }`}
+          >
+            Estilo C: Jerárquico (Stripe)
+          </button>
+        </div>
+      </div>
+
       {/* Selector de pestañas táctiles grandes (min 48px de altura táctil) */}
       <nav aria-label="Filtro de estados de taller" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         <button
           type="button"
           onClick={() => setTabActual("activos")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${
-            tabActual === "activos"
-              ? "border-zinc-900 bg-zinc-900 text-white shadow-sm dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
-              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-          }`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("activos")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Activos en Taller</span>
           <span className="text-lg font-bold leading-tight">{conteoActivos}</span>
@@ -325,11 +494,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("recibido")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${
-            tabActual === "recibido"
-              ? "border-sky-600 bg-sky-600 text-white shadow-sm"
-              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-          }`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("recibido")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Por Iniciar</span>
           <span className="text-lg font-bold leading-tight">{conteoRecibido}</span>
@@ -338,11 +503,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("en_produccion")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${
-            tabActual === "en_produccion"
-              ? "border-amber-600 bg-amber-600 text-white shadow-sm"
-              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-          }`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("en_produccion")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">En Producción</span>
           <span className="text-lg font-bold leading-tight">{conteoProduccion}</span>
@@ -351,11 +512,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("listo")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${
-            tabActual === "listo"
-              ? "border-emerald-600 bg-emerald-600 text-white shadow-sm"
-              : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
-          }`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("listo")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Listos para Retiro</span>
           <span className="text-lg font-bold leading-tight">{conteoListo}</span>
@@ -481,42 +638,48 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
 
                 {/* BOTÓN DE ACCIÓN TÁCTIL PRINCIPAL (≤ 2 toques: 1 toque directo para avanzar) */}
                 <div className="mt-4 space-y-2 pt-3 border-t border-zinc-100 dark:border-zinc-800">
-                  {pedido.estado === "recibido" && (
-                    <button
-                      type="button"
-                      disabled={cargandoEste}
-                      onClick={() => handleAvanzar(pedido)}
-                      data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                      className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 text-base font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-98 disabled:opacity-50"
-                    >
-                      <Sparkles className="size-5" />
-                      {cargandoEste ? "Iniciando..." : "1 TOQUE: Iniciar Producción"}
-                    </button>
-                  )}
-
-                  {pedido.estado === "en_produccion" && (
-                    <div className="space-y-1.5">
+                  {pedido.estado === "recibido" && (() => {
+                    const cfg = getBtnRecibido();
+                    return (
                       <button
                         type="button"
                         disabled={cargandoEste}
                         onClick={() => handleAvanzar(pedido)}
                         data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                        className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 text-base font-bold text-white shadow-sm transition hover:bg-amber-500 active:scale-98 disabled:opacity-50"
+                        className={cfg.btn}
                       >
-                        <CheckCircle2 className="size-5" />
-                        {cargandoEste ? "Guardando..." : "1 TOQUE: ¡Listo para Retiro!"}
+                        <Sparkles className={cfg.icon} />
+                        <span>{cargandoEste ? "Iniciando..." : "Iniciar Producción"}</span>
                       </button>
-                      <button
-                        type="button"
-                        disabled={cargandoEste}
-                        onClick={() => handleRetroceder(pedido, "recibido")}
-                        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-400"
-                      >
-                        <RotateCcw className="size-3" />
-                        Revertir a recibido
-                      </button>
-                    </div>
-                  )}
+                    );
+                  })()}
+
+                  {pedido.estado === "en_produccion" && (() => {
+                    const cfg = getBtnProduccion();
+                    return (
+                      <div className="space-y-1.5">
+                        <button
+                          type="button"
+                          disabled={cargandoEste}
+                          onClick={() => handleAvanzar(pedido)}
+                          data-testid={`btn-avanzar-${pedido.numero_orden}`}
+                          className={cfg.btn}
+                        >
+                          <CheckCircle2 className={cfg.icon} />
+                          <span>{cargandoEste ? "Guardando..." : "Listo para Retiro"}</span>
+                        </button>
+                        <button
+                          type="button"
+                          disabled={cargandoEste}
+                          onClick={() => handleRetroceder(pedido, "recibido")}
+                          className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-400"
+                        >
+                          <RotateCcw className="size-3" />
+                          Revertir a recibido
+                        </button>
+                      </div>
+                    );
+                  })()}
 
                   {pedido.estado === "listo" && (
                     <div className="space-y-2">
@@ -528,40 +691,47 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                         saldoUsd={pedido.saldo_usd ?? 0}
                         tasaBsPorUsd={pedido.tasa_bs}
                         variante="full"
+                        estiloVisual={estiloVisual}
                       />
-                      {(pedido.saldo_usd ?? 0) > 0 ? (
-                        <button
-                          type="button"
-                          disabled={cargandoEste}
-                          onClick={() => setPedidoParaCobrar(pedido)}
-                          data-testid={`btn-cobrar-entregar-${pedido.numero_orden}`}
-                          className="flex h-14 w-full flex-col items-center justify-center rounded-xl bg-amber-600 px-4 text-white shadow-sm transition hover:bg-amber-500 active:scale-98 disabled:opacity-50"
-                        >
-                          <div className="flex items-center gap-1.5 text-sm font-black">
-                            <Banknote className="size-5" />
-                            <span>Cobrar Saldo y Entregar</span>
-                          </div>
-                          <span className="text-xs font-semibold text-amber-100">
-                            Resta por cobrar: {formatearMonedaUSD(pedido.saldo_usd ?? 0)}
-                          </span>
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          disabled={cargandoEste}
-                          onClick={() => handleAvanzar(pedido)}
-                          data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                          className="flex h-14 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 text-base font-bold text-white shadow-sm transition hover:bg-emerald-500 active:scale-98 disabled:opacity-50"
-                        >
-                          <Package className="size-5" />
-                          {cargandoEste ? "Guardando..." : "1 TOQUE: Entregar al Cliente"}
-                        </button>
-                      )}
+                      {(pedido.saldo_usd ?? 0) > 0 ? (() => {
+                        const cfg = getBtnCobrar();
+                        return (
+                          <button
+                            type="button"
+                            disabled={cargandoEste}
+                            onClick={() => setPedidoParaCobrar(pedido)}
+                            data-testid={`btn-cobrar-entregar-${pedido.numero_orden}`}
+                            className={cfg.btn}
+                          >
+                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold">
+                              <Banknote className={cfg.icon} />
+                              <span>Cobrar Saldo y Entregar</span>
+                            </div>
+                            <span className={cfg.subtext}>
+                              Resta por cobrar: {formatearMonedaUSD(pedido.saldo_usd ?? 0)}
+                            </span>
+                          </button>
+                        );
+                      })() : (() => {
+                        const cfg = getBtnEntregar();
+                        return (
+                          <button
+                            type="button"
+                            disabled={cargandoEste}
+                            onClick={() => handleAvanzar(pedido)}
+                            data-testid={`btn-avanzar-${pedido.numero_orden}`}
+                            className={cfg.btn}
+                          >
+                            <Package className={cfg.icon} />
+                            <span>{cargandoEste ? "Guardando..." : "Entregar al Cliente"}</span>
+                          </button>
+                        );
+                      })()}
                       <button
                         type="button"
                         disabled={cargandoEste}
                         onClick={() => handleRetroceder(pedido, "en_produccion")}
-                        className="flex h-9 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-400"
+                        className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-400"
                       >
                         <RotateCcw className="size-3" />
                         Reabrir a taller (reimpresión)

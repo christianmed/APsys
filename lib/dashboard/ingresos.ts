@@ -2,7 +2,12 @@
  * Métricas financieras y consolidación de ingresos por moneda y fechas (RF-11 / T-019).
  */
 
-export type PresetFecha = "hoy" | "esta_semana" | "este_mes" | "todo";
+import {
+  obtenerRangoPresetCaracas,
+  type PresetFecha as PresetFechaCaracas,
+} from "@/lib/fechas";
+
+export type PresetFecha = PresetFechaCaracas;
 
 export type PagoMétrica = {
   id: string;
@@ -32,43 +37,14 @@ export type ConsolidadoIngresos = {
 };
 
 /**
- * Genera las marcas de tiempo ISO de inicio y fin para los rangos preestablecidos.
+ * Genera las marcas de tiempo ISO de inicio y fin para los rangos preestablecidos
+ * delegando en la única fuente de verdad temporal: lib/fechas.ts (Fase 32).
  */
 export function obtenerRangoFechasPreset(
   preset: PresetFecha,
   fechaReferencia: Date = new Date(),
 ): { desde: string; hasta: string } {
-  const anio = fechaReferencia.getFullYear();
-  const mes = fechaReferencia.getMonth();
-  const dia = fechaReferencia.getDate();
-
-  switch (preset) {
-    case "hoy": {
-      const inicio = new Date(anio, mes, dia, 0, 0, 0, 0);
-      const fin = new Date(anio, mes, dia, 23, 59, 59, 999);
-      return { desde: inicio.toISOString(), hasta: fin.toISOString() };
-    }
-    case "esta_semana": {
-      // Inicio en lunes de la semana actual
-      const diaSemana = fechaReferencia.getDay(); // 0 es domingo
-      const diffLunes = (diaSemana + 6) % 7;
-      const inicio = new Date(anio, mes, dia - diffLunes, 0, 0, 0, 0);
-      const fin = new Date(anio, mes, dia + (6 - diffLunes), 23, 59, 59, 999);
-      return { desde: inicio.toISOString(), hasta: fin.toISOString() };
-    }
-    case "este_mes": {
-      const inicio = new Date(anio, mes, 1, 0, 0, 0, 0);
-      const ultimoDia = new Date(anio, mes + 1, 0, 23, 59, 59, 999);
-      return { desde: inicio.toISOString(), hasta: ultimoDia.toISOString() };
-    }
-    case "todo":
-    default: {
-      return {
-        desde: new Date(2020, 0, 1).toISOString(),
-        hasta: new Date(2100, 11, 31).toISOString(),
-      };
-    }
-  }
+  return obtenerRangoPresetCaracas(preset, fechaReferencia);
 }
 
 /**
