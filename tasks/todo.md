@@ -250,6 +250,47 @@
     - [x] Actualizar `docs/arquitectura/manual-tecnico-sistema.md` con el módulo `lib/fechas.ts`, las métricas de estado y la arquitectura de estilos de taller.
     - [x] Actualizar `docs/capacitacion/guia-rapida-usuarios.md` reflejando las nuevas etiquetas de producción y el comportamiento de la fecha en vivo.
 
-
-
-
+- [x] **Fase 33: Sistema de Tema Claro/Oscuro Tokyo Night (#16161e/#1a1b26/#1f202c), Armonización de Home y Tarjetas de Taller por Estado**
+  - [x] **Paso 1 (TDD - Rojo: Pruebas Unitarias de Tema y Tarjetas):**
+    - [x] Crear `test/theme-provider.test.tsx` verificando:
+      - Inicialización con tema guardado en `localStorage` o preferencia del sistema.
+      - Alternancia fluida entre tema claro y oscuro aplicando la clase `dark` a `document.documentElement`.
+      - Persistencia en `localStorage` bajo la clave `apsys-theme`.
+    - [x] Crear `test/taller-tarjetas-estado.test.tsx` verificando:
+      - Clases de superficie y bordes diferenciadas por estado (`recibido`, `en_produccion`, `listo`).
+      - Neutralidad de los botones de acción sin colores saturados.
+      - Presencia del nuevo set de iconos gráficos (`Play`, `Printer`, `PackageCheck`, `HandCoins`).
+  - [x] **Paso 2 (TDD - Verde: Paleta Tokyo Night y ThemeProvider):**
+    - [x] Configurar variables CSS en `app/globals.css`:
+      - Modo oscuro: `--background: #16161e`, `--surface: #1a1b26`, `--surface-elevated: #1f202c`, `--border: #24283b`.
+      - Configurar directiva `@custom-variant dark (&:where(.dark, .dark *));` para Tailwind CSS v4.
+    - [x] Implementar `components/providers/theme-provider.tsx` (`ThemeContext`, `useTheme`, hook `toggleTheme`).
+    - [x] Registrar `ThemeProvider` dentro de `components/providers/app-providers.tsx`.
+    - [x] Añadir script anti-parpadeo FOUC en `app/layout.tsx`.
+  - [x] **Paso 3 (Conmutador Ergonómico de Tema):**
+    - [x] Crear `components/shell/theme-toggle-button.tsx` con icono reactivo `Sun` / `Moon` y micro-animación.
+    - [x] En `components/shell/app-shell.tsx`:
+      - Reemplazar la ubicación del badge `v1.0.0` en la cabecera del sidebar por `ThemeToggleButton`.
+      - Reubicar el indicador `v1.0.0` al pie del sidebar junto al perfil de usuario.
+      - Añadir el botón en el header móvil `< md` junto al menú hamburguesa.
+  - [x] **Paso 4 (Corrección de Inconsistencias y Contrastes en Home `app/page.tsx`):**
+    - [x] Convertir "Activas en Taller" en enlace interactivo hacia `/taller?tab=activos`.
+    - [x] Enlazar cada una de las 4 tarjetas KPI a su filtro respectivo (`/taller?tab=activos`, `/taller?tab=recibido`, `/taller?tab=en_produccion`, `/taller?tab=listo`).
+    - [x] Corregir estados hover oscuros en tarjetas KPI para evitar el fondo gris lavado (`dark:hover:bg-[#1f202c]` con bordes iluminados sutiles).
+    - [x] Homogeneizar botones en la cuadrícula de accesos directos:
+      - Polaridad estandarizada: botón principal a la izquierda, botón rápido `+` a la derecha en "Gestión de Pedidos" y "Clientes & Recurrencia".
+      - Sustituir el botón naranja chillón de taller por botón neutral elegante coherente con el resto.
+      - Corregir hovers rotos en modo oscuro para garantizar contraste WCAG AAA.
+  - [x] **Paso 5 (Rediseño de Tarjetas de Taller por Estado e Iconos Coherentes):**
+    - [x] En `app/taller/taller-tablero.tsx`:
+      - Aplicar fondos y bordes diferenciados por estado sobre la base `#1a1b26` (azul zafiro tenue para Recibido, ámbar noche para Producción, esmeralda bosque para Listo).
+      - Estandarizar botones de acción a estilo neutral elegante en claro y oscuro.
+      - Actualizar iconos: `Play` (Por Iniciar), `Printer` (En Producción), `PackageCheck` (Listo para Retiro), `HandCoins` (Cobrar Saldo y Entregar).
+  - [x] **Paso 6 (Compuerta de Calidad DoD):**
+    - [x] Ejecutar `npx vitest run` y asegurar 100% tests verdes.
+    - [x] Ejecutar `npm run typecheck` (0 errores de TypeScript).
+    - [x] Ejecutar `npm run lint` (0 advertencias de ESLint).
+    - [x] Ejecutar `npm run build` (compilación exitosa en Next.js).
+  - [x] **Paso 7 (Sincronización Mandatoria de Documentación):**
+    - [x] Actualizar `docs/arquitectura/manual-tecnico-sistema.md` con la Sección 13.
+    - [x] Actualizar `docs/capacitacion/guia-rapida-usuarios.md` reflejando el conmutador de tema, paleta Tokyo Night y nuevas tarjetas.

@@ -1,17 +1,17 @@
 "use client";
 
 import {
-  Banknote,
   Camera,
-  CheckCircle2,
   Clock,
   ExternalLink,
   Flame,
+  HandCoins,
   Package,
-  Palette,
+  PackageCheck,
+  Play,
+  Printer,
   RotateCcw,
   Search,
-  Sparkles,
   User,
   X,
 } from "lucide-react";
@@ -19,8 +19,6 @@ import Link from "next/link";
 import { useEffect, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { cambiarEstadoPedido } from "@/app/pedidos/actions";
-
-export type EstiloVisualTaller = "A" | "B" | "C";
 import { sanearTerminoBusquedaOrden } from "@/lib/pedidos/busqueda";
 import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
 import { PageHeader } from "@/components/shell/page-header";
@@ -32,6 +30,7 @@ import {
   type EstadoPedido,
   obtenerSiguienteEstadoSugerido,
 } from "@/lib/pedidos/estados";
+import { obtenerEstilosTarjetaTaller } from "@/lib/taller/estilos-tarjeta";
 import {
   mapearPedidosTaller,
   type PedidoTaller,
@@ -65,22 +64,21 @@ function formatoTiempo(fechaIso: string): string {
 }
 
 export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
-  const [estiloVisual, setEstiloVisual] = useState<EstiloVisualTaller>(() => {
+  const [tabActual, setTabActual] = useState<TabEstado>(() => {
     if (typeof window !== "undefined") {
-      const guardado = localStorage.getItem("apsys_taller_estilo");
-      if (guardado === "A" || guardado === "B" || guardado === "C") return guardado;
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get("tab") as TabEstado | null;
+      if (
+        tabParam === "activos" ||
+        tabParam === "recibido" ||
+        tabParam === "en_produccion" ||
+        tabParam === "listo"
+      ) {
+        return tabParam;
+      }
     }
-    return "A"; // Estilo predeterminado: Opción A (Minimalista Monocromático)
+    return "activos";
   });
-
-  const cambiarEstilo = (nuevo: EstiloVisualTaller) => {
-    setEstiloVisual(nuevo);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("apsys_taller_estilo", nuevo);
-    }
-  };
-
-  const [tabActual, setTabActual] = useState<TabEstado>("activos");
   const [busqueda, setBusqueda] = useState("");
   const [modalCamaraAbierto, setModalCamaraAbierto] = useState(false);
   const [pedidoParaCobrar, setPedidoParaCobrar] = useState<PedidoTaller | null>(null);
@@ -183,111 +181,23 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
   const conteoListo = pedidos.filter((p) => p.estado === "listo").length;
   const conteoActivos = conteoRecibido + conteoProduccion + conteoListo;
 
-  // Clases dinámicas según el aspecto visual conmutable (Fase 32)
+  // Clases dinámicas de pestañas según estado activo y tema Tokyo Night
   const getTabClass = (tab: TabEstado) => {
     const isActivo = tabActual === tab;
     if (!isActivo) {
-      return "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300";
+      return "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1a1b26] dark:text-zinc-300 dark:hover:bg-[#1f202c]";
     }
 
-    if (estiloVisual === "B") {
-      switch (tab) {
-        case "recibido":
-          return "border-sky-300 bg-sky-100 text-sky-950 shadow-xs dark:border-sky-800 dark:bg-sky-950/60 dark:text-sky-200";
-        case "en_produccion":
-          return "border-amber-300 bg-amber-100 text-amber-950 shadow-xs dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-200";
-        case "listo":
-          return "border-emerald-300 bg-emerald-100 text-emerald-950 shadow-xs dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200";
-        default:
-          return "border-zinc-900 bg-zinc-900 text-white shadow-xs dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900";
-      }
+    switch (tab) {
+      case "recibido":
+        return "border-sky-300 bg-sky-100 text-sky-950 shadow-xs dark:border-sky-800 dark:bg-sky-950/70 dark:text-sky-200 font-bold";
+      case "en_produccion":
+        return "border-amber-300 bg-amber-100 text-amber-950 shadow-xs dark:border-amber-800 dark:bg-amber-950/70 dark:text-amber-200 font-bold";
+      case "listo":
+        return "border-emerald-300 bg-emerald-100 text-emerald-950 shadow-xs dark:border-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-200 font-bold";
+      default:
+        return "border-zinc-900 bg-zinc-900 text-white shadow-xs dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-100 font-bold";
     }
-
-    // Estilo A y C: Monocromático sólido sobrio
-    return "border-zinc-900 bg-zinc-900 text-white shadow-xs dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900";
-  };
-
-  const getBtnRecibido = () => {
-    if (estiloVisual === "B") {
-      return {
-        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-4 text-sm font-semibold text-sky-900 shadow-xs transition hover:bg-sky-100 active:scale-98 disabled:opacity-50 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-300",
-        icon: "size-4 text-sky-600 dark:text-sky-400",
-      };
-    }
-    if (estiloVisual === "C") {
-      return {
-        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-medium text-zinc-700 shadow-xs transition hover:border-zinc-300 hover:bg-zinc-50 active:scale-98 disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800",
-        icon: "size-4 text-zinc-400",
-      };
-    }
-    // Estilo A: Minimalista Monocromático (Linear / Vercel)
-    return {
-      btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
-      icon: "size-4 text-sky-400 dark:text-sky-600",
-    };
-  };
-
-  const getBtnProduccion = () => {
-    if (estiloVisual === "B") {
-      return {
-        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 text-sm font-semibold text-amber-950 shadow-xs transition hover:bg-amber-100 active:scale-98 disabled:opacity-50 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200",
-        icon: "size-4 text-amber-600 dark:text-amber-400",
-      };
-    }
-    if (estiloVisual === "C") {
-      return {
-        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-amber-300/80 bg-amber-50/50 px-4 text-sm font-semibold text-amber-900 shadow-xs transition hover:bg-amber-100 active:scale-98 disabled:opacity-50 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200",
-        icon: "size-4 text-amber-600 dark:text-amber-400",
-      };
-    }
-    // Estilo A: Minimalista Monocromático (Linear / Vercel)
-    return {
-      btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
-      icon: "size-4 text-amber-400 dark:text-amber-600",
-    };
-  };
-
-  const getBtnCobrar = () => {
-    if (estiloVisual === "B") {
-      return {
-        btn: "flex h-13 w-full flex-col items-center justify-center rounded-xl border border-amber-300 bg-amber-100/70 px-4 text-amber-950 shadow-xs transition hover:bg-amber-200/80 active:scale-98 disabled:opacity-50 dark:border-amber-800 dark:bg-amber-950/60 dark:text-amber-200",
-        icon: "size-4 text-amber-700 dark:text-amber-400",
-        subtext: "text-[11px] font-semibold text-amber-800 dark:text-amber-300",
-      };
-    }
-    if (estiloVisual === "C") {
-      return {
-        btn: "flex h-13 w-full flex-col items-center justify-center rounded-xl bg-amber-600 px-4 text-white shadow-xs transition hover:bg-amber-500 active:scale-98 disabled:opacity-50",
-        icon: "size-4 text-amber-100",
-        subtext: "text-[11px] font-medium text-amber-100",
-      };
-    }
-    // Estilo A: Minimalista Monocromático (Linear / Vercel)
-    return {
-      btn: "flex h-13 w-full flex-col items-center justify-center rounded-xl bg-zinc-900 px-4 text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
-      icon: "size-4 text-amber-400 dark:text-amber-600",
-      subtext: "text-[11px] font-medium text-amber-300 dark:text-amber-600",
-    };
-  };
-
-  const getBtnEntregar = () => {
-    if (estiloVisual === "B") {
-      return {
-        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-emerald-100/70 px-4 text-sm font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-200 active:scale-98 disabled:opacity-50 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-200",
-        icon: "size-4 text-emerald-700 dark:text-emerald-400",
-      };
-    }
-    if (estiloVisual === "C") {
-      return {
-        btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-emerald-600 active:scale-98 disabled:opacity-50",
-        icon: "size-4 text-emerald-200",
-      };
-    }
-    // Estilo A: Minimalista Monocromático (Linear / Vercel)
-    return {
-      btn: "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
-      icon: "size-4 text-emerald-400 dark:text-emerald-600",
-    };
   };
 
   // Filtrado de pedidos según la pestaña y la búsqueda
@@ -432,51 +342,21 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         </div>
       )}
 
-      {/* Barra interactiva de prueba visual de estilos (Fase 32) */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-3 shadow-xs dark:border-zinc-800 dark:bg-zinc-900">
+      {/* Barra de estado del flujo de taller */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-3.5 shadow-xs dark:border-[#24283b] dark:bg-[#1a1b26]">
         <div className="flex items-center gap-2 text-xs">
-          <Palette className="size-4 text-amber-500 dark:text-amber-400" />
+          <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" />
           <span className="font-bold text-zinc-800 dark:text-zinc-200">
-            Aspecto Visual de Botones:
+            Flujo de Producción Táctil
           </span>
-          <span className="hidden sm:inline text-zinc-400 text-[11px]">
-            (Conmuta en vivo para comparar los 3 estilos propuestos)
+          <span className="hidden sm:inline text-zinc-400 dark:text-zinc-500 text-[11px]">
+            — Tarjetas con fondo tonal por estado y botonera neutral de alta legibilidad
           </span>
         </div>
-        <div className="inline-flex rounded-xl bg-zinc-100 p-1 dark:bg-zinc-800">
-          <button
-            type="button"
-            onClick={() => cambiarEstilo("A")}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-              estiloVisual === "A"
-                ? "bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-900"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            }`}
-          >
-            Estilo A: Minimalista (Linear)
-          </button>
-          <button
-            type="button"
-            onClick={() => cambiarEstilo("B")}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-              estiloVisual === "B"
-                ? "bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-900"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            }`}
-          >
-            Estilo B: Pastel Tonal (Apple)
-          </button>
-          <button
-            type="button"
-            onClick={() => cambiarEstilo("C")}
-            className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-              estiloVisual === "C"
-                ? "bg-zinc-900 text-white shadow-xs dark:bg-zinc-100 dark:text-zinc-900"
-                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-            }`}
-          >
-            Estilo C: Jerárquico (Stripe)
-          </button>
+        <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-sky-500" />Por Iniciar</span>
+          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-amber-500" />En Producción</span>
+          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-emerald-500" />Listos</span>
         </div>
       </div>
 
@@ -521,7 +401,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
 
       {/* Listado de tarjetas de taller */}
       {pedidosFiltrados.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-[#24283b] dark:bg-[#1a1b26]">
           <Package className="size-10 text-zinc-400" />
           <h2 className="mt-3 text-base font-semibold text-zinc-900 dark:text-zinc-100">
             No hay órdenes en este estado
@@ -538,12 +418,13 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
             const numeroFormateado = `ORD-${String(pedido.numero_orden).padStart(4, "0")}`;
             const metaEstado = ESTADOS_METADATA[pedido.estado];
             const cargandoEste = isPending && idEnProceso === pedido.id;
+            const estilos = obtenerEstilosTarjetaTaller(pedido.estado);
 
             return (
               <article
                 key={pedido.id}
                 data-testid={`taller-card-${pedido.numero_orden}`}
-                className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                className={`flex flex-col justify-between rounded-2xl border p-5 shadow-sm transition hover:shadow-md ${estilos.cardContainer}`}
               >
                 <div className="space-y-3">
                   {/* Cabecera de la tarjeta */}
@@ -637,49 +518,43 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                 </div>
 
                 {/* BOTÓN DE ACCIÓN TÁCTIL PRINCIPAL (≤ 2 toques: 1 toque directo para avanzar) */}
-                <div className="mt-4 space-y-2 pt-3 border-t border-zinc-100 dark:border-zinc-800">
-                  {pedido.estado === "recibido" && (() => {
-                    const cfg = getBtnRecibido();
-                    return (
+                <div className="mt-4 space-y-2 pt-3 border-t border-zinc-100 dark:border-[#24283b]">
+                  {pedido.estado === "recibido" && (
+                    <button
+                      type="button"
+                      disabled={cargandoEste}
+                      onClick={() => handleAvanzar(pedido)}
+                      data-testid={`btn-avanzar-${pedido.numero_orden}`}
+                      className={estilos.btnAction}
+                    >
+                      <Play className="size-4 shrink-0 fill-current" />
+                      <span>{cargandoEste ? "Iniciando..." : "Iniciar Producción"}</span>
+                    </button>
+                  )}
+
+                  {pedido.estado === "en_produccion" && (
+                    <div className="space-y-1.5">
                       <button
                         type="button"
                         disabled={cargandoEste}
                         onClick={() => handleAvanzar(pedido)}
                         data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                        className={cfg.btn}
+                        className={estilos.btnAction}
                       >
-                        <Sparkles className={cfg.icon} />
-                        <span>{cargandoEste ? "Iniciando..." : "Iniciar Producción"}</span>
+                        <Printer className="size-4 shrink-0" />
+                        <span>{cargandoEste ? "Guardando..." : "Listo para Retiro"}</span>
                       </button>
-                    );
-                  })()}
-
-                  {pedido.estado === "en_produccion" && (() => {
-                    const cfg = getBtnProduccion();
-                    return (
-                      <div className="space-y-1.5">
-                        <button
-                          type="button"
-                          disabled={cargandoEste}
-                          onClick={() => handleAvanzar(pedido)}
-                          data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                          className={cfg.btn}
-                        >
-                          <CheckCircle2 className={cfg.icon} />
-                          <span>{cargandoEste ? "Guardando..." : "Listo para Retiro"}</span>
-                        </button>
-                        <button
-                          type="button"
-                          disabled={cargandoEste}
-                          onClick={() => handleRetroceder(pedido, "recibido")}
-                          className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-400"
-                        >
-                          <RotateCcw className="size-3" />
-                          Revertir a recibido
-                        </button>
-                      </div>
-                    );
-                  })()}
+                      <button
+                        type="button"
+                        disabled={cargandoEste}
+                        onClick={() => handleRetroceder(pedido, "recibido")}
+                        className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-[#1f202c] dark:text-zinc-400"
+                      >
+                        <RotateCcw className="size-3" />
+                        Revertir a recibido
+                      </button>
+                    </div>
+                  )}
 
                   {pedido.estado === "listo" && (
                     <div className="space-y-2">
@@ -691,47 +566,40 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                         saldoUsd={pedido.saldo_usd ?? 0}
                         tasaBsPorUsd={pedido.tasa_bs}
                         variante="full"
-                        estiloVisual={estiloVisual}
                       />
-                      {(pedido.saldo_usd ?? 0) > 0 ? (() => {
-                        const cfg = getBtnCobrar();
-                        return (
-                          <button
-                            type="button"
-                            disabled={cargandoEste}
-                            onClick={() => setPedidoParaCobrar(pedido)}
-                            data-testid={`btn-cobrar-entregar-${pedido.numero_orden}`}
-                            className={cfg.btn}
-                          >
-                            <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold">
-                              <Banknote className={cfg.icon} />
-                              <span>Cobrar Saldo y Entregar</span>
-                            </div>
-                            <span className={cfg.subtext}>
-                              Resta por cobrar: {formatearMonedaUSD(pedido.saldo_usd ?? 0)}
-                            </span>
-                          </button>
-                        );
-                      })() : (() => {
-                        const cfg = getBtnEntregar();
-                        return (
-                          <button
-                            type="button"
-                            disabled={cargandoEste}
-                            onClick={() => handleAvanzar(pedido)}
-                            data-testid={`btn-avanzar-${pedido.numero_orden}`}
-                            className={cfg.btn}
-                          >
-                            <Package className={cfg.icon} />
-                            <span>{cargandoEste ? "Guardando..." : "Entregar al Cliente"}</span>
-                          </button>
-                        );
-                      })()}
+                      {(pedido.saldo_usd ?? 0) > 0 ? (
+                        <button
+                          type="button"
+                          disabled={cargandoEste}
+                          onClick={() => setPedidoParaCobrar(pedido)}
+                          data-testid={`btn-cobrar-entregar-${pedido.numero_orden}`}
+                          className={estilos.btnCobrarSaldo ?? estilos.btnAction}
+                        >
+                          <div className="flex items-center gap-1.5 text-xs sm:text-sm font-bold">
+                            <HandCoins className="size-4 shrink-0 text-amber-400 dark:text-amber-300" />
+                            <span>Cobrar Saldo y Entregar</span>
+                          </div>
+                          <span className="text-[11px] text-zinc-300 dark:text-zinc-400">
+                            Resta por cobrar: {formatearMonedaUSD(pedido.saldo_usd ?? 0)}
+                          </span>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={cargandoEste}
+                          onClick={() => handleAvanzar(pedido)}
+                          data-testid={`btn-avanzar-${pedido.numero_orden}`}
+                          className={estilos.btnAction}
+                        >
+                          <PackageCheck className="size-4 shrink-0 text-emerald-400 dark:text-emerald-300" />
+                          <span>{cargandoEste ? "Guardando..." : "Entregar al Cliente"}</span>
+                        </button>
+                      )}
                       <button
                         type="button"
                         disabled={cargandoEste}
                         onClick={() => handleRetroceder(pedido, "en_produccion")}
-                        className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:text-zinc-400"
+                        className="flex h-8 w-full items-center justify-center gap-1.5 rounded-lg text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-800 dark:hover:bg-[#1f202c] dark:text-zinc-400"
                       >
                         <RotateCcw className="size-3" />
                         Reabrir a taller (reimpresión)
@@ -740,7 +608,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
                   )}
 
                   {pedido.estado === "entregado" && (
-                    <div className="flex h-12 w-full items-center justify-center rounded-xl bg-zinc-100 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+                    <div className="flex h-12 w-full items-center justify-center rounded-xl bg-zinc-100 text-xs font-medium text-zinc-500 dark:bg-[#1f202c] dark:text-zinc-400">
                       Entregado y finalizado
                     </div>
                   )}

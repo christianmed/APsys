@@ -139,7 +139,32 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
      - **Estilo C (Jerarquía Progresiva - Stripe):** Botón neutro/outline en etapas iniciales que adquiere peso visual y color sólido de certeza únicamente en cobro y entrega.
   6. **Compuerta de Calidad DoD:** Pruebas unitarias TDD para `lib/fechas.ts` y componentes de fecha, pruebas de consistencia de contadores, `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` y actualización obligatoria de manuales técnicos y de usuario.
 
-### Fase 33: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 33: Sistema de Tema Claro/Oscuro Tokyo Night (#16161e/#1a1b26/#1f202c), Armonización de Home y Tarjetas de Taller por Estado
+
+- **Objetivo:** Implementar la paleta de color oscuro Tokyo Night (`#16161e` fondo, `#1a1b26` superficies, `#1f202c` elementos interactivos y hover) con conmutador de tema claro/oscuro en el sidebar y header móvil; resolver las inconsistencias de polaridad y contraste en las tarjetas y botones del Home (`app/page.tsx`); y rediseñar las tarjetas de taller (`/taller`) para que el estado se transmita a través de la superficie de la tarjeta con fondos tonales sutiles y botones de acción neutrales, acompañados de nueva iconografía coherente de taller gráfico (`Play`, `Printer`, `PackageCheck`, `HandCoins`).
+- **Acciones Clave:**
+  1. **Arquitectura de Tema y Paleta Tokyo Night (`globals.css` y `ThemeProvider`):**
+     - Configurar variables CSS para la paleta Tokyo Night: `--background: #16161e`, `--surface: #1a1b26`, `--surface-elevated: #1f202c`, `--border: #24283b` para modo oscuro, preservando la paleta clara en modo claro.
+     - Crear proveedor ligero `ThemeProvider` en `components/providers/theme-provider.tsx` con almacenamiento en `localStorage` (`apsys-theme`) y soporte sin parpadeo (FOUC).
+     - Configurar la variante `@custom-variant dark (&:where(.dark, .dark *));` en Tailwind CSS v4 para soporte pleno del selector `.dark`.
+  2. **Conmutador de Tema Ergonómico (Sidebar y Header Móvil):**
+     - En `components/shell/app-shell.tsx`, sustituir la ubicación del badge `v1.0.0` por un conmutador interactivo `Sun`/`Moon` accesible y con micro-animaciones.
+     - Reubicar el indicador `v1.0.0` al pie del sidebar junto a la información de perfil y cierre de sesión.
+     - Añadir el botón conmutador en el header móvil `< md` junto al menú hamburguesa.
+  3. **Corrección de Inconsistencias y Contraste en el Home (`app/page.tsx`):**
+     - Convertir la tarjeta *"Activas en Taller"* en enlace interactivo hacia `/taller?tab=activos`, asegurando que las 4 tarjetas KPI conduzcan al taller con su filtro correspondiente.
+     - Corregir los estados hover en modo oscuro de "En Producción" y "Listos para Retiro", eliminando el fondo beige/grisáceo lavado mediante estados `dark:hover:bg-[#1f202c]` con bordes iluminados sutiles.
+     - Homogeneizar los botones de las tarjetas de acceso directo:
+       - Tarjetas con 2 botones ("Gestión de Pedidos" y "Clientes & Recurrencia"): botón principal (izq) con estilo neutro consistente y botón rápido `+` (der) con estilo outline idéntico, eliminando la polaridad invertida.
+       - Tarjetas de 1 solo botón ("Taller", "Servicios", "Recordatorios", "Plantillas"): unificar bajo el mismo estilo neutral sobrio, reemplazando el botón naranja chillón del taller por un botón coherente con acento en el icono.
+       - Corregir los hovers rotos en modo oscuro para evitar texto negro sobre fondo oscuro o texto blanco sobre fondo blanco.
+  4. **Rediseño de Tarjetas de Taller por Estado e Iconografía Coherente (`app/taller/taller-tablero.tsx`):**
+     - Las tarjetas adoptan un fondo tonal suave y diferenciado por estado sobre la base Tokyo Night (`#1a1b26`), con micro-bordes elegantes: azul zafiro tenue para *Recibido / Por Iniciar*, ámbar noche para *En Producción*, y esmeralda bosque para *Listo para Retiro*.
+     - Los botones de acción de taller pasan a ser **100% neutrales** acorde al tema claro y oscuro, eliminando colores estridentes en la botonera.
+     - Actualizar la iconografía a un set profesional de manufactura gráfica: `Play` / `Inbox` para Por Iniciar, `Printer` / `Layers` para En Producción, `PackageCheck` para Listo para Retiro, y `HandCoins` para Cobrar Saldo y Entregar.
+  5. **Compuerta de Calidad DoD:** Tests unitarios de tema y componentes, `npm test` (100% verde), `npm run typecheck` (0 errores), `npm run lint` (0 advertencias), `npm run build` y actualización de manuales técnicos y de usuario.
+
+### Fase 34: Potencia Comercial y Finanzas (Versión 1.1.0)
 
 - **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
 - **Acciones Clave:**
@@ -147,7 +172,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
   3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
 
-### Fase 34: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 35: Planta Inteligente y Manufactura (Versión 1.2.0)
 
 - **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
 - **Acciones Clave:**

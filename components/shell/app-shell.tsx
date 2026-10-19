@@ -19,6 +19,7 @@ import { useState, type ReactNode } from "react";
 import { NAVIGATION_GROUPS } from "./app-nav-items";
 
 import { SidebarTasasCard } from "./sidebar-tasas-card";
+import { ThemeToggleButton } from "./theme-toggle-button";
 
 type Props = {
   usuarioEmail: string;
@@ -58,13 +59,13 @@ export function AppShell({
   };
 
   return (
-    <div className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950 font-sans text-zinc-900 dark:text-zinc-50">
+    <div className="flex min-h-screen bg-zinc-50 dark:bg-[#16161e] font-sans text-zinc-900 dark:text-zinc-50">
       {/* =========================================================================
           1. SIDEBAR DESKTOP (visible en md y superior)
           ========================================================================= */}
-      <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 border-r border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        {/* Branding superior */}
-        <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-5 dark:border-zinc-800">
+      <aside className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-30 border-r border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+        {/* Branding superior y conmutador de tema */}
+        <div className="flex h-16 items-center justify-between border-b border-zinc-200 px-5 dark:border-[#24283b]">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="flex size-9 items-center justify-center rounded-xl bg-zinc-900 text-white shadow-sm transition group-hover:scale-105 dark:bg-zinc-100 dark:text-zinc-900">
               <span className="font-mono text-base font-black tracking-tighter">AP</span>
@@ -78,9 +79,7 @@ export function AppShell({
               </span>
             </div>
           </Link>
-          <span className="rounded bg-zinc-100 px-1.5 py-0.5 text-[10px] font-mono text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-            v1.0.0
-          </span>
+          <ThemeToggleButton size="sm" />
         </div>
 
         {/* Widget de Tasas de Cambio (Pestañas, Acordeón y Apilado conmutable) */}
@@ -179,13 +178,20 @@ export function AppShell({
               </button>
             </form>
           </div>
+
+          <div className="mt-2 flex items-center justify-between px-2 text-[10px] font-mono text-zinc-400 dark:text-zinc-500">
+            <span>APSys Taller</span>
+            <span className="rounded bg-zinc-100 px-1.5 py-0.5 dark:bg-[#1f202c] dark:text-zinc-400">
+              v1.0.0
+            </span>
+          </div>
         </div>
       </aside>
 
       {/* =========================================================================
           2. HEADER MÓVIL (visible en móviles < md)
           ========================================================================= */}
-      <header className="md:hidden fixed top-0 inset-x-0 z-40 flex h-14 items-center justify-between border-b border-zinc-200 bg-white/95 px-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95">
+      <header className="md:hidden fixed top-0 inset-x-0 z-40 flex h-14 items-center justify-between border-b border-zinc-200 bg-white/95 px-4 backdrop-blur dark:border-[#24283b] dark:bg-[#1a1b26]/95">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex size-8 items-center justify-center rounded-lg bg-zinc-900 text-white font-mono font-black text-xs dark:bg-zinc-100 dark:text-zinc-900">
             AP
@@ -222,11 +228,13 @@ export function AppShell({
             </div>
           )}
 
+          <ThemeToggleButton size="sm" />
+
           <button
             type="button"
             onClick={() => setMenuMovilAbierto(!menuMovilAbierto)}
             aria-label="Abrir menú de navegación"
-            className="flex size-9 items-center justify-center rounded-lg border border-zinc-200 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="flex size-9 items-center justify-center rounded-lg border border-zinc-200 text-zinc-700 hover:bg-zinc-100 dark:border-[#24283b] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
           >
             {menuMovilAbierto ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -240,8 +248,8 @@ export function AppShell({
             className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
             onClick={() => setMenuMovilAbierto(false)}
           />
-          <div className="relative ml-auto flex h-full w-4/5 max-w-sm flex-col bg-white shadow-xl dark:bg-zinc-900">
-            <div className="flex h-14 items-center justify-between border-b border-zinc-200 px-4 dark:border-zinc-800">
+          <div className="relative ml-auto flex h-full w-4/5 max-w-sm flex-col bg-white shadow-xl dark:bg-[#1a1b26] dark:border-l dark:border-[#24283b]">
+            <div className="flex h-14 items-center justify-between border-b border-zinc-200 px-4 dark:border-[#24283b]">
               <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                 Menú de Navegación
               </span>
@@ -338,7 +346,7 @@ export function AppShell({
           ========================================================================= */}
       <nav
         aria-label="Navegación rápida móvil"
-        className="md:hidden fixed bottom-0 inset-x-0 z-30 flex h-16 items-center justify-around border-t border-zinc-200 bg-white/95 px-2 backdrop-blur shadow-lg dark:border-zinc-800 dark:bg-zinc-900/95"
+        className="md:hidden fixed bottom-0 inset-x-0 z-30 flex h-16 items-center justify-around border-t border-zinc-200 bg-white/95 px-2 backdrop-blur shadow-lg dark:border-[#24283b] dark:bg-[#1a1b26]/95"
       >
         <Link
           href="/"

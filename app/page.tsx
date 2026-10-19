@@ -53,7 +53,7 @@ export default async function Home() {
             ========================================================================= */}
         <section
           aria-label="Bienvenida"
-          className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]"
         >
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-2">
@@ -70,7 +70,7 @@ export default async function Home() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/pedidos/nuevo"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 active:scale-98 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
               >
                 <Plus className="size-4" />
                 Nueva Orden de Trabajo
@@ -78,9 +78,9 @@ export default async function Home() {
 
               <Link
                 href="/taller"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-amber-300 bg-amber-50 px-4 text-sm font-semibold text-amber-950 transition hover:bg-amber-100 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-sm font-semibold text-zinc-800 shadow-xs transition hover:bg-zinc-100 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42]"
               >
-                <Flame className="size-4 text-amber-600 dark:text-amber-400" />
+                <Flame className="size-4 text-amber-500" />
                 Tablero de Taller
               </Link>
             </div>
@@ -106,46 +106,49 @@ export default async function Home() {
 
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {/* Activos en taller */}
-            <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <Link
+              href="/taller?tab=activos"
+              className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-400 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-zinc-500 dark:hover:bg-[#1f202c]"
+            >
               <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
                 <span className="text-xs font-medium">Activas en Taller</span>
-                <Package className="size-4" />
+                <Package className="size-4 group-hover:scale-105 transition-transform" />
               </div>
-              <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50">
+              <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50 group-hover:text-zinc-700 dark:group-hover:text-white transition-colors">
                 {totalActivos}
               </p>
               <span className="mt-1 block text-[11px] text-zinc-400">
                 Trabajos en curso
               </span>
-            </div>
+            </Link>
 
             {/* Por iniciar */}
             <Link
-              href="/taller"
-              className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+              href="/taller?tab=recibido"
+              className="group rounded-2xl border border-sky-200/90 bg-sky-50/20 p-5 shadow-sm transition hover:border-sky-400 hover:bg-sky-50/40 dark:border-sky-900/40 dark:bg-sky-950/20 dark:hover:border-sky-700/70 dark:hover:bg-sky-950/40"
             >
-              <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
+              <div className="flex items-center justify-between text-sky-800 dark:text-sky-300">
                 <span className="text-xs font-medium">Por Iniciar</span>
-                <ClipboardList className="size-4 text-blue-500" />
+                <ClipboardList className="size-4 text-sky-600 dark:text-sky-400 group-hover:scale-105 transition-transform" />
               </div>
-              <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 transition-colors">
+              <p className="mt-2 text-3xl font-black text-sky-950 dark:text-sky-100 group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
                 {porIniciar}
               </p>
-              <span className="mt-1 block text-[11px] text-zinc-400">
+              <span className="mt-1 block text-[11px] text-sky-700/80 dark:text-sky-400/70">
                 En cola de inicio
               </span>
             </Link>
 
             {/* En producción */}
             <Link
-              href="/taller"
-              className="group rounded-2xl border border-amber-200/80 bg-amber-50/30 p-5 shadow-sm transition hover:bg-amber-50/60 dark:border-amber-900/40 dark:bg-amber-950/20"
+              href="/taller?tab=en_produccion"
+              className="group rounded-2xl border border-amber-200/90 bg-amber-50/20 p-5 shadow-sm transition hover:border-amber-400 hover:bg-amber-50/40 dark:border-amber-900/40 dark:bg-amber-950/20 dark:hover:border-amber-700/70 dark:hover:bg-amber-950/40"
             >
               <div className="flex items-center justify-between text-amber-800 dark:text-amber-300">
                 <span className="text-xs font-medium">En Producción</span>
-                <Printer className="size-4 text-amber-600" />
+                <Printer className="size-4 text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform" />
               </div>
-              <p className="mt-2 text-3xl font-black text-amber-950 dark:text-amber-100">
+              <p className="mt-2 text-3xl font-black text-amber-950 dark:text-amber-100 group-hover:text-amber-600 dark:group-hover:text-amber-300 transition-colors">
                 {enProduccion}
               </p>
               <span className="mt-1 block text-[11px] text-amber-700/80 dark:text-amber-400/70">
@@ -155,14 +158,14 @@ export default async function Home() {
 
             {/* Listos para entrega */}
             <Link
-              href="/taller"
-              className="group rounded-2xl border border-emerald-200/80 bg-emerald-50/30 p-5 shadow-sm transition hover:bg-emerald-50/60 dark:border-emerald-900/40 dark:bg-emerald-950/20"
+              href="/taller?tab=listo"
+              className="group rounded-2xl border border-emerald-200/90 bg-emerald-50/20 p-5 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50/40 dark:border-emerald-900/40 dark:bg-emerald-950/20 dark:hover:border-emerald-700/70 dark:hover:bg-emerald-950/40"
             >
               <div className="flex items-center justify-between text-emerald-800 dark:text-emerald-300">
                 <span className="text-xs font-medium">Listos para Retiro</span>
-                <Flame className="size-4 text-emerald-600" />
+                <Flame className="size-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform" />
               </div>
-              <p className="mt-2 text-3xl font-black text-emerald-950 dark:text-emerald-100">
+              <p className="mt-2 text-3xl font-black text-emerald-950 dark:text-emerald-100 group-hover:text-emerald-600 dark:group-hover:text-emerald-300 transition-colors">
                 {listos}
               </p>
               <span className="mt-1 block text-[11px] text-emerald-700/80 dark:text-emerald-400/70">
@@ -178,7 +181,7 @@ export default async function Home() {
         <section aria-label="Módulos del sistema" className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Tarjeta: Gestión de Órdenes */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
                   <ClipboardList className="size-5" />
@@ -191,16 +194,16 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-5 flex items-center gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="mt-5 flex items-center gap-2 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/pedidos"
-                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
+                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 active:scale-98 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Ver Pedidos
                 </Link>
                 <Link
                   href="/pedidos/nuevo"
-                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-98 dark:border-[#2f3654] dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-white"
                 >
                   + Nuevo
                 </Link>
@@ -208,7 +211,7 @@ export default async function Home() {
             </div>
 
             {/* Tarjeta: Taller Kanban */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-400">
                   <Flame className="size-5" />
@@ -221,10 +224,10 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/taller"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-amber-600 text-xs font-semibold text-white transition hover:bg-amber-500 shadow-sm"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 active:scale-98 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white shadow-xs"
                 >
                   Abrir Tablero de Taller
                 </Link>
@@ -232,7 +235,7 @@ export default async function Home() {
             </div>
 
             {/* Tarjeta: Directorio de Clientes */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400">
                   <Users className="size-5" />
@@ -245,16 +248,16 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-5 flex items-center gap-2 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="mt-5 flex items-center gap-2 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/clientes"
-                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg border border-zinc-200 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300"
+                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 active:scale-98 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Directorio
                 </Link>
                 <Link
                   href="/clientes/nuevo"
-                  className="inline-flex h-9 items-center justify-center rounded-lg bg-zinc-900 px-3 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-98 dark:border-[#2f3654] dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-white"
                 >
                   + Agregar
                 </Link>
@@ -262,7 +265,7 @@ export default async function Home() {
             </div>
 
             {/* Tarjeta: Catálogo de Servicios */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-400">
                   <Tag className="size-5" />
@@ -275,10 +278,10 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/servicios"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Gestionar Catálogo
                 </Link>
@@ -286,7 +289,7 @@ export default async function Home() {
             </div>
 
             {/* Tarjeta: Recordatorios */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
                   <Bell className="size-5" />
@@ -299,10 +302,10 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/recordatorios"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Revisar Alertas (48–72h)
                 </Link>
@@ -310,7 +313,7 @@ export default async function Home() {
             </div>
 
             {/* Tarjeta: Plantillas WhatsApp */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600 dark:bg-teal-950/50 dark:text-teal-400">
                   <MessageSquare className="size-5" />
@@ -323,10 +326,10 @@ export default async function Home() {
                 </p>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-zinc-800">
+              <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/plantillas"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-300"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Editar Mensajes
                 </Link>
@@ -339,7 +342,7 @@ export default async function Home() {
             4. SECCIÓN GERENCIAL Y FINANCIERA (exclusiva para rol gerencial)
             ========================================================================= */}
         {esGerencial && (
-          <section aria-label="Módulos gerenciales" className="space-y-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+          <section aria-label="Módulos gerenciales" className="space-y-4 pt-4 border-t border-zinc-200 dark:border-[#24283b]">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
@@ -357,7 +360,7 @@ export default async function Home() {
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Link
                 href="/dashboard"
-                className="group flex flex-col justify-between rounded-2xl border border-emerald-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50/20 dark:border-emerald-900/60 dark:bg-zinc-900 dark:hover:border-emerald-800"
+                className="group flex flex-col justify-between rounded-2xl border border-emerald-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50/20 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-emerald-800"
               >
                 <div>
                   <TrendingUp className="size-5 text-emerald-600 dark:text-emerald-400" />
@@ -376,7 +379,7 @@ export default async function Home() {
 
               <Link
                 href="/cuentas-por-cobrar"
-                className="group flex flex-col justify-between rounded-2xl border border-rose-200 bg-white p-5 shadow-sm transition hover:border-rose-400 hover:bg-rose-50/20 dark:border-rose-900/60 dark:bg-zinc-900 dark:hover:border-rose-800"
+                className="group flex flex-col justify-between rounded-2xl border border-rose-200 bg-white p-5 shadow-sm transition hover:border-rose-400 hover:bg-rose-50/20 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-rose-800"
               >
                 <div>
                   <Wallet className="size-5 text-rose-600 dark:text-rose-400" />
@@ -395,7 +398,7 @@ export default async function Home() {
 
               <Link
                 href="/dashboard/rotacion"
-                className="group flex flex-col justify-between rounded-2xl border border-indigo-200 bg-white p-5 shadow-sm transition hover:border-indigo-400 hover:bg-indigo-50/20 dark:border-indigo-900/60 dark:bg-zinc-900 dark:hover:border-indigo-800"
+                className="group flex flex-col justify-between rounded-2xl border border-indigo-200 bg-white p-5 shadow-sm transition hover:border-indigo-400 hover:bg-indigo-50/20 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-indigo-800"
               >
                 <div>
                   <Package className="size-5 text-indigo-600 dark:text-indigo-400" />
@@ -414,7 +417,7 @@ export default async function Home() {
 
               <Link
                 href="/tasas"
-                className="group flex flex-col justify-between rounded-2xl border border-emerald-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50/20 dark:border-emerald-900/60 dark:bg-zinc-900 dark:hover:border-emerald-800"
+                className="group flex flex-col justify-between rounded-2xl border border-emerald-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-50/20 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-emerald-800"
               >
                 <div>
                   <Banknote className="size-5 text-emerald-600 dark:text-emerald-400" />

@@ -150,3 +150,36 @@ Al consultar `/tasas`, la tabla del histórico clasifica cada registro con un es
 - Revisa ingresos consolidados en USD y Bs.
 - Pulsa **"Descargar CSV"** para abrir en Excel o **"Imprimir / Guardar PDF"** para reportes ejecutivos.
 - En caso de cancelaciones, usa **"Anular Pedido"** ingresando el motivo obligatorio para la auditoría inmutable.
+
+---
+
+## 7. Conmutador de Tema (Modo Claro / Modo Oscuro Tokyo Night)
+
+- **Ubicación del Conmutador:**
+  - **En Computadora / Tablet:** En la parte superior de la barra lateral (Sidebar), donde anteriormente figuraba la versión del sistema, ahora se encuentra el botón interactivo con icono de **Sol / Luna** (`Sun` / `Moon`).
+  - **En Teléfono Móvil:** En la barra superior junto al botón del menú hamburguesa.
+  - **Ubicación de la versión del sistema:** La versión `v1.0.0` se ubica discretamente al pie de la barra lateral junto al correo de sesión.
+- **Paleta Tokyo Night:** Al activar el modo oscuro, la aplicación adopta tonos nocturnos azulados (`#16161e` de fondo, `#1a1b26` en superficies y `#1f202c` en botones interactivos) para un descanso visual prolongado y un contraste nítido de lectura.
+- **Persistencia Inmediata:** La preferencia se almacena en tu navegador. Al recargar la página o volver al día siguiente, el sistema mantendrá tu tema sin parpadeos.
+
+---
+
+## 8. Lectura Visual y Flujo Táctil en Taller de Producción (`/taller`)
+
+En el tablero de producción, cada tarjeta comunica su estado actual mediante el **color de fondo de la tarjeta**, mientras que los botones de avance son sobrios y neutrales:
+
+1. **🔵 Tarjeta con Tinte Azul Zafiro (Por Iniciar / Recibido):**
+   - Indica que la orden está en espera de arrancar en máquinas.
+   - Botón neutral: **`[ ▶ Iniciar Producción ]`** (1 solo toque para pasar a máquinas).
+2. **🟡 Tarjeta con Tinte Ámbar (En Producción):**
+   - Indica que el trabajo está actualmente imprimiéndose o ensamblándose.
+   - Botón neutral: **`[ 🖨 Listo para Retiro ]`** (con icono de impresora).
+   - Botón secundario discreto: *Revertir a recibido* si hubo una detención justificada.
+3. **🟢 Tarjeta con Tinte Esmeralda (Listos para Retiro):**
+   - El trabajo está terminado y empacado en mostrador.
+   - Botón directo de **`[ Avisar por WhatsApp ]`** para notificar al cliente.
+   - **Si tiene saldo pendiente:** Botón prioritario neutral **`[ 🪙 Cobrar Saldo y Entregar ]`** (icono de monedas en mano), que abre la calculadora de cobro en Bs o USD antes de entregar.
+   - **Si el saldo es $0.00:** Botón neutral **`[ 📦 Entregar al Cliente ]`** (icono de paquete verificado).
+4. **Acceso Rápido desde la Pantalla de Inicio (Home):**
+   - Las 4 tarjetas de resumen del taller en la página principal ahora son interactivas: al hacer clic en cualquiera de ellas ("Activas en Taller", "Por Iniciar", "En Producción", "Listos para Retiro"), viajarás directamente al taller con ese filtro preseleccionado.
+
