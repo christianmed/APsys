@@ -14,7 +14,6 @@ type Props = {
   saldoUsd: number;
   tasaBsPorUsd?: number | null;
   variante?: "boton" | "icono" | "full";
-  estiloVisual?: "A" | "B" | "C";
 };
 
 /**
@@ -29,7 +28,6 @@ export function BotonAvisoWhatsApp({
   saldoUsd,
   tasaBsPorUsd,
   variante = "boton",
-  estiloVisual = "A",
 }: Props) {
   const telefonoValido = normalizarTelefonoWhatsApp(telefono);
 
@@ -61,19 +59,9 @@ export function BotonAvisoWhatsApp({
   const ordenStr = `ORD-${String(numeroOrden).padStart(4, "0")}`;
 
   if (variante === "full") {
-    let estiloClases =
-      "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-300/80 bg-emerald-50/70 px-4 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300";
-    let iconoClases = "size-4 text-emerald-600 dark:text-emerald-400";
-
-    if (estiloVisual === "B") {
-      estiloClases =
-        "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-xs font-semibold text-emerald-900 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300";
-      iconoClases = "size-4 text-emerald-600 dark:text-emerald-400";
-    } else if (estiloVisual === "C") {
-      estiloClases =
-        "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-xs font-semibold text-zinc-800 shadow-xs transition hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 active:scale-98 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300";
-      iconoClases = "size-4 text-zinc-500";
-    }
+    const estiloClases =
+      "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-300/80 bg-emerald-50/70 px-4 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-emerald-300 dark:hover:bg-[#252b42] dark:hover:border-emerald-700/60";
+    const iconoClases = "size-4 text-emerald-600 dark:text-emerald-400";
 
     return (
       <a

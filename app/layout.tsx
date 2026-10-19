@@ -40,6 +40,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             __html: `
               (function() {
                 try {
+                  var t = localStorage.getItem('apsys-theme');
+                  var d = t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (d) {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.setAttribute('data-theme', 'light');
+                  }
+                } catch(e) {}
+                try {
                   function clean(root) {
                     if (!root) return;
                     if (root.removeAttribute && root.hasAttribute && root.hasAttribute('bis_skin_checked')) {

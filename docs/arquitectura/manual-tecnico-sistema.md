@@ -512,4 +512,53 @@ Para responder al requerimiento de eliminar colores saturados estridentes y perm
 | **Estilo B** | Tonales Pastel Suaves (Apple HIG) | `border-sky-200 bg-sky-50 text-sky-900` | `border-amber-300 bg-amber-50 text-amber-950` | `border-emerald-200 bg-emerald-50 text-emerald-900` | `border-amber-300 bg-amber-100/70 text-amber-950` |
 | **Estilo C** | Jerarquía Progresiva (Stripe) | Botón neutro `border-zinc-200 bg-white text-zinc-700` | Borde ámbar suave `border-amber-300/80 bg-amber-50/50` | Outline gris neutro | Botón sólido de certeza con peso visual en la fase final de cobro |
 
+---
+
+## 13. Sistema de Tema Claro/Oscuro Tokyo Night, Armonización de Home y Tarjetas de Taller por Estado (Fase 33)
+
+### 13.1 Paleta Tokyo Night y Configuración Tailwind CSS v4
+
+Para ofrecer una experiencia nocturna profesional con tonos azulados profundos y confort visual de estándar internacional, se adoptó la paleta **Tokyo Night**:
+
+- **Canvas / Fondo Global (`--background`):** `#16161e` (canvas base de la aplicación).
+- **Superficie de Tarjetas, Sidebar y Modales (`--surface`):** `#1a1b26` (elevación primaria para contenedores).
+- **Superficies Interactivas y Botones Neutrales (`--surface-elevated`):** `#1f202c` (botones neutros, inputs, estados hover y badges).
+- **Líneas y Micro-Bordes (`--border`):** `#24283b` y `#2f3654` (delimitadores sutiles de alto contraste).
+
+En `app/globals.css`, se configuró la directiva oficial de Tailwind CSS v4 para soporte de modo oscuro por clase DOM:
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+### 13.2 Arquitectura de Tema (`ThemeProvider`) y Conmutador 0ms FOUC
+
+1. **Contexto Unificado (`components/providers/theme-provider.tsx`):**
+   - Hook `useTheme()` con funciones `theme`, `toggleTheme` y `setTheme`.
+   - Persistencia automática en el navegador bajo la clave `apsys-theme` en `localStorage`.
+   - Resiliencia arquitectónica: incluye fallback seguro `DEFAULT_THEME_CONTEXT` si un componente o test unitario se evalúa de manera aislada sin el proveedor.
+2. **Eliminación Total de Parpadeo (0ms FOUC):**
+   - En `app/layout.tsx`, se inyecta un script síncrono previo a la hidratación que inspecciona `localStorage.getItem("apsys-theme")` o `prefers-color-scheme: dark` y aplica la clase `.dark` a `document.documentElement` antes de que el navegador pinte el primer fotograma.
+3. **Conmutador Ergonómico (`components/shell/theme-toggle-button.tsx`):**
+   - Reemplaza la posición que ocupaba la etiqueta `v1.0.0` en la cabecera del Sidebar de escritorio.
+   - Disponible en el header móvil junto al menú hamburguesa.
+   - La versión `v1.0.0` fue reubicada discretamente al pie del Sidebar junto al perfil de usuario.
+
+### 13.3 Tarjetas de Taller por Estado (`lib/taller/estilos-tarjeta.ts`) e Iconografía
+
+El estado de la orden en el tablero de taller se comunica a través del fondo completo y el contorno de la tarjeta, manteniendo los botones 100% neutros:
+
+- **Por Iniciar (`recibido`):** Tinte azul zafiro tenue (`border-sky-200 bg-sky-50/20 dark:border-sky-900/50 dark:bg-sky-950/15`). Botón neutral `#1f202c` con icono `Play` (inicio de producción).
+- **En Producción (`en_produccion`):** Tinte ámbar noche suave (`border-amber-200 bg-amber-50/20 dark:border-amber-900/50 dark:bg-amber-950/15`). Botón neutral `#1f202c` con icono `Printer` (impresora en marcha).
+- **Listo para Retiro (`listo`):** Tinte esmeralda bosque sutil (`border-emerald-200 bg-emerald-50/20 dark:border-emerald-900/50 dark:bg-emerald-950/15`).
+  - Si tiene saldo pendiente: botón de cobro prioritario con icono `HandCoins`.
+  - Si saldo es $0: botón de entrega final con icono `PackageCheck`.
+- **Aviso WhatsApp (`app/pedidos/boton-aviso-whatsapp.tsx`):** Integrado sobre superficie `#1f202c` con acento esmeralda discreto para avisar al cliente cuando su pedido esté listo.
+
+### 13.4 Armonización de Contraste y Navegación en el Home (`app/page.tsx`)
+
+1. **Navegación Directa de KPIs al Taller:** Las 4 tarjetas de resumen de taller ahora son enlaces interactivos (`<Link href="/taller?tab=...">`), permitiendo acceder directamente a la vista filtrada con 1 toque.
+2. **Corrección de Hover Fantasma:** Eliminado el efecto de hover beige/grisáceo lavado en modo oscuro mediante `dark:hover:bg-amber-950/40` y `dark:hover:bg-emerald-950/40`.
+3. **Polaridad Normalizada en Accesos Rápidos:** Tarjetas con dos botones ("Gestión de Pedidos", "Clientes") estandarizadas con botón principal neutral a la izquierda y botón de creación rápida outline a la derecha. El acceso al taller adoptó un botón neutral con micro-icono de acento, eliminando el color naranja saturado anterior.
+
+
 

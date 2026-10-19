@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  color-scheme: light dark;
+  --surface: #ffffff;
+  --surface-elevated: #f4f4f5;
+  --border: #e4e4e7;
+  color-scheme: light;
 }
 
 html {
@@ -13,15 +18,23 @@ html {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-tokyo-bg: #16161e;
+  --color-tokyo-surface: #1a1b26;
+  --color-tokyo-elevated: #1f202c;
+  --color-tokyo-border: #24283b;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root,
-  html {
-    --background: #0a0a0a;
+  :root:not([data-theme="light"]):not(.light) {
+    --background: #16161e;
     --foreground: #ededed;
+    --surface: #1a1b26;
+    --surface-elevated: #1f202c;
+    --border: #24283b;
     color-scheme: dark;
   }
 }
@@ -29,6 +42,11 @@ html {
 .dark,
 [data-theme="dark"],
 html.dark {
+  --background: #16161e;
+  --foreground: #ededed;
+  --surface: #1a1b26;
+  --surface-elevated: #1f202c;
+  --border: #24283b;
   color-scheme: dark;
 }
 
