@@ -29,7 +29,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-4 py-10 font-sans dark:bg-black sm:px-6">
+    <div className="flex flex-1 flex-col items-center justify-center bg-zinc-50 px-4 py-10 font-sans dark:bg-[#16161e] sm:px-6">
       <main className="flex w-full max-w-sm flex-col gap-6">
         <header className="text-center">
           <p className="text-sm font-semibold tracking-widest text-zinc-500 uppercase dark:text-zinc-400">
@@ -43,7 +43,7 @@ export default async function LoginPage() {
           </p>
         </header>
 
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950 sm:p-8">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-xl dark:border-[#24283b] dark:bg-[#1a1b26] sm:p-8">
           <LoginForm />
         </div>
       </main>

@@ -122,7 +122,7 @@ export function AppShell({
                         className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 ${
                           activa
                             ? "bg-zinc-900 text-white font-semibold shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
-                            : "text-zinc-600 hover:bg-zinc-100/90 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                            : "text-zinc-600 hover:bg-zinc-100/90 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]"
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -136,7 +136,7 @@ export function AppShell({
                           <span>{item.label}</span>
                         </div>
                         {item.badge && (
-                          <span className="rounded-full bg-zinc-200 px-1.5 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                          <span className="rounded-full bg-zinc-200 px-1.5 py-0.5 text-[10px] font-bold text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-300">
                             {item.badge}
                           </span>
                         )}
@@ -150,10 +150,10 @@ export function AppShell({
         </nav>
 
         {/* Perfil del usuario autenticado al pie del Sidebar */}
-        <div className="border-t border-zinc-200 p-3 dark:border-zinc-800">
-          <div className="flex items-center justify-between rounded-xl bg-zinc-50 p-2.5 dark:bg-zinc-800/60">
+        <div className="border-t border-zinc-200 p-3 dark:border-[#24283b]">
+          <div className="flex items-center justify-between rounded-xl border border-zinc-200/70 bg-zinc-50 p-2.5 dark:border-[#24283b] dark:bg-[#1f202c]">
             <div className="flex items-center gap-2 overflow-hidden">
-              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200">
+              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-zinc-200 text-zinc-700 dark:bg-[#252b42] dark:text-zinc-200">
                 <User className="size-4" />
               </div>
               <div className="truncate">
@@ -172,7 +172,7 @@ export function AppShell({
                 type="submit"
                 aria-label="Cerrar sesión"
                 title="Cerrar sesión"
-                className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-900 dark:hover:bg-zinc-700 dark:hover:text-zinc-100"
+                className="flex size-8 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-[#252b42] dark:hover:text-zinc-100"
               >
                 <LogOut className="size-4" />
               </button>
@@ -256,7 +256,7 @@ export function AppShell({
               <button
                 type="button"
                 onClick={() => setMenuMovilAbierto(false)}
-                className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-[#1f202c] dark:text-zinc-400"
               >
                 <X className="size-5" />
               </button>
@@ -300,7 +300,7 @@ export function AppShell({
                             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-medium transition-all duration-150 ${
                               activa
                                 ? "bg-zinc-900 text-white font-semibold dark:bg-zinc-100 dark:text-zinc-900"
-                                : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                                : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]"
                             }`}
                           >
                             <Icono className="size-4" />
@@ -314,14 +314,14 @@ export function AppShell({
               })}
             </nav>
 
-            <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
+            <div className="border-t border-zinc-200 p-4 dark:border-[#24283b]">
               <div className="mb-3 text-xs text-zinc-500">
                 Sesión: <strong className="text-zinc-800 dark:text-zinc-200">{usuarioEmail}</strong> ({usuarioRol})
               </div>
               <form action={accionCerrarSesion}>
                 <button
                   type="submit"
-                  className="flex h-9 w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200"
+                  className="flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200/80 bg-zinc-100 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42]"
                 >
                   <LogOut className="size-4" />
                   Cerrar sesión

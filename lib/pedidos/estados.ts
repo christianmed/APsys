@@ -28,31 +28,31 @@ export const ESTADOS_METADATA: Record<
   recibido: {
     label: "Recibido",
     badgeColor:
-      "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+      "border border-blue-200/90 bg-blue-50 text-blue-800 dark:border-blue-900/60 dark:bg-blue-950/50 dark:text-[#7aa2f7]",
     descripcion: "Esperando inicio de producción en taller",
   },
   en_produccion: {
     label: "En Producción",
     badgeColor:
-      "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
+      "border border-amber-200/90 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-[#e0af68]",
     descripcion: "En proceso de impresión o acabado",
   },
   listo: {
     label: "Listo para Retiro",
     badgeColor:
-      "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
+      "border border-emerald-200/90 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-[#9ece6a]",
     descripcion: "Trabajo terminado, listo para entregar al cliente",
   },
   entregado: {
     label: "Entregado",
     badgeColor:
-      "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+      "border border-zinc-200 bg-zinc-100 text-zinc-700 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300",
     descripcion: "Orden retirada y entregada al cliente",
   },
   cancelado: {
     label: "Cancelado",
     badgeColor:
-      "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
+      "border border-red-200 bg-red-50 text-red-800 dark:border-red-900/60 dark:bg-red-950/50 dark:text-[#f7768e]",
     descripcion: "Orden anulada con motivo justificado",
   },
 };

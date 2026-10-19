@@ -119,7 +119,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             </Link>
             <Link
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 truncate"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc] truncate"
             >
               <span className="truncate">Ver Pedidos</span>
             </Link>
@@ -148,12 +148,12 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         </div>
 
         {/* Total por Cobrar en Bs */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Equivalente en Bolívares
             </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-200">
               <TrendingDown className="size-5" />
             </span>
           </div>
@@ -166,12 +166,12 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         </div>
 
         {/* Clientes Deudores */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Clientes con Saldo
             </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-200">
               <Users className="size-5" />
             </span>
           </div>
@@ -203,7 +203,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       </div>
 
       {/* Visualización de Tramos de Antigüedad */}
-      <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
         <h2 className="text-base font-bold text-zinc-900 dark:text-white">
           Antigüedad de la Cartera por Cobrar (Aging)
         </h2>
@@ -212,7 +212,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         </p>
 
         {/* Barra proporcional visual */}
-        <div className="mt-4 flex h-3.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+        <div className="mt-4 flex h-3.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-[#16161e]">
           {(["0_a_7", "8_a_15", "16_a_30", "mas_de_30"] as TramoAntiguedad[]).map((t) => {
             const tramoInfo = resumenInicial.tramos[t];
             if (tramoInfo.porcentaje_del_total <= 0) return null;
@@ -241,8 +241,8 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
                 onClick={() => setTramoSeleccionado(estaActivo ? "todos" : t)}
                 className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
                   estaActivo
-                    ? "border-zinc-900 bg-zinc-50 ring-2 ring-zinc-900 dark:border-white dark:bg-zinc-800 dark:ring-white"
-                    : "border-zinc-200 bg-white hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700"
+                    ? "border-zinc-900 bg-zinc-50 ring-2 ring-zinc-900 dark:border-[#7aa2f7] dark:bg-[#1f202c] dark:ring-2 dark:ring-[#7aa2f7]/40"
+                    : "border-zinc-200 bg-white hover:border-zinc-300 dark:border-[#24283b] dark:bg-[#16161e] dark:hover:border-[#2f3654]"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -271,7 +271,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       </div>
 
       {/* Controles de Filtros y Búsqueda */}
-      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 lg:flex-row lg:items-center lg:justify-between min-w-0 max-w-full">
+      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26] lg:flex-row lg:items-center lg:justify-between min-w-0 max-w-full">
         {/* Pestañas de tramo */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <button
@@ -279,8 +279,8 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             onClick={() => setTramoSeleccionado("todos")}
             className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
               tramoSeleccionado === "todos"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
             }`}
           >
             Todos ({resumenInicial.total_pedidos_con_deuda})
@@ -292,8 +292,8 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
               onClick={() => setTramoSeleccionado(t)}
               className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
                 tramoSeleccionado === t
-                  ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                  : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                  ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
+                  : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
               }`}
             >
               {NOMBRES_TRAMOS[t].titulo} ({resumenInicial.tramos[t].cantidad})
@@ -310,7 +310,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar cliente, orden o tlf..."
-              className="h-9 w-full rounded-lg border border-zinc-200 bg-white pl-9 pr-3 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-800 dark:bg-zinc-950 dark:text-white dark:placeholder:text-zinc-600 dark:focus:border-white dark:focus:ring-white min-w-0"
+              className="h-9 w-full rounded-lg border border-zinc-200 bg-white pl-9 pr-3 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:outline-none focus:ring-1 focus:ring-[#7aa2f7] dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25 min-w-0"
             />
           </div>
 
@@ -326,8 +326,8 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       </div>
 
       {/* Tabla detallada de cuentas por cobrar */}
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+        <div className="border-b border-zinc-200 px-6 py-4 dark:border-[#24283b]">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
               Detalle de Saldos por Cobrar ({cuentasFiltradas.length})
@@ -347,7 +347,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400">
+              <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                 <tr>
                   <th className="px-6 py-3.5">Orden</th>
                   <th className="px-6 py-3.5">Cliente</th>
@@ -358,7 +358,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
                   <th className="px-6 py-3.5 text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              <tbody className="divide-y divide-zinc-200 dark:divide-[#24283b]">
                 {cuentasFiltradas.map((cuenta) => {
                   const meta = NOMBRES_TRAMOS[cuenta.tramo];
                   const { enlaceWhatsApp } = generarMensajeCobranza({
@@ -373,7 +373,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
                   return (
                     <tr
                       key={cuenta.pedido_id}
-                      className="transition-colors hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40"
+                      className="transition-colors hover:bg-zinc-50/70 dark:hover:bg-[#1f202c]/50"
                     >
                       {/* Orden */}
                       <td className="px-6 py-4 font-bold text-zinc-900 dark:text-white">
@@ -459,7 +459,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
 
                           <Link
                             href={`/pedidos/${cuenta.pedido_id}`}
-                            className="inline-flex h-8 items-center rounded-lg border border-zinc-200 bg-white px-2.5 text-[11px] font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+                            className="inline-flex h-8 items-center rounded-lg border border-zinc-200 bg-white px-2.5 text-[11px] font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
                           >
                             Abonar
                           </Link>

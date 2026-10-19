@@ -5,6 +5,7 @@ import {
   Camera,
   CheckCircle2,
   Flashlight,
+  Info,
   LoaderCircle,
   Search,
   X,
@@ -300,8 +301,11 @@ export function CamaraEscanerModal({
         {/* Información y Fallback para navegadores sin BarcodeDetector */}
         <div className="p-4 space-y-3 bg-zinc-900 border-t border-zinc-800">
           {!soportaBarcodeDetector && (
-            <p className="text-[11px] text-amber-300">
-              ℹ️ Su navegador actual no cuenta con BarcodeDetector activo. Puede escribir el número o usar el lector USB a continuación:
+            <p className="flex items-center gap-1.5 text-[11px] text-amber-300">
+              <Info className="size-3.5 shrink-0 text-amber-300" />
+              <span>
+                Su navegador actual no cuenta con BarcodeDetector activo. Puede escribir el número o usar el lector USB a continuación:
+              </span>
             </p>
           )}
 

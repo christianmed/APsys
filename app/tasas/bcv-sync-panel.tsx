@@ -103,7 +103,7 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
         type="button"
         onClick={handleConsultar}
         disabled={consultando || sincronizando}
-        className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 text-xs font-bold text-blue-800 shadow-sm transition hover:bg-blue-100 disabled:opacity-60 dark:border-blue-900/50 dark:bg-blue-950/30 dark:text-blue-300 dark:hover:bg-blue-950/50"
+        className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 text-xs font-bold text-blue-800 shadow-sm transition hover:bg-blue-100 disabled:opacity-60 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#7aa2f7] dark:hover:bg-[#252b42]"
       >
         {consultando ? (
           <>
@@ -123,7 +123,7 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
         <div className="space-y-3">
           {/* Tasa USD */}
           {tasaUsdEnVivo ? (
-            <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+            <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50/70 p-3 dark:border-emerald-900/40 dark:bg-[#16161e]">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                   USD / BCV Oficial
@@ -164,16 +164,16 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
 
           {/* Tasa EUR (informativa) */}
           {tasaEurEnVivo ? (
-            <div className="flex items-center justify-between rounded-xl border border-indigo-200 bg-indigo-50/50 p-3 dark:border-indigo-900/50 dark:bg-indigo-950/20">
+            <div className="flex items-center justify-between rounded-xl border border-blue-200 bg-blue-50/50 p-3 dark:border-[#24283b] dark:bg-[#16161e]">
               <div>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-[#7aa2f7]">
                   <Euro className="size-3" />
                   EUR / BCV Oficial (informativa)
                 </span>
-                <p className="text-lg font-black text-indigo-900 dark:text-indigo-100">
+                <p className="text-lg font-black text-blue-900 dark:text-[#f8fafc]">
                   Bs. {tasaEurEnVivo.valorBs.toFixed(4)}
                 </p>
-                <p className="text-[10px] text-indigo-600 dark:text-indigo-400">
+                <p className="text-[10px] text-blue-600 dark:text-[#7aa2f7]">
                   Actualizado:{" "}
                   {new Date(
                     tasaEurEnVivo.fechaActualizacion,
@@ -184,7 +184,7 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
                   })}
                 </p>
               </div>
-              <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[9px] font-bold text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300">
+              <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[9px] font-bold text-blue-700 dark:bg-blue-950/50 dark:text-[#7aa2f7]">
                 Solo informativa
               </span>
             </div>
@@ -204,10 +204,10 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
                 type="button"
                 onClick={handleSincronizar}
                 disabled={sincronizando || consultando}
-                className={`inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold text-white shadow-sm transition disabled:opacity-60 ${
+                className={`inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold shadow-xs transition active:scale-98 disabled:opacity-60 ${
                   esFutura
-                    ? "bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700"
-                    : "bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                    ? "border border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#e0af68] dark:hover:bg-[#252b42] dark:hover:border-amber-600/60"
+                    : "border border-emerald-300/80 bg-emerald-50 text-emerald-950 hover:bg-emerald-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42] dark:hover:border-emerald-600/60"
                 }`}
               >
                 {sincronizando ? (

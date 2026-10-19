@@ -86,10 +86,10 @@ export function BotonAvisoWhatsApp({
         rel="noopener noreferrer"
         aria-label={`Avisar por WhatsApp a ${nombreCliente}`}
         data-testid={`btn-whatsapp-${numeroOrden}`}
-        className="inline-flex size-8 items-center justify-center rounded-lg border border-emerald-300/80 bg-emerald-50/80 text-emerald-700 transition hover:bg-emerald-100 active:scale-95 shadow-xs dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+        className="inline-flex size-8 items-center justify-center rounded-lg border border-emerald-300/80 bg-emerald-50/80 text-emerald-700 transition hover:bg-emerald-100 active:scale-95 shadow-xs dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42]"
         title="Avisar por WhatsApp"
       >
-        <MessageCircle className="size-4 text-emerald-600 dark:text-emerald-400" />
+        <MessageCircle className="size-4 text-emerald-600 dark:text-[#9ece6a]" />
       </a>
     );
   }
@@ -101,9 +101,9 @@ export function BotonAvisoWhatsApp({
       rel="noopener noreferrer"
       aria-label={`Avisar por WhatsApp a ${nombreCliente} sobre ${ordenStr}`}
       data-testid={`btn-whatsapp-${numeroOrden}`}
-      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-emerald-300/80 bg-emerald-50/80 px-3 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-95 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
+      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-emerald-300/80 bg-emerald-50/80 px-3 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-95 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42] dark:hover:border-emerald-700/60"
     >
-      <MessageCircle className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+      <MessageCircle className="size-3.5 text-emerald-600 dark:text-[#9ece6a]" />
       Aviso WhatsApp
     </a>
   );

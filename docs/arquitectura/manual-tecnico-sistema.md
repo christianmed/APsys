@@ -289,6 +289,17 @@ APSys cuenta con un motor autónomo de tasas de cambio diseñado específicament
   - `30 22 * * 1-5` (22:30 UTC / 6:30 PM Caracas, Lunes a Viernes): Sincronización vespertina optimizada para capturar la tasa del día siguiente, 100% compatible con el límite de 1 cron diario del plan **Vercel Hobby**.
   - En entornos con Vercel Pro, puede habilitarse adicionalmente el turno de medianoche (`5 4 * * *` / 12:05 AM Caracas).
 
+### 6.2.1 Auto-Sincronización Transparente Post-Medianoche (`/api/tasas/auto-sync`)
+
+Para blindar al negocio en caso de que el operador olvide sincronizar manualmente la tasa antes de las 11:59 PM y ante la ausencia de cron jobs en servidores de desarrollo local o planes limitados:
+
+1. **Ventana Manual (4:00 PM – 11:59 PM):** Durante la tarde, el BCV emite la tasa del día hábil siguiente (`esFutura = true`). El sistema la expone en el acordeón ámbar del Sidebar y en los formularios, pero respeta la ventana manual para que el operador decida cuándo aplicarla.
+2. **Corte Estricto a las 12:00 a. m. (Caracas UTC-4):** Al cambiar el día calendario, la nueva tasa se convierte en la oficial y obligatoria por ley para la jornada en curso.
+3. **Auto-Adopción en Memoria y Persistencia Silenciosa:** Cuando cualquier cliente abre o navega por la aplicación pasadas las 12:00 a. m.:
+   - `context/tasas-context.tsx` detecta si la tasa en base de datos es de una fecha anterior o es inferior a la tasa oficial emitida por el BCV para el día de hoy.
+   - Si detecta rezago, adopta de inmediato el valor en memoria y despacha una llamada transparente a `POST /api/tasas/auto-sync`.
+   - El endpoint valida con `SUPABASE_SERVICE_ROLE_KEY`, verifica idempotencia para evitar escrituras duplicadas, persiste el nuevo registro en `tasas_cambio`, añade la traza en `auditoria` y revalida las rutas con `revalidatePath`.
+
 ### 6.3 Micro-Webhook de Alertas por Telegram (`lib/notificaciones/telegram.ts`)
 
 Para que el personal de gerencia y tecnología tenga visibilidad inmediata ante incidencias sin intervención humana, se integró un micro-cliente HTTP nativo de Telegram:
@@ -372,6 +383,26 @@ El sistema visual de APSys está optimizado para funcionar tanto en computadoras
   }
   ```
 - Permite desplazamiento táctil horizontal 100% fluido en móviles sin barras grises que afeen la interfaz.
+
+### 8.4 Arquitectura Visual de Tarjetas de Pedidos y Estandarización Iconográfica
+
+- **Desacoplamiento de `EstadoControl` (`app/pedidos/estado-control.tsx`):**
+  - Componente polimórfico que soporta tres modos de presentación: `modo="completo"`, `modo="solo_badge"` y `modo="solo_boton"`.
+  - Permite separar el indicador de estado informativo del disparador de mutación transaccional.
+- **Layout Ergonómico de Doble Columna (`app/pedidos/page.tsx`):**
+  - **Columna Izquierda (Identidad y Operación):** Muestra el número de orden `#` con su badge de estado a su derecha (`solo_badge`), nombre del cliente, teléfono y timestamp. Inmediatamente debajo de la fecha se sitúa el botón de avance operativo (`solo_boton`: `Iniciar producción`, `Listo para Retiro`, `Entregar pedido`) con tokens Tokyo Night (`#1f202c`, borde `#2f3654`, hover `#252b42`) y micro-iconos Lucide (`Play`, `CheckCircle2`, `PackageCheck`).
+  - **Columna Derecha (Finanzas y Utilidades):** Despliega el total general en USD, seguido de las píldoras de saldo con iconografía vectorial (`100% Pagado`, `Abonado: $xx.xx`, `Resta: $xx.xx`, `Sin abono`), y justo debajo la botonera utilitaria alineada a la derecha: `[Comanda]`, `[Aviso WhatsApp]`, `[Auditoría]` y `[Anular]`.
+- **Estandarización Iconográfica Global (Cero Emoticones):**
+  - Se prohíbe el uso de emojis Unicode en la interfaz y en las plantillas de notificación del sistema.
+  - Todas las representaciones de estado, moneda, advertencia y acciones emplean exclusivamente iconos SVG vectoriales de la librería `lucide-react`, asegurando coherencia visual, renderizado nítido en pantallas de alta densidad y compatibilidad total entre sistemas operativos y navegadores.
+
+### 8.5 Prevención de Hydration Mismatch en Conmutadores de Tema (`ThemeToggleButton`)
+
+- **Causa Raíz de Desincronización SSR vs. Cliente:** Durante el Server-Side Rendering (SSR) en Next.js, el servidor desconoce el almacenamiento local del cliente (`localStorage`) y genera el HTML asumiendo el tema por defecto (`dark`, renderizando `<Sun />` y `aria-label="Cambiar a tema claro"`). Cuando el usuario navega habiendo configurado el tema claro (`light`), el renderizado inicial en el cliente evaluaba `localStorage` de inmediato, generando un árbol DOM con `<Moon />` y provocando el error `Hydration failed because the server rendered HTML didn't match the client`.
+- **Solución Arquitectónica con `React.useSyncExternalStore`:**
+  - Se evitó el antipatrón de llamar a `setState` síncrono dentro de un `useEffect` (prohibido por las reglas de rendimiento de React 19 y Next.js 16).
+  - Se implementó `React.useSyncExternalStore(emptySubscribe, () => true, () => false)` para determinar el estado de montaje del cliente.
+  - Garantiza que durante SSR y el paso de hidratación inicial se renderice un placeholder neutro con dimensiones y clases idénticas, activando el conmutador dinámico de forma determinista y sin parpadeo de layout (*Layout Shift*).
 
 ---
 
@@ -558,7 +589,79 @@ El estado de la orden en el tablero de taller se comunica a través del fondo co
 
 1. **Navegación Directa de KPIs al Taller:** Las 4 tarjetas de resumen de taller ahora son enlaces interactivos (`<Link href="/taller?tab=...">`), permitiendo acceder directamente a la vista filtrada con 1 toque.
 2. **Corrección de Hover Fantasma:** Eliminado el efecto de hover beige/grisáceo lavado en modo oscuro mediante `dark:hover:bg-amber-950/40` y `dark:hover:bg-emerald-950/40`.
-3. **Polaridad Normalizada en Accesos Rápidos:** Tarjetas con dos botones ("Gestión de Pedidos", "Clientes") estandarizadas con botón principal neutral a la izquierda y botón de creación rápida outline a la derecha. El acceso al taller adoptó un botón neutral con micro-icono de acento, eliminando el color naranja saturado anterior.
+3. **Polaridad Normalizada en Accesos Rápidos:** Tarjetas con dos botones ("Gestión de Pedidos", "Clientes") estandarizadas con botón principal neutral a la izquierda y botón de creación rápida outline a la derecha. El acceso al taller adoptó un botón neutral con micro-icono de acento, eliminando el color naranja saturado anterior.---
 
+## 14. Sistema de Diseño Integral APSys Tokyo Night
 
+### 14.1 Diagnóstico de Inconsistencias Heredadas (Fase 34)
+
+Previo a la Fase 34, el sistema presentaba inconsistencias visuales en el tema oscuro derivadas de la migración progresiva de pantallas:
+1. **Componentes Aislados en el Sidebar:** El widget de tasas BCV y el pie del operador conservaban clases `zinc-900`/`zinc-800` heredadas, contrastando con la superficie de la barra lateral.
+2. **Hover Grisáceo Antiguo en Navegación:** Los enlaces del sidebar usaban `hover:bg-zinc-800`, produciendo un tono gris cenizo desentonado con el matiz azul medianoche de Tokyo Night.
+3. **Disparidad de Azules:** La tarjeta "Por Iniciar" utilizaba una variante de `sky-400`, mientras que el módulo de tasas utilizaba `blue-400` y otras secciones recurrían a `indigo`, rompiendo la coherencia visual.
+4. **CustomSelect Desalineado:** El menú selector universal conservaba anillos de foco verdes (`focus-visible:ring-emerald-500`) en formularios generales y fondos grises lavados en el desplegable.
+5. **Divergencia entre Páginas:** Las pantallas de `/pedidos`, `/tasas`, `/cuentas-por-cobrar`, `/clientes` y `/servicios` tenían combinaciones dispares de clases `dark:bg-zinc-950` y `dark:border-zinc-800`.
+
+### 14.2 Arquitectura de Tokens Globales y Remapping en Tailwind CSS v4
+
+Para erradicar de raíz la inconsistencia, se implementó una estrategia en dos capas:
+
+1. **Tokens Semánticos Oficiales (`app/globals.css` y `lib/design-system.ts`):**
+   ```css
+   @theme inline {
+     --color-tokyo-canvas: #16161e;
+     --color-tokyo-surface: #1a1b26;
+     --color-tokyo-elevated: #1f202c;
+     --color-tokyo-hover: #252b42;
+     --color-tokyo-border: #24283b;
+     --color-tokyo-border-active: #2f3654;
+     --color-tokyo-blue: #7aa2f7;
+     --color-tokyo-amber: #e0af68;
+     --color-tokyo-emerald: #9ece6a;
+     --color-tokyo-purple: #bb9af7;
+     --color-tokyo-red: #f7768e;
+   }
+   ```
+2. **Blindaje de Raíz vía CSS Remapping en `.dark`:**
+   En `app/globals.css`, las utilidades nativas de Tailwind se remapearon dentro del selector `.dark`:
+   ```css
+   .dark {
+     --color-zinc-950: #16161e;
+     --color-zinc-900: #1a1b26;
+     --color-zinc-800: #1f202c;
+     --color-zinc-700: #24283b;
+     --color-zinc-600: #565f89;
+   }
+   ```
+   Esto garantiza que cualquier componente de terceros, biblioteca o utilería heredada resuelva automáticamente en el color Tokyo Night correspondiente, evitando pantallas o modales con grises incompatibles.
+
+### 14.3 Mapeo Semántico Universal de Estados y Colores
+
+| Concepto Visual | Hex / Token | Aplicación en APSys |
+| :--- | :--- | :--- |
+| **Canvas** | `#16161e` | Fondo raíz de aplicación, página de login y contenedor general. |
+| **Superficie** | `#1a1b26` | Tarjetas KPI, sidebar, paneles de formulario, modales y tablas. |
+| **Superficie Elevada** | `#1f202c` | Inputs, header thead, botones secundarios, badges neutrales y pie de usuario. |
+| **Hover Activo** | `#252b42` | Estado hover de botones de navegación, botones secundarios y dropdowns. |
+| **Borde Estándar** | `#24283b` | Divisores de fila, bordes de tarjeta e inputs en reposo. |
+| **Borde Activo / Ring** | `#2f3654` / `#7aa2f7` | Foco de inputs, selector abierto y bordes seleccionados. |
+| **Azul Zafiro Semántico** | `#7aa2f7` | **Color Azul Unificado de APSys:** Estado "Recibido / Por Iniciar", Gestión de Pedidos, Tasa Euro BCV informativa, botones de acción secundaria y rings de foco en CustomSelect. |
+| **Ámbar Noche** | `#e0af68` | Estado "En Producción", avisos de tasas para mañana y recordatorios 48h. |
+| **Esmeralda Bosque** | `#9ece6a` | Estado "Listo para Retiro", totales pagados y tasa USD oficial vigente. |
+| **Rojo Coral** | `#f7768e` | Estado "Cancelado", pedidos anulados, saldos retenidos y alertas urgentes 72h. |
+
+### 14.4 Rediseño Integral de Componentes Clave
+
+1. **Cascarón y Sidebar (`components/shell/`):**
+   - **Widget Tasas BCV:** Contenedor `#1a1b26`, borde `#24283b`, acordeones `#1f202c` y hover `#252b42`.
+   - **Pie de Operador:** Superficie `#1f202c` con borde `#24283b`, botón logout con hover `#252b42`.
+   - **Navegación:** Enlaces con hover `#1f202c` y texto `#f8fafc`.
+2. **Selector Universal (`components/ui/custom-select.tsx`):**
+   - Variante `form`: Botón disparador con fondo `#16161e`, borde `#24283b`, hover `#2f3654` y anillo de foco azul `#7aa2f7` (reemplazando el anillo verde desentonado).
+   - Menú listbox desplegable: Fondo `#1a1b26`, borde `#2f3654`, buscador `#16161e`, ítems con hover `#1f202c` y activo con check `#7aa2f7`.
+3. **Módulos Operativos y Comerciales:**
+   - **Pedidos y Nuevo Pedido:** Secciones a `#1a1b26`, renglones dinámicos a `#1f202c`, inputs a `#16161e` con foco `#7aa2f7`.
+   - **Taller Kanban:** Tarjetas unificadas con bordes tonales de estado y botones táctiles de avance.
+   - **Tasas y Finanzas:** Tarjeta hero en gradiente `#1a1b26`, panel BCV y tabla histórica inmutable sincronizados.
+   - **Clientes y Servicios:** Directorio, formularios de alta/edición y fichas de historial consolidados en Tokyo Night.
 

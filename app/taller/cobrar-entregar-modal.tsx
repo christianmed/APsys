@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Banknote, CheckCircle, LoaderCircle, X } from "lucide-react";
+import { AlertCircle, Banknote, CheckCircle, Coins, DollarSign, LoaderCircle, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { cobrarYEntregarPedido } from "@/app/pedidos/actions";
 import { formatearMonedaBs, formatearMonedaUSD } from "@/lib/cobranzas/cuentas-por-cobrar";
@@ -139,7 +139,8 @@ export function CobrarYEntregarModal({
                   : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
               }`}
             >
-              💵 Dólares (USD)
+              <DollarSign className="size-4" />
+              <span>Dólares (USD)</span>
             </button>
             <button
               type="button"
@@ -151,7 +152,8 @@ export function CobrarYEntregarModal({
                   : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-300"
               }`}
             >
-              🇻🇪 Bolívares (Bs)
+              <Coins className="size-4" />
+              <span>Bolívares (Bs)</span>
             </button>
           </div>
         </div>

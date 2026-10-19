@@ -36,20 +36,19 @@
 4. **Registra el abono inicial y selecciona la tasa adecuada:**
    - Puedes cobrar en **USD efectivo** o **Bolívares (Pago Móvil / Transferencia)**.
    - Si el cobro es en Bs, el sistema aplica la tasa oficial del día automáticamente.
-   - **Selector de Tasa Hoy vs. Mañana:** Si el BCV ya emitió en la tarde la tasa para el día siguiente y fue registrada en `/tasas`, en el formulario de la orden aparecerá un selector destacado en color ámbar:
-     `[ Hoy (Bs. 879.12) ]` | `[ Mañana (Bs. 880.12) ]`
-     Permite cotizar o cobrar de inmediato con la tasa nueva a discreción del operador para proteger el margen del taller antes del cierre de jornada.
+   - **Ciclo Diario de Tasas y Corte a las 12:00 a. m.:**
+     - **Tarde (4:00 PM - 11:59 PM):** El BCV publica la tasa de mañana y se resalta en ámbar en el Sidebar. El operador tiene la opción de revisarla y aplicarla voluntariamente en `/tasas`.
+     - **Post-Medianoche (12:00 a. m. en adelante):** Si el operador no la aplicó manualmente antes de las 11:59 PM, el sistema la auto-adopta y guarda en la base de datos de forma obligatoria e inmediata al primer acceso, protegiendo el margen del taller sin depender de la memoria del personal.
 5. Haz clic en **"Crear Pedido"** e imprime la **Comanda Técnica**.
 
-### Navegación y Paginación en Listados (`/pedidos` y `/clientes`)
+### Buscadores Unificados y Gestión de Pedidos (`/pedidos` y `/clientes`)
 
-Para garantizar que el sistema cargue de manera instantánea sin congelar el navegador:
-
-- Las listas de **Pedidos** y **Clientes** muestran **25 registros por página**.
-- Al final del listado se ubican los botones de navegación:
-  - `[ Siguiente → ]`: Carga las 25 órdenes o clientes anteriores aprovechando los índices rápidos de la base de datos.
-  - `[ ← Inicio ]`: Aparece al haber avanzado de página para regresar con un solo toque a las órdenes más recientes.
-- Si utilizas el buscador, la paginación respetará automáticamente tu término de búsqueda.
+- **Buscador Moderno Unificado con Atajo `/`:** En las pantallas de Pedidos y Directorio de Clientes se cuenta con una barra de búsqueda integrada tipo píldora. Al presionar `/` en el teclado se enfoca instantáneamente el campo, con botón de limpieza inmediata `X`.
+- **Organización Ergonómica de Tarjetas de Pedidos (`/pedidos`):**
+  - **Columna Izquierda:** Contiene el número de orden con su píldora de estado actual (`Recibido`, `En Producción`, `Listo para Retiro`), datos del cliente, teléfono y fecha de registro. Justo debajo de la fecha se sitúa el **botón de avance operativo de estado** (`Iniciar producción`, `Listo para Retiro`, `Entregar pedido`) con icono vectorial Lucide, permitiendo transiciones de flujo a un toque sin interferir con la cabecera.
+  - **Columna Derecha:** Muestra el Total en USD, seguido de las **píldoras semánticas financieras** vectoriales (`100% Pagado`, `Abonado: $xx.xx`, `Resta: $xx.xx`, `Sin abono`) con códigos cromáticos Tokyo Night e iconos Lucide. Inmediatamente debajo se agrupa la botonera de utilidades técnicas: `[Comanda]` `[Aviso WhatsApp]` `[Auditoría]` `[Anular]`.
+- **Estandarización Iconográfica Global (Cero Emoticones):** Toda la interfaz del sistema utiliza exclusivamente iconos vectoriales tipográficos de la librería `lucide-react` para garantizar consistencia, sobriedad y legibilidad profesional.
+- **Paginación Inteligente:** Las listas muestran **25 registros por página** con navegación por cursor (`[ Siguiente → ]` y `[ ← Inicio ]`).
 
 ---
 
@@ -183,3 +182,19 @@ En el tablero de producción, cada tarjeta comunica su estado actual mediante el
 4. **Acceso Rápido desde la Pantalla de Inicio (Home):**
    - Las 4 tarjetas de resumen del taller en la página principal ahora son interactivas: al hacer clic en cualquiera de ellas ("Activas en Taller", "Por Iniciar", "En Producción", "Listos para Retiro"), viajarás directamente al taller con ese filtro preseleccionado.
 
+---
+
+## 9. Sistema de Diseño Integral Tokyo Night y Selectores Universales (Fase 34)
+
+A partir de la versión v1.0.0, la experiencia visual de APSys fue unificada transversalmente bajo el estándar de diseño **Tokyo Night**:
+
+1. **Unificación Estricta del Azul Zafiro (`#7aa2f7`):**
+   - El color azul utilizado en la tarjeta "Por Iniciar" del Home es **exactamente el mismo** utilizado en los accesos de "Gestión de Pedidos", la tasa informativa del Euro BCV, los checks de selección y los anillos de foco de la interfaz. Esto elimina cualquier confusión visual o disparidad entre pantallas.
+2. **Selector Universal Inteligente (`CustomSelect`):**
+   - Al registrar pedidos o seleccionar clientes y servicios, el nuevo selector desplegable ofrece:
+     - Búsqueda en tiempo real por nombre o teléfono sin perder el contexto.
+     - Botón directo para registrar clientes nuevos sin abandonar el pedido en curso.
+     - Enfoque visual nítido con el azul oficial Tokyo Night, sin bordes verdes desentonados.
+     - Navegación táctil ágil adaptada para tablets de mostrador y teléfonos móviles.
+3. **Consistencia en Todas las Pantallas:**
+   - La barra lateral (Sidebar), el widget de tasas BCV, el pie de usuario, las listas de clientes, catálogo de servicios, comanda técnica, paneles de cobranza y reportes financieros comparten ahora la misma armonía cromática (`#16161e` en fondos, `#1a1b26` en tarjetas, `#1f202c` en controles interactivos y `#24283b` en divisiones), ofreciendo una apariencia profesional, moderna y libre de saturación visual.

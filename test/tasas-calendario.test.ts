@@ -150,5 +150,23 @@ describe("Lógica de Calendario Bancario y Dinámica de Vigencias (Fase 30)", ()
       });
       expect(etiqueta).toBe("Mañana, 21/10/2026");
     });
+
+    it("cuando no hay fechaVigencia futura emitida (undefined) para el acordeón de Mañana, debe calcular 'Mañana, 21/10/2026'", () => {
+      const etiqueta = formatearEtiquetaSidebar({
+        fechaVigencia: undefined,
+        esTasaActiva: false,
+        fechaReferencia: fechaMartes20,
+      });
+      expect(etiqueta).toBe("Mañana, 21/10/2026");
+    });
+
+    it("si la fechaVigencia para el acordeón de Mañana tiene diff <= 0 (ej. fecha de hoy), debe mostrar 'Mañana, 21/10/2026'", () => {
+      const etiqueta = formatearEtiquetaSidebar({
+        fechaVigencia: "2026-10-20",
+        esTasaActiva: false,
+        fechaReferencia: fechaMartes20,
+      });
+      expect(etiqueta).toBe("Mañana, 21/10/2026");
+    });
   });
 });

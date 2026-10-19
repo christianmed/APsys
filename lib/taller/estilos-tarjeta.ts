@@ -27,9 +27,9 @@ export function obtenerEstilosTarjetaTaller(
       return {
         estado: "recibido",
         cardContainer:
-          "border-sky-200/90 bg-sky-50/20 hover:border-sky-400/80 hover:bg-sky-50/40 dark:border-sky-900/50 dark:bg-sky-950/15 dark:hover:border-sky-800/80 dark:hover:bg-sky-950/25",
+          "border-blue-200/90 bg-blue-50/20 hover:border-blue-400/80 hover:bg-blue-50/40 dark:border-blue-900/50 dark:bg-blue-950/20 dark:hover:border-blue-800/80 dark:hover:bg-blue-950/30",
         badge:
-          "border border-sky-200 bg-sky-100 text-sky-900 dark:border-sky-800/60 dark:bg-sky-950/70 dark:text-sky-200",
+          "border border-blue-200 bg-blue-100 text-blue-900 dark:border-blue-800/60 dark:bg-blue-950/70 dark:text-[#7aa2f7]",
         btnAction:
           "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42]",
         iconoAccion: "Play",

@@ -29,23 +29,23 @@ export const DESCRIPCION_VARIABLES: Record<VariablePermitida, string> = {
 };
 
 export const PLANTILLAS_POR_DEFECTO: Record<TipoPlantilla, string> = {
-  aviso_retiro: `👋 *Hola {cliente}*, le escribimos de *APSys Gráfica*.
+  aviso_retiro: `*Hola {cliente}*, le escribimos de *APSys Gráfica*.
 
-🎉 ¡Su orden *#{orden}* está lista para ser retirada en nuestro taller!
+¡Su orden *#{orden}* está lista para ser retirada en nuestro taller!
 
-💵 *Total:* \${total} USD
-💳 *Saldo pendiente:* \${saldo} USD
+*Total:* \${total} USD
+*Saldo pendiente:* \${saldo} USD
 
-📍 Puede pasar a retirar su pedido en nuestro horario habitual. ¡Muchas gracias por confiar en nosotros!`,
+Puede pasar a retirar su pedido en nuestro horario habitual. ¡Muchas gracias por confiar en nosotros!`,
 
-  recordatorio: `🔔 *Hola {cliente}*, le escribimos con un cordial recordatorio de *APSys Gráfica*.
+  recordatorio: `*Hola {cliente}*, le escribimos con un cordial recordatorio de *APSys Gráfica*.
 
-📦 Le recordamos que su orden *#{orden}* lleva varios días lista para entrega ({dias} días en taller).
+Le recordamos que su orden *#{orden}* lleva varios días lista para entrega ({dias} días en taller).
 
-💵 *Total:* \${total} USD
-💳 *Saldo pendiente:* \${saldo} USD
+*Total:* \${total} USD
+*Saldo pendiente:* \${saldo} USD
 
-📍 Le esperamos en nuestras instalaciones para retirar su material. Si ya coordinó el retiro, por favor desestime este mensaje. ¡Muchas gracias!`,
+Le esperamos en nuestras instalaciones para retirar su material. Si ya coordinó el retiro, por favor desestime este mensaje. ¡Muchas gracias!`,
 };
 
 export type DatosVariablesPlantilla = {

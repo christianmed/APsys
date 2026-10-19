@@ -51,13 +51,13 @@ type Props = {
 type ItemLocal = ItemPedidoEntrada & { localId: string };
 
 const CLASES_INPUT =
-  "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-zinc-400 dark:focus-visible:ring-zinc-100/15";
+  "h-11 w-full rounded-xl border border-zinc-300 bg-white px-3.5 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:ring-2 focus:ring-[#7aa2f7]/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25";
 
 const CLASES_BOTON =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-6 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42]";
 
 const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-zinc-300 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-98 disabled:opacity-50 dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-300 dark:hover:border-[#7aa2f7]/50 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]";
 
 /**
  * Formulario interactivo de registro de pedidos y cobranza inicial (RF-01 / RF-02 / T-008 / T-009).
@@ -247,7 +247,7 @@ export function PedidoForm({
       />
 
       {/* SECCIÓN CLIENTE */}
-      <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <label
             htmlFor={`${formId}-cliente`}
@@ -257,7 +257,7 @@ export function PedidoForm({
           </label>
           <Link
             href="/clientes/nuevo"
-            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:hover:text-white"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
           >
             <UserPlus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
             Nuevo Cliente
@@ -291,7 +291,7 @@ export function PedidoForm({
       </section>
 
       {/* SECCIÓN SERVICIOS / ÍTEMS */}
-      <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
             Servicios y acabados <span className="text-red-500">*</span>
@@ -313,7 +313,7 @@ export function PedidoForm({
             return (
               <div
                 key={item.localId}
-                className="space-y-3 rounded-xl border border-zinc-100 bg-zinc-50/70 p-4 dark:border-zinc-800/80 dark:bg-zinc-950/40"
+                className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50/70 p-4 dark:border-[#24283b] dark:bg-[#1f202c]"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
@@ -499,7 +499,7 @@ export function PedidoForm({
         <button
           type="button"
           onClick={agregarItem}
-          className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 text-xs font-semibold text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-700 dark:bg-zinc-800/60 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 text-xs font-semibold text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:border-[#7aa2f7]/50 dark:hover:text-white"
         >
           <Plus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
           Agregar otro ítem
@@ -507,7 +507,7 @@ export function PedidoForm({
       </section>
 
       {/* SECCIÓN COBRANZA INICIAL (RF-02 / T-009) */}
-      <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="space-y-5 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
         {/* Selector de tasa programada (si el BCV ya publicó para mañana) */}
         {tasaProgramada && (
           <div className="rounded-xl border border-amber-200 bg-amber-50/80 p-3.5 dark:border-amber-900/60 dark:bg-amber-950/20">
@@ -521,13 +521,13 @@ export function PedidoForm({
                   El BCV ya emitió la tasa oficial para el siguiente día hábil. Elige con cuál cotizar:
                 </p>
               </div>
-              <div className="inline-flex rounded-lg border border-amber-300/80 bg-white p-1 dark:border-amber-800 dark:bg-zinc-900 shrink-0">
+              <div className="inline-flex rounded-lg border border-amber-300/80 bg-white p-1 dark:border-[#2f3654] dark:bg-[#16161e] shrink-0">
                 <button
                   type="button"
                   onClick={() => setTasaElegidaTipo("hoy")}
                   className={`px-3 py-1.5 rounded-md text-xs font-semibold transition ${
                     tasaElegidaTipo === "hoy"
-                      ? "bg-zinc-900 text-white shadow-sm dark:bg-zinc-100 dark:text-zinc-900"
+                      ? "bg-zinc-900 text-white shadow-sm dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                       : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
                   }`}
                 >
@@ -538,7 +538,7 @@ export function PedidoForm({
                   onClick={() => setTasaElegidaTipo("manana")}
                   className={`px-3 py-1.5 rounded-md text-xs font-semibold transition ${
                     tasaElegidaTipo === "manana"
-                      ? "bg-amber-600 text-white shadow-sm dark:bg-amber-500 dark:text-white"
+                      ? "bg-amber-600 text-white shadow-sm dark:bg-amber-500/90 dark:text-white"
                       : "text-amber-800 hover:text-amber-950 dark:text-amber-300 dark:hover:text-amber-100"
                   }`}
                 >
@@ -549,9 +549,9 @@ export function PedidoForm({
           </div>
         )}
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-100 pb-4 dark:border-zinc-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-100 pb-4 dark:border-[#24283b]">
           <div className="flex items-center gap-2.5">
-            <CreditCard className="size-5 text-zinc-900 dark:text-zinc-100" />
+            <CreditCard className="size-5 text-zinc-900 dark:text-[#7aa2f7]" />
             <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Cobranza inicial (Abono)
             </h2>
@@ -568,7 +568,7 @@ export function PedidoForm({
                   setAbonoReferencia("");
                 }
               }}
-              className="size-4 accent-zinc-900 dark:accent-zinc-50"
+              className="size-4 accent-[#7aa2f7] dark:accent-[#7aa2f7]"
             />
             Registrar abono en recepción
           </label>
@@ -576,9 +576,9 @@ export function PedidoForm({
 
         {registrarAbono ? (
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-zinc-50 px-3.5 py-2 text-xs text-zinc-600 dark:bg-zinc-950 dark:text-zinc-400">
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-zinc-50 px-3.5 py-2 text-xs text-zinc-600 dark:bg-[#16161e] dark:border dark:border-[#24283b] dark:text-zinc-400">
               <span className="flex items-center gap-1.5 font-medium">
-                <Banknote className="size-4" /> Tasa de cambio de referencia:
+                <Banknote className="size-4 text-[#7aa2f7]" /> Tasa de cambio de referencia:
               </span>
               <span className="font-semibold text-zinc-900 dark:text-zinc-100">
                 1 USD = {tasaActiva.toFixed(2)} Bs. {tasaElegidaTipo === "manana" ? "(Tasa Mañana)" : ""}
@@ -591,13 +591,13 @@ export function PedidoForm({
                 <label className="mb-1 block text-xs font-medium text-zinc-700 dark:text-zinc-300">
                   Moneda
                 </label>
-                <div className="grid grid-cols-2 gap-1 rounded-lg border border-zinc-200 bg-zinc-100 p-1 dark:border-zinc-800 dark:bg-zinc-950">
+                <div className="grid grid-cols-2 gap-1 rounded-lg border border-zinc-200 bg-zinc-100 p-1 dark:border-[#24283b] dark:bg-[#16161e]">
                   <button
                     type="button"
                     onClick={() => setAbonoMoneda("USD")}
                     className={`flex h-9 items-center justify-center gap-1 rounded-md text-xs font-semibold transition-colors ${
                       abonoMoneda === "USD"
-                        ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                        ? "bg-white text-zinc-900 shadow-sm dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                         : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                     }`}
                   >
@@ -608,7 +608,7 @@ export function PedidoForm({
                     onClick={() => setAbonoMoneda("Bs")}
                     className={`flex h-9 items-center justify-center gap-1 rounded-md text-xs font-semibold transition-colors ${
                       abonoMoneda === "Bs"
-                        ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-100"
+                        ? "bg-white text-zinc-900 shadow-sm dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                         : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                     }`}
                   >
@@ -660,7 +660,7 @@ export function PedidoForm({
         )}
 
         {/* Resumen financiero del pedido */}
-        <div className="space-y-3 rounded-xl border border-zinc-100 bg-zinc-50/70 p-4 dark:border-zinc-800/80 dark:bg-zinc-950/50">
+        <div className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50/70 p-4 dark:border-[#24283b] dark:bg-[#16161e]">
           <div className="flex flex-wrap items-center justify-between text-sm">
             <span className="text-zinc-600 dark:text-zinc-400">
               Total del contrato:
@@ -692,7 +692,7 @@ export function PedidoForm({
             </div>
           ) : null}
 
-          <div className="flex flex-wrap items-center justify-between border-t border-zinc-200/60 pt-3 dark:border-zinc-800 text-sm">
+          <div className="flex flex-wrap items-center justify-between border-t border-zinc-200/60 pt-3 dark:border-[#24283b] text-sm">
             <div className="flex items-center gap-2">
               <span className="font-semibold text-zinc-900 dark:text-zinc-100">
                 Saldo pendiente al retiro:
@@ -716,7 +716,7 @@ export function PedidoForm({
       </section>
 
       {/* SECCIÓN NOTAS */}
-      <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
         <div>
           <label
             htmlFor={`${formId}-notas`}
@@ -731,7 +731,7 @@ export function PedidoForm({
             placeholder="Indicaciones para taller o recepción..."
             value={notas}
             onChange={(e) => setNotas(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white p-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500"
+            className="w-full rounded-xl border border-zinc-300 bg-white p-3 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:ring-2 focus:ring-[#7aa2f7]/20 focus:outline-none dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25"
           />
         </div>
       </section>

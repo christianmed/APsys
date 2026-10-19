@@ -20,6 +20,7 @@ type Props = {
   estadoActual: EstadoPedido;
   rolUsuario: string;
   anulado?: boolean;
+  modo?: "completo" | "solo_badge" | "solo_boton";
 };
 
 const ESTADO_CONFIG: Record<
@@ -29,6 +30,7 @@ const ESTADO_CONFIG: Record<
     clasesBadge: string;
     siguienteLabel?: string;
     IconoSiguiente?: typeof Play;
+    iconoColor?: string;
   }
 > = {
   recibido: {
@@ -37,13 +39,15 @@ const ESTADO_CONFIG: Record<
       "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
     siguienteLabel: "Iniciar producción",
     IconoSiguiente: Play,
+    iconoColor: "text-[#7aa2f7]",
   },
   en_produccion: {
     label: "En Producción",
     clasesBadge:
       "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
-    siguienteLabel: "Marcar listo",
+    siguienteLabel: "Listo para Retiro",
     IconoSiguiente: CheckCircle2,
+    iconoColor: "text-[#9ece6a]",
   },
   listo: {
     label: "Listo para Retiro",
@@ -51,6 +55,7 @@ const ESTADO_CONFIG: Record<
       "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
     siguienteLabel: "Entregar pedido",
     IconoSiguiente: PackageCheck,
+    iconoColor: "text-[#9ece6a]",
   },
   entregado: {
     label: "Entregado",
@@ -72,6 +77,7 @@ export function EstadoControl({
   estadoActual,
   rolUsuario,
   anulado = false,
+  modo = "completo",
 }: Props) {
   const [pendiente, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -113,6 +119,47 @@ export function EstadoControl({
     });
   };
 
+  // Modo solo_badge: solo muestra la píldora informativa de estado
+  if (modo === "solo_badge") {
+    return (
+      <span
+        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${config.clasesBadge}`}
+      >
+        {config.label}
+      </span>
+    );
+  }
+
+  // Modo solo_boton: solo muestra el botón de acción rápida de avance de estado
+  if (modo === "solo_boton") {
+    if (!siguienteEstado || anulado) return null;
+
+    const Icono = config.IconoSiguiente ?? ChevronRight;
+    const colorIcono = config.iconoColor ?? "text-[#7aa2f7]";
+
+    return (
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          disabled={pendiente}
+          onClick={() => handleAvanzar(siguienteEstado)}
+          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-900 bg-zinc-900 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-zinc-800 hover:border-zinc-800 active:scale-98 disabled:opacity-60 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f8fafc] dark:hover:bg-[#252b42] dark:hover:border-[#7aa2f7]/50"
+        >
+          {pendiente ? (
+            <LoaderCircle className="size-3.5 animate-spin" />
+          ) : (
+            <Icono className={`size-3.5 shrink-0 ${colorIcono}`} />
+          )}
+          <span>{config.siguienteLabel}</span>
+        </button>
+
+        {error ? (
+          <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-2 sm:items-end">
       <div className="flex flex-wrap items-center gap-2">
@@ -128,7 +175,7 @@ export function EstadoControl({
             type="button"
             disabled={pendiente}
             onClick={() => handleAvanzar(siguienteEstado)}
-            className="inline-flex h-7 items-center justify-center gap-1 rounded-lg bg-zinc-900 px-2.5 text-xs font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex h-7 items-center justify-center gap-1 rounded-lg border border-zinc-900 bg-zinc-900 px-2.5 text-xs font-medium text-white shadow-xs transition hover:bg-zinc-800 disabled:opacity-60 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
           >
             {pendiente ? (
               <LoaderCircle className="size-3 animate-spin" />

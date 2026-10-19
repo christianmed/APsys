@@ -12,6 +12,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import {
   calcularConversionBsUsd,
   calcularConversionUsdBs,
+  obtenerFechaYmdCaracas,
 } from "@/lib/tasas/tasas";
 
 export interface TasasData {
@@ -98,14 +99,32 @@ export function TasasProvider({ children, initialTasas }: TasasProviderProps) {
           : Promise.resolve(null),
       ]);
 
-      // 1. Resolver Tasa USD Hoy:
-      // Prioridad a la BD si tiene una tasa real > 40 (o si no hay dato de API).
-      // Si la BD no responde o tiene el valor por defecto (40.0) pero el BCV ya tiene tasa oficial (ej. 879.12),
-      // se adopta la tasa oficial en vivo de inmediato para evitar mostrar 40.0 desfasado.
+      // 1. Resolver Tasa USD Hoy con regla estricta de corte a las 12:00 a. m.
+      // - Si estamos en la ventana de la tarde (4:00 PM - 11:59 PM), el operador tiene la opción de aplicar la tasa manualmente.
+      // - Pasadas las 12:00 a. m. (inicio de la nueva jornada comercial en Caracas), la tasa oficial emitida por el BCV para hoy
+      //   es obligatoria. Si la BD tiene una tasa anterior o menor (el operador no la actualizó antes de las 11:59 PM),
+      //   el sistema auto-adopta bcvUsdHoy de inmediato en memoria y dispara auto-persistencia en BD.
+      const ymdCaracasHoy = obtenerFechaYmdCaracas(new Date());
       const bcvUsdHoy = bcvRes?.hoy?.usd ? Number(bcvRes.hoy.usd) : undefined;
       const bdUsdHoy = vigenteRes?.data?.valor_bs_por_usd ? Number(vigenteRes.data.valor_bs_por_usd) : undefined;
+      const bdVigenteDesde = vigenteRes?.data?.vigente_desde;
+      const bdYmd = bdVigenteDesde ? obtenerFechaYmdCaracas(bdVigenteDesde) : undefined;
 
-      if (bdUsdHoy && bdUsdHoy > 0 && bdUsdHoy !== TASA_POR_DEFECTO) {
+      const requiereAutoSync =
+        Boolean(bcvUsdHoy && bcvUsdHoy > 0) &&
+        (!bdUsdHoy ||
+          bdUsdHoy === TASA_POR_DEFECTO ||
+          (bcvUsdHoy && bdUsdHoy && bcvUsdHoy > bdUsdHoy) ||
+          (bcvRes?.hoy?.fecha === ymdCaracasHoy && bdYmd && bdYmd < ymdCaracasHoy));
+
+      if (requiereAutoSync && bcvUsdHoy) {
+        setTasaUsd(bcvUsdHoy);
+        if (typeof window !== "undefined") {
+          void fetch("/api/tasas/auto-sync", { method: "POST" })
+            .then((r) => (r.ok ? r.json() : null))
+            .catch(() => {});
+        }
+      } else if (bdUsdHoy && bdUsdHoy > 0 && bdUsdHoy !== TASA_POR_DEFECTO) {
         setTasaUsd(bdUsdHoy);
       } else if (bcvUsdHoy && bcvUsdHoy > 0) {
         setTasaUsd(bcvUsdHoy);

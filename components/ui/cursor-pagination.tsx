@@ -47,13 +47,13 @@ export function CursorPagination({
   return (
     <nav
       aria-label="Paginación"
-      className="flex items-center justify-between gap-3 border-t border-zinc-200/80 pt-4 dark:border-zinc-800"
+      className="flex items-center justify-between gap-3 border-t border-zinc-200/80 pt-4 dark:border-[#24283b]"
     >
       <div>
         {tienePaginaAnterior ? (
           <Link
             href={urlInicio}
-            className="inline-flex h-10 items-center justify-center rounded-xl border border-zinc-300 bg-white px-4 text-xs sm:text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-white dark:focus-visible:ring-zinc-100"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-zinc-300 bg-white px-4 text-xs sm:text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-200 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]"
           >
             ← Inicio
           </Link>
@@ -66,7 +66,7 @@ export function CursorPagination({
         {tienePaginaSiguiente ? (
           <Link
             href={urlSiguiente}
-            className="inline-flex h-10 items-center justify-center rounded-xl border border-zinc-300 bg-white px-4 text-xs sm:text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800 dark:hover:text-white dark:focus-visible:ring-zinc-100"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-zinc-300 bg-white px-4 text-xs sm:text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 focus:outline-none dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-200 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]"
           >
             Siguiente →
           </Link>

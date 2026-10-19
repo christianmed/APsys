@@ -32,7 +32,7 @@ export default async function NuevoClientePage() {
           }
         />
 
-        <div className="mx-auto max-w-xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="mx-auto max-w-xl rounded-2xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <ClienteForm modo="crear" />
         </div>
       </div>

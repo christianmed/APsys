@@ -93,42 +93,42 @@ export function generarMensajeRecordatorioRetiro({
   const esUrgente = horasTranscurridas >= 72;
 
   const lineas: string[] = [
-    `🔔 *Hola ${clienteLimpio}*, le escribimos con un cordial recordatorio de *APSys Gráfica*.`,
+    `*Hola ${clienteLimpio}*, le escribimos con un cordial recordatorio de *APSys Gráfica*.`,
     "",
   ];
 
   if (esUrgente) {
     lineas.push(
-      `⚠️ Su orden *#${ordenStr}* lleva *más de 3 días* lista para retiro en nuestro taller.`,
+      `Su orden *#${ordenStr}* lleva *más de 3 días* lista para retiro en nuestro taller.`,
     );
     lineas.push(
       "Agradecemos enormemente su apoyo retirando el material lo antes posible para evitar maltrato y liberar espacio en nuestro almacén.",
     );
   } else {
     lineas.push(
-      `📦 Le recordamos que su pedido *#${ordenStr}* lleva *más de 48 horas listo* para ser retirado en nuestras instalaciones.`,
+      `Le recordamos que su pedido *#${ordenStr}* lleva *más de 48 horas listo* para ser retirado en nuestras instalaciones.`,
     );
   }
 
   lineas.push("");
 
   if (saldoUsd <= 0.009) {
-    lineas.push(`✅ *Estado de pago:* 100% Pagado. ¡Solo debe pasar a retirar!`);
+    lineas.push(`*Estado de pago:* 100% Pagado. ¡Solo debe pasar a retirar!`);
   } else {
-    lineas.push(`💵 *Total:* $${formatearMoneda(totalUsd)} USD`);
-    lineas.push(`💳 *Saldo pendiente:* $${formatearMoneda(saldoUsd)} USD`);
+    lineas.push(`*Total:* $${formatearMoneda(totalUsd)} USD`);
+    lineas.push(`*Saldo pendiente:* $${formatearMoneda(saldoUsd)} USD`);
 
     if (tasaBsPorUsd && tasaBsPorUsd > 0) {
       const saldoBs = Math.round(saldoUsd * tasaBsPorUsd * 100) / 100;
       lineas.push(
-        `🇻🇪 *Equivalente en Bs:* Bs. ${formatearMoneda(saldoBs)} (tasa: ${formatearMoneda(tasaBsPorUsd)} Bs/$)`,
+        `*Equivalente en Bs:* Bs. ${formatearMoneda(saldoBs)} (tasa: ${formatearMoneda(tasaBsPorUsd)} Bs/$)`,
       );
     }
   }
 
   lineas.push("");
   lineas.push(
-    "📍 Le esperamos en nuestro taller. Si ya coordinó el retiro, por favor desestime este mensaje. ¡Muchas gracias!",
+    "Le esperamos en nuestro taller. Si ya coordinó el retiro, por favor desestime este mensaje. ¡Muchas gracias!",
   );
 
   return lineas.join("\n");

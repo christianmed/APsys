@@ -18,11 +18,11 @@ export function PageHeader({
   actions,
 }: Props) {
   return (
-    <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-zinc-200 bg-white p-4.5 sm:p-6 lg:p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+    <section className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-zinc-200 bg-white p-4.5 sm:p-6 lg:p-8 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
       <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between min-w-0">
         <div className="space-y-1.5 min-w-0 w-full">
           {badge && (
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-100 px-3 py-0.5 text-xs font-medium text-zinc-600 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
               {badge}
             </div>
           )}
