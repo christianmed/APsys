@@ -14,6 +14,7 @@ type Props = {
   saldoUsd: number;
   tasaBsPorUsd?: number | null;
   variante?: "boton" | "icono" | "full";
+  estiloVisual?: "A" | "B" | "C";
 };
 
 /**
@@ -28,6 +29,7 @@ export function BotonAvisoWhatsApp({
   saldoUsd,
   tasaBsPorUsd,
   variante = "boton",
+  estiloVisual = "A",
 }: Props) {
   const telefonoValido = normalizarTelefonoWhatsApp(telefono);
 
@@ -59,6 +61,20 @@ export function BotonAvisoWhatsApp({
   const ordenStr = `ORD-${String(numeroOrden).padStart(4, "0")}`;
 
   if (variante === "full") {
+    let estiloClases =
+      "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-300/80 bg-emerald-50/70 px-4 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-emerald-800 dark:bg-emerald-950/30 dark:text-emerald-300";
+    let iconoClases = "size-4 text-emerald-600 dark:text-emerald-400";
+
+    if (estiloVisual === "B") {
+      estiloClases =
+        "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 text-xs font-semibold text-emerald-900 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-300";
+      iconoClases = "size-4 text-emerald-600 dark:text-emerald-400";
+    } else if (estiloVisual === "C") {
+      estiloClases =
+        "flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-xs font-semibold text-zinc-800 shadow-xs transition hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-900 active:scale-98 dark:border-zinc-800 dark:bg-zinc-800/60 dark:text-zinc-300";
+      iconoClases = "size-4 text-zinc-500";
+    }
+
     return (
       <a
         href={urlWhatsApp}
@@ -66,10 +82,10 @@ export function BotonAvisoWhatsApp({
         rel="noopener noreferrer"
         aria-label={`Avisar por WhatsApp a ${nombreCliente} sobre ${ordenStr}`}
         data-testid={`btn-whatsapp-${numeroOrden}`}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 text-sm font-bold text-white shadow-sm transition hover:bg-[#20ba59] active:scale-98"
+        className={estiloClases}
       >
-        <MessageCircle className="size-5 fill-white/20" />
-        Avisar por WhatsApp
+        <MessageCircle className={iconoClases} />
+        <span>Avisar por WhatsApp</span>
       </a>
     );
   }
@@ -82,10 +98,10 @@ export function BotonAvisoWhatsApp({
         rel="noopener noreferrer"
         aria-label={`Avisar por WhatsApp a ${nombreCliente}`}
         data-testid={`btn-whatsapp-${numeroOrden}`}
-        className="inline-flex size-8 items-center justify-center rounded-lg bg-[#25D366] text-white transition hover:bg-[#20ba59] active:scale-95 shadow-sm"
+        className="inline-flex size-8 items-center justify-center rounded-lg border border-emerald-300/80 bg-emerald-50/80 text-emerald-700 transition hover:bg-emerald-100 active:scale-95 shadow-xs dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
         title="Avisar por WhatsApp"
       >
-        <MessageCircle className="size-4 fill-white/20" />
+        <MessageCircle className="size-4 text-emerald-600 dark:text-emerald-400" />
       </a>
     );
   }
@@ -97,10 +113,10 @@ export function BotonAvisoWhatsApp({
       rel="noopener noreferrer"
       aria-label={`Avisar por WhatsApp a ${nombreCliente} sobre ${ordenStr}`}
       data-testid={`btn-whatsapp-${numeroOrden}`}
-      className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#25D366] px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-[#20ba59] active:scale-95"
+      className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-emerald-300/80 bg-emerald-50/80 px-3 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-95 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300"
     >
-      <MessageCircle className="size-3.5 fill-white/20" />
-      Avisar por WhatsApp
+      <MessageCircle className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+      Aviso WhatsApp
     </a>
   );
 }

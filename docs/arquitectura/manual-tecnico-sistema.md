@@ -469,4 +469,47 @@ Para garantizar la integridad financiera del taller y erradicar entregas con sal
    - **Si `COUNT(pedido_items) > 0`:** Bloquea la acción invocando `validarEliminacionServicio` (`lib/validaciones/servicio.ts`), explicando al operador la imposibilidad técnica de borrado físico y sugiriendo la baja lógica.
    - En el formulario `ServicioForm`, los servicios con pedidos asociados ocultan el botón de eliminación y muestran un banner informativo de **Protección de Integridad Histórica**.
 
+---
+
+## 12. Arquitectura Centralizada de Fechas Caracas, Consistencia de Contadores y Estilos de Taller (Fase 32)
+
+### 12.1 Módulo Centralizado de Fechas (`lib/fechas.ts`) — Single Source of Truth
+
+Para eliminar inconsistencias causadas por la diferencia horaria entre los servidores en la nube (que operan en UTC +0) y el huso oficial de Venezuela (UTC-4, `America/Caracas`), se estableció `lib/fechas.ts` como la única fuente de verdad temporal para todo el sistema:
+
+1. **Inmunidad a Desfase de Servidores Cloud:**
+   - En servidores Vercel o AWS Lambda en UTC, a partir de las 8:00 p. m. en Caracas ya es el día siguiente en UTC.
+   - Las funciones de `lib/fechas.ts` (`obtenerFechaYmdCaracas`, `formatearFechaLargaCaracas`, `formatearFechaHoraCaracas`) utilizan explícitamente `{ timeZone: "America/Caracas", locale: "es-VE" }`, garantizando que la fecha mostrada corresponda siempre al día calendario en curso en Venezuela sin importar dónde se ejecute el SSR.
+2. **Límites de Jornada y Rangos de Reportes:**
+   - `obtenerInicioFinDiaCaracas`: Devuelve las marcas de tiempo ISO (UTC) correspondientes exactamente a las `00:00:00.000` y `23:59:59.999` de la jornada en Caracas.
+   - `obtenerRangoPresetCaracas`: Calcula los intervalos para los filtros del dashboard gerencial (`hoy`, `esta_semana`, `este_mes`, `todo`). `lib/dashboard/ingresos.ts` delega el cálculo de fechas en esta función, asegurando que el filtro "Hoy" no salte prematuramente a las 8:00 p. m.
+3. **Badge Reactivo de Fecha en Vivo (`components/shell/fecha-en-vivo-badge.tsx`):**
+   - Montado en el banner principal del Home (`app/page.tsx`).
+   - Se actualiza automáticamente al cruzar la medianoche en Caracas sin necesidad de recargar la página web, programando un temporizador exacto (`obtenerTiempoHastaMedianocheCaracas`) y un intervalo de respaldo cada 60 segundos.
+
+### 12.2 Consistencia de Contadores de Producción (Home vs. Taller)
+
+1. **Estados Canónicos del Modelo Relacional (`lib/pedidos/estados.ts`):**
+   - Se corrigieron los filtros en `app/page.tsx`, eliminando estados obsoletos de borradores iniciales (`registrado`, `imprimiendo`) que provocaban lecturas en cero.
+   - La función `calcularContadoresProduccion` unifica los cálculos para toda la aplicación:
+     - `porIniciar`: Pedidos con `estado === "recibido"` (no anulados).
+     - `enProduccion`: Pedidos con `estado === "en_produccion"` (no anulados).
+     - `listos`: Pedidos con `estado === "listo"` (no anulados).
+     - `totalActivos`: `porIniciar + enProduccion + listos` (excluyendo estrictamente `entregado` y `cancelado`).
+2. **Unificación de Nomenclatura:**
+   - Las tarjetas KPI del panel de inicio se alinearon con las pestañas del tablero de taller:
+     - *"Por Iniciar"* (antes "Por Imprimir").
+     - *"En Producción"* (antes "En Impresión").
+     - *"Listos para Retiro"*.
+
+### 12.3 Sistema de Conmutación Visual de Estilos en Taller (`app/taller/taller-tablero.tsx`)
+
+Para responder al requerimiento de eliminar colores saturados estridentes y permitir la evaluación comparativa en vivo por parte del usuario, se implementó un conmutador interactivo con persistencia local (`localStorage.getItem("apsys_taller_estilo")`):
+
+| Propuesta | Estilo Visual | Botón Recibido | Botón Producción | Botón WhatsApp | Botón Cobro / Entrega |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Estilo A (Recomendado)** | Minimalista Monocromático (Linear / Vercel) | `bg-zinc-900 text-white` con icono `Sparkles` azul sutil | `bg-zinc-900 text-white` con icono `CheckCircle2` ámbar | Outline refinado `border-emerald-300 bg-emerald-50/70 text-emerald-950` | `bg-zinc-900 text-white` con badge interior ámbar para saldos |
+| **Estilo B** | Tonales Pastel Suaves (Apple HIG) | `border-sky-200 bg-sky-50 text-sky-900` | `border-amber-300 bg-amber-50 text-amber-950` | `border-emerald-200 bg-emerald-50 text-emerald-900` | `border-amber-300 bg-amber-100/70 text-amber-950` |
+| **Estilo C** | Jerarquía Progresiva (Stripe) | Botón neutro `border-zinc-200 bg-white text-zinc-700` | Borde ámbar suave `border-amber-300/80 bg-amber-50/50` | Outline gris neutro | Botón sólido de certeza con peso visual en la fase final de cobro |
+
 

@@ -9,7 +9,6 @@ import {
   Package,
   Plus,
   Printer,
-  Sparkles,
   Tag,
   TrendingUp,
   Users,
@@ -18,6 +17,8 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
+import { FechaEnVivoBadge } from "@/components/shell/fecha-en-vivo-badge";
+import { calcularContadoresProduccion } from "@/lib/pedidos/estados";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 
 export const instant = false;
@@ -35,24 +36,14 @@ export default async function Home() {
   const rol: string = perfil?.rol ?? "operativo";
   const esGerencial = rol === "gerencial";
 
-  // Consultar métricas operativas en vivo
+  // Consultar métricas operativas en vivo con estados canónicos de taller (Fase 32)
   const { data: pedidosRaw } = await supabase
     .from("pedidos")
     .select("id, estado, anulado")
     .eq("anulado", false);
 
-  const listaPedidos = pedidosRaw ?? [];
-  const conteoPorImprimir = listaPedidos.filter((p) => p.estado === "registrado").length;
-  const conteoEnImpresion = listaPedidos.filter((p) => p.estado === "imprimiendo").length;
-  const conteoListos = listaPedidos.filter((p) => p.estado === "listo").length;
-  const totalActivos = listaPedidos.filter((p) => p.estado !== "entregado").length;
-
-  const fechaFormateada = new Date().toLocaleDateString("es-VE", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const { porIniciar, enProduccion, listos, totalActivos } =
+    calcularContadoresProduccion(pedidosRaw ?? []);
 
   return (
     <AuthenticatedShell>
@@ -66,12 +57,7 @@ export default async function Home() {
         >
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                <Sparkles className="size-3.5 text-amber-500" />
-                <span className="capitalize">
-                  {fechaFormateada}
-                </span>
-              </div>
+              <FechaEnVivoBadge />
               <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-zinc-900 dark:text-zinc-50">
                 ¡Hola de nuevo!
               </h1>
@@ -133,34 +119,34 @@ export default async function Home() {
               </span>
             </div>
 
-            {/* Por imprimir */}
+            {/* Por iniciar */}
             <Link
               href="/taller"
               className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
             >
               <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
-                <span className="text-xs font-medium">Por Imprimir</span>
+                <span className="text-xs font-medium">Por Iniciar</span>
                 <ClipboardList className="size-4 text-blue-500" />
               </div>
               <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50 group-hover:text-blue-600 transition-colors">
-                {conteoPorImprimir}
+                {porIniciar}
               </p>
               <span className="mt-1 block text-[11px] text-zinc-400">
                 En cola de inicio
               </span>
             </Link>
 
-            {/* En máquina */}
+            {/* En producción */}
             <Link
               href="/taller"
               className="group rounded-2xl border border-amber-200/80 bg-amber-50/30 p-5 shadow-sm transition hover:bg-amber-50/60 dark:border-amber-900/40 dark:bg-amber-950/20"
             >
               <div className="flex items-center justify-between text-amber-800 dark:text-amber-300">
-                <span className="text-xs font-medium">En Impresión</span>
+                <span className="text-xs font-medium">En Producción</span>
                 <Printer className="size-4 text-amber-600" />
               </div>
               <p className="mt-2 text-3xl font-black text-amber-950 dark:text-amber-100">
-                {conteoEnImpresion}
+                {enProduccion}
               </p>
               <span className="mt-1 block text-[11px] text-amber-700/80 dark:text-amber-400/70">
                 En máquina / acabados
@@ -177,7 +163,7 @@ export default async function Home() {
                 <Flame className="size-4 text-emerald-600" />
               </div>
               <p className="mt-2 text-3xl font-black text-emerald-950 dark:text-emerald-100">
-                {conteoListos}
+                {listos}
               </p>
               <span className="mt-1 block text-[11px] text-emerald-700/80 dark:text-emerald-400/70">
                 Aviso WhatsApp disponible

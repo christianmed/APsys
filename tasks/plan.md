@@ -125,7 +125,21 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   5. **Catálogo de Servicios:** En `app/servicios/servicio-form.tsx`, renombrar `Orden` a `Prioridad en Catálogo (Posición)` con texto de ayuda, explicar `Activo` e incorporar `eliminarServicio` seguro para servicios huérfanos.
   6. **Compuerta DoD:** Tests unitarios (TDD), `npm test`, `npm run typecheck`, compilación y actualización de manuales.
 
-### Fase 32: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 32: Arquitectura Centralizada de Fechas Caracas, Consistencia Total de Métricas y Conmutador de Estilos de Taller
+
+- **Objetivo:** Establecer una única fuente de verdad para la lógica temporal de la aplicación anclada a la hora oficial de Venezuela (`America/Caracas`), resolviendo el desfase del banner de bienvenida y los filtros de dashboards (`hoy`, `esta_semana`); corregir la discrepancia de métricas en "Estado de producción en vivo" en `app/page.tsx` para sincronizarlas 1:1 con el taller; e implementar un conmutador visual interactivo en `/taller` para evaluar en vivo las 3 propuestas estéticas sobrias de botones antes de consolidar la decisión final.
+- **Acciones Clave:**
+  1. **Módulo Centralizado de Fechas (`lib/fechas.ts`):** Crear la única fuente de verdad para formateo (`formatearFechaCaracas`, `formatearFechaHoraCaracas`), obtención de límites temporales (`obtenerInicioFinDiaCaracas`, `obtenerInicioFinSemanaCaracas`, `obtenerInicioFinMesCaracas`) y rangos para dashboards. Refactorizar `lib/dashboard/ingresos.ts` para consumir directamente estas utilidades, garantizando consistencia absoluta en todo el sistema.
+  2. **Badge de Fecha Reactiva en Vivo (`components/shell/fecha-en-vivo-badge.tsx`):** Componente cliente desacoplado que renderiza la fecha calendario en curso en Caracas (`America/Caracas`, `locale: "es-VE"`), con sincronización automática a medianoche sin recargas ni desfase por servidores UTC.
+  3. **Consistencia de Estados de Producción en Vivo (`app/page.tsx`):** Corregir los filtros de pedidos para utilizar los estados canónicos del modelo relacional (`recibido`, `en_produccion`, `listo`) en vez de estados obsoletos (`registrado`, `imprimiendo`), unificando las etiquetas y conteos exactamente con `/taller`.
+  4. **Estandarización de Fechas en Vistas del Sistema:** Reemplazar llamadas desalineadas a `toLocaleDateString` en `app/pedidos/page.tsx`, `app/comanda/[id]/comanda-vista.tsx`, `app/clientes/[id]/historial-cliente-view.tsx` y `app/dashboard/dashboard-view.tsx` por el helper oficial de Caracas.
+  5. **Conmutador Visual Interactivo de 3 Estilos en Taller (`app/taller/taller-tablero.tsx` y `app/pedidos/boton-aviso-whatsapp.tsx`):** Implementar una barra de herramientas de vista previa que permita alternar en tiempo real entre:
+     - **Estilo A (Minimalista Monocromático - Linear/Vercel):** Botón principal negro/zinc oscuro con micro-icono identificador, WhatsApp en outline menta sobrio y cobro con badge ámbar integrado.
+     - **Estilo B (Tonales Pastel Suaves - Apple HIG):** Fondos translúcidos tenues (`bg-sky-50`, `bg-amber-50`, `bg-emerald-50`), bordes nítidos y alto contraste tipográfico sin saturación chillona.
+     - **Estilo C (Jerarquía Progresiva - Stripe):** Botón neutro/outline en etapas iniciales que adquiere peso visual y color sólido de certeza únicamente en cobro y entrega.
+  6. **Compuerta de Calidad DoD:** Pruebas unitarias TDD para `lib/fechas.ts` y componentes de fecha, pruebas de consistencia de contadores, `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` y actualización obligatoria de manuales técnicos y de usuario.
+
+### Fase 33: Potencia Comercial y Finanzas (Versión 1.1.0)
 
 - **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
 - **Acciones Clave:**
@@ -133,7 +147,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
   3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
 
-### Fase 33: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 34: Planta Inteligente y Manufactura (Versión 1.2.0)
 
 - **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
 - **Acciones Clave:**
