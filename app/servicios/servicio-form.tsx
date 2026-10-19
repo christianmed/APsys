@@ -33,16 +33,16 @@ type Props =
     };
 
 const CLASES_INPUT =
-  "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-zinc-400 dark:focus-visible:ring-zinc-100/15";
+  "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-[#7aa2f7] dark:focus-visible:ring-[#7aa2f7]/20";
 
 const CLASES_BOTON =
-  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200 dark:focus-visible:ring-zinc-100 dark:focus-visible:ring-offset-zinc-950";
+  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:focus-visible:ring-[#7aa2f7] dark:focus-visible:ring-offset-[#1a1b26]";
 
 const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800";
+  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42]";
 
 const CLASES_CHECKBOX =
-  "size-4 shrink-0 accent-zinc-900 disabled:cursor-not-allowed disabled:opacity-60 dark:accent-zinc-50";
+  "size-4 shrink-0 accent-zinc-900 disabled:cursor-not-allowed disabled:opacity-60 dark:accent-[#7aa2f7]";
 
 /**
  * Formulario de alta/edición de servicio (RF-04/T-007b). Resuelve la acción
@@ -156,7 +156,7 @@ export function ServicioForm({ modo, servicio, pedidosAsociados = 0 }: Props) {
 
       {/* Casilla Activo / Baja Lógica */}
       {enEdicion ? (
-        <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
+        <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-[#24283b] dark:bg-[#16161e]">
           <div className="flex items-start gap-3">
             <input
               id="activo"
@@ -229,7 +229,7 @@ export function ServicioForm({ modo, servicio, pedidosAsociados = 0 }: Props) {
 
       {/* Botón de Eliminación Segura (Solo disponible si 0 pedidos vinculados) */}
       {enEdicion && pedidosAsociados === 0 ? (
-        <div className="border-t border-zinc-200 pt-5 dark:border-zinc-800">
+        <div className="border-t border-zinc-200 pt-5 dark:border-[#24283b]">
           <div className="space-y-2">
             <button
               type="button"

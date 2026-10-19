@@ -125,16 +125,16 @@ export default async function Home() {
             {/* Por iniciar */}
             <Link
               href="/taller?tab=recibido"
-              className="group rounded-2xl border border-sky-200/90 bg-sky-50/20 p-5 shadow-sm transition hover:border-sky-400 hover:bg-sky-50/40 dark:border-sky-900/40 dark:bg-sky-950/20 dark:hover:border-sky-700/70 dark:hover:bg-sky-950/40"
+              className="group rounded-2xl border border-blue-200/90 bg-blue-50/20 p-5 shadow-sm transition hover:border-blue-400 hover:bg-blue-50/40 dark:border-blue-900/40 dark:bg-blue-950/20 dark:hover:border-blue-700/70 dark:hover:bg-blue-950/40"
             >
-              <div className="flex items-center justify-between text-sky-800 dark:text-sky-300">
+              <div className="flex items-center justify-between text-blue-800 dark:text-[#7aa2f7]">
                 <span className="text-xs font-medium">Por Iniciar</span>
-                <ClipboardList className="size-4 text-sky-600 dark:text-sky-400 group-hover:scale-105 transition-transform" />
+                <ClipboardList className="size-4 text-blue-600 dark:text-[#7aa2f7] group-hover:scale-105 transition-transform" />
               </div>
-              <p className="mt-2 text-3xl font-black text-sky-950 dark:text-sky-100 group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
+              <p className="mt-2 text-3xl font-black text-blue-950 dark:text-zinc-50 group-hover:text-blue-600 dark:group-hover:text-[#7aa2f7] transition-colors">
                 {porIniciar}
               </p>
-              <span className="mt-1 block text-[11px] text-sky-700/80 dark:text-sky-400/70">
+              <span className="mt-1 block text-[11px] text-blue-700/80 dark:text-[#7aa2f7]/80">
                 En cola de inicio
               </span>
             </Link>
@@ -183,7 +183,7 @@ export default async function Home() {
             {/* Tarjeta: Gestión de Órdenes */}
             <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <div className="space-y-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-[#7aa2f7]">
                   <ClipboardList className="size-5" />
                 </div>
                 <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">

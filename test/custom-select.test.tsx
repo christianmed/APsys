@@ -171,4 +171,17 @@ describe("CustomSelect (Universal Accessible Component)", () => {
     fireEvent.click(trigger);
     expect(screen.queryByRole("listbox")).toBeNull();
   });
+
+  it("aplica los tokens oficiales del Sistema de Diseño Tokyo Night (#16161e, #1a1b26, #24283b)", () => {
+    render(<CustomSelect options={sampleOptions} placeholder="Seleccionar" />);
+    const trigger = screen.getByRole("button", { name: "Seleccionar" });
+
+    expect(trigger.className).toContain("dark:bg-[#16161e]");
+    expect(trigger.className).toContain("dark:border-[#24283b]");
+
+    fireEvent.click(trigger);
+    const listbox = screen.getByRole("listbox");
+    expect(listbox.className).toContain("dark:bg-[#1a1b26]");
+    expect(listbox.className).toContain("dark:border-[#2f3654]");
+  });
 });

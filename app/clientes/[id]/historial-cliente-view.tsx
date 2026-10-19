@@ -32,27 +32,27 @@ const BADGES_RECURRENCIA: Record<
 > = {
   "Sin compras": {
     label: "Sin compras",
-    color: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+    color: "bg-zinc-100 text-zinc-600 dark:bg-[#1f202c] dark:text-zinc-400 dark:border dark:border-[#24283b]",
   },
   Nuevo: {
     label: "Nuevo cliente",
-    color: "bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300",
+    color: "bg-blue-100 text-blue-800 dark:bg-[#7aa2f7]/15 dark:text-[#7aa2f7] dark:border dark:border-[#7aa2f7]/30",
   },
   Ocasional: {
     label: "Cliente ocasional",
-    color: "bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300",
+    color: "bg-amber-100 text-amber-800 dark:bg-[#e0af68]/15 dark:text-[#e0af68] dark:border dark:border-[#e0af68]/30",
   },
   Recurrente: {
     label: "Cliente recurrente",
-    color: "bg-indigo-100 text-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-300",
+    color: "bg-indigo-100 text-indigo-800 dark:bg-[#bb9af7]/15 dark:text-[#bb9af7] dark:border dark:border-[#bb9af7]/30",
   },
   "VIP / Frecuente": {
     label: "VIP / Frecuente",
-    color: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
+    color: "bg-emerald-100 text-emerald-800 dark:bg-[#9ece6a]/15 dark:text-[#9ece6a] dark:border dark:border-[#9ece6a]/30",
   },
   "Inactivo (> 60 días)": {
     label: "Inactivo (> 60 días)",
-    color: "bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300",
+    color: "bg-rose-100 text-rose-800 dark:bg-[#f7768e]/15 dark:text-[#f7768e] dark:border dark:border-[#f7768e]/30",
   },
 };
 
@@ -84,7 +84,7 @@ export function HistorialClienteView({
       {/* Tarjetas KPI de compras y recurrencia */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Comprado */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             <span>Total Comprado</span>
             <Wallet className="size-4 text-zinc-400" />
@@ -102,7 +102,7 @@ export function HistorialClienteView({
           className={`rounded-2xl border p-4 shadow-sm ${
             metricas.saldo_pendiente_usd > 0
               ? "border-rose-200 bg-rose-50/40 dark:border-rose-900/40 dark:bg-rose-950/20"
-              : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+              : "border-zinc-200 bg-white dark:border-[#24283b] dark:bg-[#1a1b26]"
           }`}
         >
           <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
@@ -132,7 +132,7 @@ export function HistorialClienteView({
         </div>
 
         {/* Ticket Promedio */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             <span>Ticket Promedio</span>
             <TrendingUp className="size-4 text-zinc-400" />
@@ -146,7 +146,7 @@ export function HistorialClienteView({
         </div>
 
         {/* Recurrencia */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
             <span>Recurrencia</span>
             <Sparkles className="size-4 text-zinc-400" />
@@ -169,8 +169,8 @@ export function HistorialClienteView({
       </div>
 
       {/* Historial detallado de compras */}
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 px-6 py-4 dark:border-[#24283b]">
           <div>
             <h2 className="text-base font-bold text-zinc-900 dark:text-white">
               Historial de Compras ({metricas.historial_pedidos.length})
@@ -182,7 +182,7 @@ export function HistorialClienteView({
 
           <Link
             href={`/pedidos/nuevo?cliente_id=${clienteId}`}
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
           >
             <Plus className="size-3.5" />
             Nueva Orden
@@ -202,7 +202,7 @@ export function HistorialClienteView({
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400">
+              <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-400">
                 <tr>
                   <th className="px-6 py-3.5">N° Orden</th>
                   <th className="px-6 py-3.5">Fecha</th>
@@ -213,7 +213,7 @@ export function HistorialClienteView({
                   <th className="px-6 py-3.5 text-center">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+              <tbody className="divide-y divide-zinc-200 dark:divide-[#24283b]">
                 {metricas.historial_pedidos.map((pedido) => {
                   const tieneSaldo = pedido.saldo_usd > 0 && !pedido.anulado;
                   // En pedidos entregados NUNCA debe ofrecerse botón de cobro (un pedido entregado ya está saldado)
@@ -232,7 +232,7 @@ export function HistorialClienteView({
                   return (
                     <tr
                       key={pedido.pedido_id}
-                      className="transition-colors hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40"
+                      className="transition-colors hover:bg-zinc-50/70 dark:hover:bg-[#1f202c]/50"
                     >
                       <td className="px-6 py-4 font-bold text-zinc-900 dark:text-white">
                         <Link
@@ -250,11 +250,11 @@ export function HistorialClienteView({
 
                       <td className="px-6 py-4">
                         {pedido.anulado ? (
-                          <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-800 dark:bg-rose-950/40 dark:text-rose-300">
+                          <span className="rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-bold text-rose-800 dark:border dark:border-[#f7768e]/30 dark:bg-[#f7768e]/15 dark:text-[#f7768e]">
                             Anulado
                           </span>
                         ) : (
-                          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+                          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-semibold text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                             {pedido.estado.replace(/_/g, " ")}
                           </span>
                         )}
@@ -299,7 +299,7 @@ export function HistorialClienteView({
 
                           <Link
                             href={`/comanda/${pedido.pedido_id}`}
-                            className="inline-flex h-7 items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2 text-[11px] font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                            className="inline-flex h-7 items-center gap-1 rounded-lg border border-zinc-200 bg-white px-2 text-[11px] font-medium text-zinc-700 shadow-sm transition hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42]"
                           >
                             <Receipt className="size-3" />
                             Comanda

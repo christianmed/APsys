@@ -66,7 +66,7 @@ export function ComandaVista({ pedido, barcodeSvg, qrSvg }: Props) {
   };
 
   return (
-    <div className="min-h-dvh bg-zinc-100 py-6 text-zinc-900 print:bg-white print:p-0 dark:bg-zinc-950 dark:text-zinc-100 print:dark:bg-white print:dark:text-black">
+    <div className="min-h-dvh bg-zinc-100 py-6 text-zinc-900 print:bg-white print:p-0 dark:bg-[#16161e] dark:text-zinc-100 print:dark:bg-white print:dark:text-black">
       {/* BARRA DE HERRAMIENTAS EN PANTALLA (NO SE IMPRIME) */}
       <aside aria-label="Controles de comanda" className="no-print mx-auto mb-6 flex w-full max-w-2xl flex-wrap items-center justify-between gap-3 px-4">
         <Link
@@ -78,13 +78,13 @@ export function ComandaVista({ pedido, barcodeSvg, qrSvg }: Props) {
 
         <div className="flex items-center gap-2">
           {/* Selector de formato: A4 vs Ticket */}
-          <div className="flex rounded-lg border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="flex rounded-lg border border-zinc-200 bg-white p-1 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
             <button
               type="button"
               onClick={() => setFormato("a4")}
               className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors ${
                 formato === "a4"
-                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900"
+                  ? "bg-zinc-900 text-white dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100"
                   : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               }`}
             >
@@ -95,7 +95,7 @@ export function ComandaVista({ pedido, barcodeSvg, qrSvg }: Props) {
               onClick={() => setFormato("ticket")}
               className={`inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold transition-colors ${
                 formato === "ticket"
-                  ? "bg-zinc-900 text-white dark:bg-zinc-50 dark:text-zinc-900"
+                  ? "bg-zinc-900 text-white dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100"
                   : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
               }`}
             >
@@ -106,7 +106,7 @@ export function ComandaVista({ pedido, barcodeSvg, qrSvg }: Props) {
           <button
             type="button"
             onClick={handlePrint}
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-4 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-zinc-900 px-4 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
           >
             <Printer className="size-3.5" /> Imprimir
           </button>

@@ -82,7 +82,7 @@ export function PedidosBuscador({ valorInicial = "" }: Props) {
           value={termino}
           onChange={(e) => setTermino(e.target.value)}
           placeholder="Buscar por N° orden (#1001), cliente o escanear comanda... (Atajo: /)"
-          className="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-20 text-sm text-zinc-900 shadow-sm transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500"
+          className="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-20 text-sm text-zinc-900 shadow-sm transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:ring-2 focus:ring-[#7aa2f7]/20 focus:outline-none dark:border-[#24283b] dark:bg-[#1a1b26] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25"
         />
 
         <div className="absolute right-2 flex items-center gap-1">
@@ -91,7 +91,7 @@ export function PedidosBuscador({ valorInicial = "" }: Props) {
               type="button"
               onClick={limpiarBusqueda}
               aria-label="Limpiar búsqueda"
-              className="inline-flex size-7 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+              className="inline-flex size-7 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]"
             >
               <X className="size-3.5" />
             </button>
@@ -101,7 +101,7 @@ export function PedidosBuscador({ valorInicial = "" }: Props) {
             type="submit"
             disabled={pendiente}
             aria-label="Buscar pedido"
-            className="inline-flex size-7 items-center justify-center rounded-lg bg-zinc-900 text-white hover:bg-zinc-700 disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="inline-flex size-7 items-center justify-center rounded-lg bg-zinc-900 text-white hover:bg-zinc-700 disabled:opacity-60 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
           >
             <Search className="size-3.5" />
           </button>

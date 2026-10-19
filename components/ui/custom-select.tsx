@@ -266,17 +266,17 @@ export function CustomSelect<T extends string | number = string>({
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-label={ariaLabel || placeholder}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 dark:bg-zinc-900 dark:hover:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-800 transition-all cursor-pointer max-w-[160px] sm:max-w-[260px] active:scale-[0.98] select-none ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-zinc-100 hover:bg-zinc-200/80 dark:bg-[#1f202c] dark:hover:bg-[#252b42] border border-zinc-200 dark:border-[#24283b] transition-all cursor-pointer max-w-[160px] sm:max-w-[260px] active:scale-[0.98] select-none ${
             disabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+          <span className="text-xs font-semibold text-zinc-900 dark:text-[#f8fafc] truncate">
             {selectedOption?.label || placeholder}
           </span>
           <ChevronDown
             size={13}
             className={`text-zinc-400 shrink-0 transition-transform duration-200 ${
-              isOpen ? "rotate-180 text-emerald-500" : ""
+              isOpen ? "rotate-180 text-[#7aa2f7]" : ""
             }`}
           />
         </button>
@@ -286,19 +286,19 @@ export function CustomSelect<T extends string | number = string>({
             ref={listboxRef}
             role="listbox"
             tabIndex={-1}
-            className="absolute top-full left-0 mt-2 z-50 w-72 max-w-[calc(100vw-32px)] rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 shadow-xl p-1.5 animate-in fade-in-0 zoom-in-95 duration-150"
+            className="absolute top-full left-0 mt-2 z-50 w-72 max-w-[calc(100vw-32px)] rounded-2xl bg-white/98 dark:bg-[#1a1b26] backdrop-blur-xl border border-zinc-200 dark:border-[#2f3654] shadow-2xl p-1.5 animate-in fade-in-0 zoom-in-95 duration-150"
           >
             {headerTitle && (
-              <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between select-none">
+              <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-400 border-b border-zinc-100 dark:border-[#24283b] flex items-center justify-between select-none">
                 <span>{headerTitle}</span>
-                <span className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                <span className="text-[9px] font-mono text-[#7aa2f7] dark:text-[#7aa2f7] font-bold">
                   {options.length} disp.
                 </span>
               </div>
             )}
 
             {searchable && (
-              <div className="p-1 pb-1.5 border-b border-zinc-100 dark:border-zinc-800/60 sticky top-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur z-10">
+              <div className="p-1 pb-1.5 border-b border-zinc-100 dark:border-[#24283b] sticky top-0 bg-white/98 dark:bg-[#1a1b26] backdrop-blur z-10">
                 <div className="relative">
                   <Search
                     size={13}
@@ -313,7 +313,7 @@ export function CustomSelect<T extends string | number = string>({
                       setSearchQuery(e.target.value);
                       setHighlightedIndex(0);
                     }}
-                    className="w-full bg-zinc-100 dark:bg-zinc-800/80 rounded-lg pl-7 pr-2 py-1 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 border border-transparent focus:border-emerald-500"
+                    className="w-full bg-zinc-100 dark:bg-[#16161e] rounded-lg pl-7 pr-2 py-1 text-xs text-zinc-900 dark:text-[#f8fafc] placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-[#7aa2f7] border border-transparent dark:border-[#24283b] focus:border-[#7aa2f7] dark:focus:border-[#7aa2f7]"
                   />
                 </div>
               </div>
@@ -341,10 +341,10 @@ export function CustomSelect<T extends string | number = string>({
                         opt.disabled
                           ? "opacity-40 cursor-not-allowed"
                           : isSelected
-                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                            ? "bg-blue-500/10 text-blue-700 dark:text-[#7aa2f7] dark:bg-[#7aa2f7]/15 border border-blue-500/20 dark:border-[#7aa2f7]/30 font-semibold"
                             : isHighlighted
-                              ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border border-transparent"
-                              : "hover:bg-zinc-100 dark:hover:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border border-transparent"
+                              ? "bg-zinc-100 dark:bg-[#1f202c] text-zinc-900 dark:text-[#f8fafc] border border-transparent"
+                              : "hover:bg-zinc-100 dark:hover:bg-[#1f202c] text-zinc-700 dark:text-zinc-300 border border-transparent"
                       }`}
                     >
                       <div className="min-w-0 flex-1">
@@ -358,7 +358,7 @@ export function CustomSelect<T extends string | number = string>({
                               }`}
                             />
                           )}
-                          <span className="text-xs font-semibold truncate block text-zinc-900 dark:text-zinc-100">
+                          <span className="text-xs font-semibold truncate block text-zinc-900 dark:text-[#f8fafc]">
                             {opt.label}
                           </span>
                         </div>
@@ -373,7 +373,7 @@ export function CustomSelect<T extends string | number = string>({
                       {isSelected && (
                         <Check
                           size={14}
-                          className="text-emerald-600 dark:text-emerald-400 shrink-0 stroke-[2.5]"
+                          className="text-blue-600 dark:text-[#7aa2f7] shrink-0 stroke-[2.5]"
                         />
                       )}
                     </button>
@@ -383,14 +383,14 @@ export function CustomSelect<T extends string | number = string>({
             </div>
 
             {actionButton && (
-              <div className="pt-1.5 mt-1 border-t border-zinc-100 dark:border-zinc-800/80">
+              <div className="pt-1.5 mt-1 border-t border-zinc-100 dark:border-[#24283b]">
                 <button
                   type="button"
                   onClick={() => {
                     closeDropdown();
                     actionButton.onClick?.();
                   }}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors select-none"
+                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold text-[#7aa2f7] hover:bg-[#7aa2f7]/10 transition-colors select-none"
                 >
                   {actionButton.icon ? (
                     <actionButton.icon size={14} />
@@ -430,12 +430,12 @@ export function CustomSelect<T extends string | number = string>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={ariaLabel || placeholder}
-        className={`w-full flex items-center justify-between gap-2 bg-white dark:bg-zinc-950 border ${
+        className={`w-full flex items-center justify-between gap-2 bg-white dark:bg-[#16161e] border ${
           error
-            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
-            : "border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600 focus:border-emerald-500 focus:ring-emerald-500/20"
-        } rounded-xl ${sizeClasses} text-zinc-900 dark:text-zinc-100 transition-all focus:outline-none focus:ring-2 active:scale-[0.99] select-none shadow-xs ${
-          disabled ? "opacity-50 cursor-not-allowed bg-zinc-50 dark:bg-zinc-900" : "cursor-pointer"
+            ? "border-red-500 focus:border-red-500 focus:ring-red-500/20 dark:border-[#f7768e] dark:focus:border-[#f7768e] dark:focus:ring-[#f7768e]/20"
+            : "border-zinc-300 dark:border-[#24283b] hover:border-zinc-400 dark:hover:border-[#2f3654] focus:border-[#7aa2f7] focus:ring-[#7aa2f7]/20 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25"
+        } rounded-xl ${sizeClasses} text-zinc-900 dark:text-[#f8fafc] transition-all focus:outline-none focus:ring-2 active:scale-[0.99] select-none shadow-xs ${
+          disabled ? "opacity-50 cursor-not-allowed bg-zinc-50 dark:bg-[#16161e]/50 dark:border-[#24283b]/60" : "cursor-pointer"
         }`}
       >
         <div className="flex items-center gap-2 truncate">
@@ -449,7 +449,7 @@ export function CustomSelect<T extends string | number = string>({
             className={`truncate ${
               !selectedOption
                 ? "text-zinc-400 dark:text-zinc-500"
-                : "font-medium"
+                : "font-medium text-zinc-900 dark:text-[#f8fafc]"
             }`}
           >
             {selectedOption?.label || placeholder}
@@ -458,7 +458,7 @@ export function CustomSelect<T extends string | number = string>({
         <ChevronDown
           size={15}
           className={`text-zinc-400 shrink-0 transition-transform duration-200 ${
-            isOpen ? "rotate-180 text-emerald-500" : ""
+            isOpen ? "rotate-180 text-[#7aa2f7]" : ""
           }`}
         />
       </button>
@@ -468,19 +468,19 @@ export function CustomSelect<T extends string | number = string>({
           ref={listboxRef}
           role="listbox"
           tabIndex={-1}
-          className="absolute top-full left-0 right-0 mt-1.5 z-50 rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 shadow-xl p-1.5 space-y-1 animate-in fade-in-0 zoom-in-95 duration-150 overscroll-contain"
+          className="absolute top-full left-0 right-0 mt-1.5 z-50 rounded-2xl bg-white/98 dark:bg-[#1a1b26] backdrop-blur-xl border border-zinc-200 dark:border-[#2f3654] shadow-2xl p-1.5 space-y-1 animate-in fade-in-0 zoom-in-95 duration-150 overscroll-contain"
         >
           {headerTitle && (
-            <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-500 border-b border-zinc-100 dark:border-zinc-800/60 flex items-center justify-between select-none">
+            <div className="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-zinc-400 dark:text-zinc-400 border-b border-zinc-100 dark:border-[#24283b] flex items-center justify-between select-none">
               <span>{headerTitle}</span>
-              <span className="text-[9px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+              <span className="text-[9px] font-mono text-[#7aa2f7] dark:text-[#7aa2f7] font-bold">
                 {options.length} disp.
               </span>
             </div>
           )}
 
           {searchable && (
-            <div className="p-1 pb-1.5 border-b border-zinc-100 dark:border-zinc-800/60 sticky top-0 bg-white/95 dark:bg-zinc-900/95 backdrop-blur z-10">
+            <div className="p-1 pb-1.5 border-b border-zinc-100 dark:border-[#24283b] sticky top-0 bg-white/98 dark:bg-[#1a1b26] backdrop-blur z-10">
               <div className="relative">
                 <Search
                   size={14}
@@ -495,7 +495,7 @@ export function CustomSelect<T extends string | number = string>({
                     setSearchQuery(e.target.value);
                     setHighlightedIndex(0);
                   }}
-                  className="w-full bg-zinc-100 dark:bg-zinc-800/80 rounded-lg pl-8 pr-2 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 border border-transparent focus:border-emerald-500"
+                  className="w-full bg-zinc-100 dark:bg-[#16161e] rounded-lg pl-8 pr-2 py-1.5 text-xs text-zinc-900 dark:text-[#f8fafc] placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-[#7aa2f7] border border-transparent dark:border-[#24283b] focus:border-[#7aa2f7] dark:focus:border-[#7aa2f7]"
                 />
               </div>
             </div>
@@ -523,10 +523,10 @@ export function CustomSelect<T extends string | number = string>({
                       opt.disabled
                         ? "opacity-40 cursor-not-allowed"
                         : isSelected
-                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-semibold border border-emerald-500/20"
+                          ? "bg-blue-500/10 text-blue-700 dark:text-[#7aa2f7] dark:bg-[#7aa2f7]/15 font-semibold border border-blue-500/20 dark:border-[#7aa2f7]/30"
                           : isHighlighted
-                            ? "bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 border border-transparent"
-                            : "hover:bg-zinc-100 dark:hover:bg-zinc-800/70 text-zinc-700 dark:text-zinc-300 border border-transparent"
+                            ? "bg-zinc-100 dark:bg-[#1f202c] text-zinc-900 dark:text-[#f8fafc] border border-transparent"
+                            : "hover:bg-zinc-100 dark:hover:bg-[#1f202c] text-zinc-700 dark:text-zinc-300 border border-transparent"
                     }`}
                   >
                     <div className="min-w-0 flex-1">
@@ -550,7 +550,7 @@ export function CustomSelect<T extends string | number = string>({
                     {isSelected && (
                       <Check
                         size={14}
-                        className="text-emerald-600 dark:text-emerald-400 shrink-0 stroke-[2.5]"
+                        className="text-blue-600 dark:text-[#7aa2f7] shrink-0 stroke-[2.5]"
                       />
                     )}
                   </button>
@@ -560,14 +560,14 @@ export function CustomSelect<T extends string | number = string>({
           </div>
 
           {actionButton && (
-            <div className="pt-1.5 mt-1 border-t border-zinc-100 dark:border-zinc-800/80">
+            <div className="pt-1.5 mt-1 border-t border-zinc-100 dark:border-[#24283b]">
               <button
                 type="button"
                 onClick={() => {
                   closeDropdown();
                   actionButton.onClick?.();
                 }}
-                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors select-none"
+                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold text-[#7aa2f7] hover:bg-[#7aa2f7]/10 transition-colors select-none"
               >
                 {actionButton.icon ? (
                   <actionButton.icon size={14} />

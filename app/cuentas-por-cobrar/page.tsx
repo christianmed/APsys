@@ -51,7 +51,7 @@ export default async function CuentasPorCobrarPage() {
     return (
       <AuthenticatedShell>
         <div className="flex min-h-[60vh] items-center justify-center p-4">
-          <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm dark:border-amber-900/40 dark:bg-zinc-900">
+          <div className="w-full max-w-md space-y-4 rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
             <ShieldAlert className="mx-auto size-12 text-amber-500" />
             <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
               Acceso Reservado a Gerencia
@@ -63,7 +63,7 @@ export default async function CuentasPorCobrarPage() {
             <div className="pt-2">
               <Link
                 href="/pedidos"
-                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
               >
                 ← Volver a Pedidos
               </Link>

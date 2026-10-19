@@ -183,3 +183,19 @@ En el tablero de producción, cada tarjeta comunica su estado actual mediante el
 4. **Acceso Rápido desde la Pantalla de Inicio (Home):**
    - Las 4 tarjetas de resumen del taller en la página principal ahora son interactivas: al hacer clic en cualquiera de ellas ("Activas en Taller", "Por Iniciar", "En Producción", "Listos para Retiro"), viajarás directamente al taller con ese filtro preseleccionado.
 
+---
+
+## 9. Sistema de Diseño Integral Tokyo Night y Selectores Universales (Fase 34)
+
+A partir de la versión v1.0.0, la experiencia visual de APSys fue unificada transversalmente bajo el estándar de diseño **Tokyo Night**:
+
+1. **Unificación Estricta del Azul Zafiro (`#7aa2f7`):**
+   - El color azul utilizado en la tarjeta "Por Iniciar" del Home es **exactamente el mismo** utilizado en los accesos de "Gestión de Pedidos", la tasa informativa del Euro BCV, los checks de selección y los anillos de foco de la interfaz. Esto elimina cualquier confusión visual o disparidad entre pantallas.
+2. **Selector Universal Inteligente (`CustomSelect`):**
+   - Al registrar pedidos o seleccionar clientes y servicios, el nuevo selector desplegable ofrece:
+     - Búsqueda en tiempo real por nombre o teléfono sin perder el contexto.
+     - Botón directo para registrar clientes nuevos sin abandonar el pedido en curso.
+     - Enfoque visual nítido con el azul oficial Tokyo Night, sin bordes verdes desentonados.
+     - Navegación táctil ágil adaptada para tablets de mostrador y teléfonos móviles.
+3. **Consistencia en Todas las Pantallas:**
+   - La barra lateral (Sidebar), el widget de tasas BCV, el pie de usuario, las listas de clientes, catálogo de servicios, comanda técnica, paneles de cobranza y reportes financieros comparten ahora la misma armonía cromática (`#16161e` en fondos, `#1a1b26` en tarjetas, `#1f202c` en controles interactivos y `#24283b` en divisiones), ofreciendo una apariencia profesional, moderna y libre de saturación visual.

@@ -164,7 +164,52 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
      - Actualizar la iconografía a un set profesional de manufactura gráfica: `Play` / `Inbox` para Por Iniciar, `Printer` / `Layers` para En Producción, `PackageCheck` para Listo para Retiro, y `HandCoins` para Cobrar Saldo y Entregar.
   5. **Compuerta de Calidad DoD:** Tests unitarios de tema y componentes, `npm test` (100% verde), `npm run typecheck` (0 errores), `npm run lint` (0 advertencias), `npm run build` y actualización de manuales técnicos y de usuario.
 
-### Fase 34: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 34: Sistema de Diseño Integral APSys Tokyo Night y Armonización Universal de Pantallas
+
+- **Objetivo:** Erradicar definitivamente la fragmentación visual y las clases de color hardcodeadas (`zinc-800`, `zinc-900`, `zinc-950`) en toda la aplicación. Establecer el **Sistema de Diseño Oficial APSys Tokyo Night** basado en tokens semánticos globales, unificar la paleta de acentos cromáticos (eliminando la discrepancia entre `sky`, `blue` e `indigo` en favor de un único Azul Zafiro Tokyo Night `#7aa2f7`), rediseñar `CustomSelect`, `PageHeader`, `SidebarTasasCard` y el perfil del Sidebar, y propagar las superficies Tokyo Night (`#16161e` canvas, `#1a1b26` tarjetas/paneles, `#1f202c` interactivo/inputs/hover, `#24283b` bordes) a cada una de las pantallas del sistema, verificado visualmente mediante el Browser Subagent.
+- **Etapas de Ejecución Estricta (Secuencial y Verificada):**
+  1. **Etapa 1: Fundación y Tokens Semánticos Globales (`app/globals.css`, `lib/design-system.ts`):**
+     - Declarar en `app/globals.css` las variables del sistema y remapear a nivel de tema oscuro para que las utilidades `dark:bg-zinc-900`, `dark:bg-zinc-950`, `dark:border-zinc-800`, `dark:border-zinc-700` resuelvan limpiamente en la paleta Tokyo Night (`#1a1b26`, `#16161e`, `#24283b`), protegiendo de raíz cualquier componente o página no intervenida manualmente.
+     - Crear el módulo rector `lib/design-system.ts` con constantes de clases estándar (`CARD`, `INPUT`, `BUTTON_PRIMARY`, `BUTTON_SECONDARY`, `BUTTON_NEUTRAL`, `SELECT`, `BADGE`, `TABLE`).
+  2. **Etapa 2: Unificación Estricta del Color Azul y Estados Semánticos (`lib/pedidos/estados.ts`, `app/page.tsx`):**
+     - Unificar el Azul Primario del sistema: "Por Iniciar", "Gestión de Pedidos", Euro y badges de recepción adoptan de manera 100% coherente el tono Azul Zafiro Tokyo Night (`#7aa2f7` / Tailwind `sky-400` / `blue-400` calibrado), erradicando mezclas arbitrarias de `sky`, `blue` e `indigo`.
+     - Sincronizar `ESTADOS_METADATA` en `lib/pedidos/estados.ts` para que `recibido` refleje Azul Zafiro, `en_produccion` refleje Ámbar y `listo` refleje Esmeralda en todo el software.
+  3. **Etapa 3: Rediseño del Cascarón, Widget de Tasas BCV y Pie de Sidebar (`components/shell/`):**
+     - `components/shell/sidebar-tasas-card.tsx`: Transicionar el contenedor de tasas a fondo `#1a1b26` con borde `#24283b`, acordeones internos `#1f202c`, y hovers `#252b42`.
+     - `components/shell/app-shell.tsx`:
+       - Corregir el hover de todos los enlaces de navegación del Sidebar a `#1f202c` con texto nítido `#f8fafc`.
+       - Rediseñar el perfil de usuario al pie a superficie `#1f202c` con micro-borde `#24283b`, icono en `#252b42` y botón de cierre de sesión en `#252b42`.
+       - Sincronizar el cajón móvil (`menuMovilAbierto`) con las mismas superficies Tokyo Night.
+     - `components/shell/page-header.tsx`: Actualizar la tarjeta unificada a superficie `#1a1b26` y bordes `#24283b`.
+  4. **Etapa 4: Rediseño Integral de `CustomSelect` (`components/ui/custom-select.tsx`):**
+     - Botón selector: Fondo `#16161e` en variantes de formulario, bordes `#24283b`, hover `#252b42` y anillo de enfoque azul `#7aa2f7` (reemplazando el verde desentonado).
+     - Menú desplegable (`listbox`): Fondo `#1a1b26` con sombra Tokyo Night, separadores `#24283b`, items hover `#1f202c` y activo con check `#7aa2f7`.
+     - Campo de búsqueda interactiva: Fondo `#16161e` y borde `#24283b`.
+  5. **Etapa 5: Armonización de Pantallas de Pedidos y Formularios (`/pedidos`, `/pedidos/nuevo`):**
+     - `app/pedidos/pedido-form.tsx`:
+       - Actualizar `CLASES_INPUT` a fondo `#16161e`, borde `#24283b`, texto `#f8fafc`, focus ring `#7aa2f7`.
+       - Secciones de formulario (Cliente, Renglones de Trabajo, Cobranza Inicial) a `#1a1b26` con bordes `#24283b`.
+       - Filas de renglones dinámicos a `#1f202c` con bordes `#24283b`.
+       - Botón "+ Agregar ítem" con estilo neutral elevado `#1f202c` / `#252b42`.
+     - `app/pedidos/page.tsx`:
+       - Buscador de órdenes, barra de filtros, tarjetas de pedidos y tabla con superficies `#1a1b26` y bordes `#24283b`.
+       - Paginación `CursorPagination` adaptada a `#1f202c`.
+  6. **Etapa 6: Armonización de Pantallas de Tasas y Finanzas (`/tasas`, `/cuentas-por-cobrar`, `/dashboard`):**
+     - `app/tasas/page.tsx` y `app/tasas/bcv-sync-panel.tsx`:
+       - Tarjeta hero de tasa vigente a `#1a1b26`, panel de sincronización a `#1a1b26` y tabla histórica con thead `#1f202c` y filas `#1a1b26`.
+     - `/cuentas-por-cobrar` y `/dashboard`:
+       - Tarjetas métricas, barras de filtros temporales y modales a `#1a1b26` y `#1f202c`.
+  7. **Etapa 7: Armonización del Resto del Ecosistema de Pantallas:**
+     - `/clientes`, `/clientes/[id]`, `/clientes/nuevo`
+     - `/servicios`, `/servicios/[id]`, `/servicios/nuevo`
+     - `/plantillas`, `/recordatorios`, `/ayuda`, `/comanda/[id]`, `/login`
+  8. **Etapa 8: Inspección Visual con Browser Subagent:**
+     - Ejecutar navegación automatizada en navegador con capturas en Home, Nuevo Pedido, Tablero de Taller, Tasas y Clientes para certificar 100% de uniformidad cromática, contraste y ausencia de parpadeos.
+  9. **Etapa 9: Compuerta de Calidad DoD y Documentación:**
+     - Vitest 100% verde (294+ tests), Typecheck 0 errores, ESLint 0 advertencias, Next.js build exitoso.
+     - Actualizar `docs/arquitectura/manual-tecnico-sistema.md` (Sección 14: Sistema de Diseño APSys) y `docs/capacitacion/guia-rapida-usuarios.md`.
+
+### Fase 35: Potencia Comercial y Finanzas (Versión 1.1.0)
 
 - **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
 - **Acciones Clave:**
@@ -172,7 +217,7 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
   3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
 
-### Fase 35: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 36: Planta Inteligente y Manufactura (Versión 1.2.0)
 
 - **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
 - **Acciones Clave:**

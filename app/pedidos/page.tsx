@@ -127,7 +127,7 @@ export default async function PedidosPage({ searchParams }: Props) {
           actions={
             <Link
               href="/pedidos/nuevo"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
             >
               <Plus className="size-4" />
               Nueva Orden
@@ -141,10 +141,10 @@ export default async function PedidosPage({ searchParams }: Props) {
         </section>
 
         {lista.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-[#24283b] dark:bg-[#1a1b26]">
             {q ? (
               <>
-                <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-[#1f202c] dark:text-[#7aa2f7]">
                   <SearchX className="size-6" />
                 </div>
                 <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">
@@ -155,14 +155,14 @@ export default async function PedidosPage({ searchParams }: Props) {
                 </p>
                 <Link
                   href="/pedidos"
-                  className="mt-5 inline-flex h-9 items-center justify-center rounded-lg border border-zinc-300 px-3.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  className="mt-5 inline-flex h-9 items-center justify-center rounded-xl border border-zinc-300 px-3.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
                 >
                   Ver todos los pedidos
                 </Link>
               </>
             ) : (
               <>
-                <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                <div className="flex size-12 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 dark:bg-[#1f202c] dark:text-[#7aa2f7]">
                   <Package className="size-6" />
                 </div>
                 <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-100">
@@ -173,7 +173,7 @@ export default async function PedidosPage({ searchParams }: Props) {
                 </p>
                 <Link
                   href="/pedidos/nuevo"
-                  className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
                 >
                   <Plus className="size-4" />
                   Nueva Orden
@@ -182,7 +182,7 @@ export default async function PedidosPage({ searchParams }: Props) {
             )}
           </div>
         ) : (
-          <div className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="divide-y divide-zinc-200 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:divide-[#24283b] dark:border-[#24283b] dark:bg-[#1a1b26]">
             {lista.map((pedido) => {
               const fecha = formatearFechaHoraCaracas(pedido.creado_en);
 
@@ -214,7 +214,7 @@ export default async function PedidosPage({ searchParams }: Props) {
               return (
                 <div
                   key={pedido.id}
-                  className="flex flex-col gap-4 p-5 transition-colors hover:bg-zinc-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-zinc-800/40"
+                  className="flex flex-col gap-4 p-5 transition-colors hover:bg-zinc-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-[#1f202c]/50"
                 >
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-3">
@@ -296,7 +296,7 @@ export default async function PedidosPage({ searchParams }: Props) {
 
                         <Link
                           href={`/comanda/${pedido.id}`}
-                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
                         >
                           <Printer className="size-3.5" />
                           Comanda

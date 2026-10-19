@@ -117,7 +117,7 @@ export function SidebarTasasCard({
 
   return (
     <div className="mx-3 mt-3">
-      <div className="rounded-2xl border border-zinc-200/90 bg-gradient-to-b from-white to-zinc-50/80 p-2.5 text-xs shadow-sm transition hover:border-zinc-300 dark:border-zinc-800 dark:from-zinc-900 dark:to-zinc-900/60 dark:hover:border-zinc-700">
+      <div className="rounded-2xl border border-zinc-200/90 bg-gradient-to-b from-white to-zinc-50/80 p-2.5 text-xs shadow-sm transition hover:border-zinc-300 dark:border-[#24283b] dark:from-[#1a1b26] dark:to-[#1a1b26] dark:hover:border-[#2f3654]">
         {/* =====================================================================
             1. ENCABEZADO DE LA TARJETA
             ===================================================================== */}
@@ -136,17 +136,17 @@ export function SidebarTasasCard({
           {/* =====================================================================
               2. ACORDEÓN 1: HOY
                  - Borde verde (border-emerald-500/40)
-                 - Mismo fondo que el actual (bg-white/90 dark:bg-zinc-900/90)
+                 - Fondo Tokyo Night surface (#1f202c)
                  - Circulito verde encendido
-                 - Texto: "Hoy, DD/MM/AAAA" (sin palabra vigente/en vigencia)
+                 - Texto: "Hoy, DD/MM/AAAA"
                  - Estado persistente al navegar entre vistas
               ===================================================================== */}
-          <div className="overflow-hidden rounded-xl border border-emerald-500/40 bg-white/90 shadow-xs transition-colors dark:border-emerald-600/50 dark:bg-zinc-900/90">
+          <div className="overflow-hidden rounded-xl border border-emerald-500/40 bg-white/90 shadow-xs transition-colors dark:border-emerald-600/40 dark:bg-[#1f202c]">
             <button
               type="button"
               onClick={toggleAcordeonHoy}
               aria-expanded={acordeonHoyAbierto}
-              className="flex w-full items-center justify-between p-2.5 text-left transition hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+              className="flex w-full items-center justify-between p-2.5 text-left transition hover:bg-zinc-50 dark:hover:bg-[#252b42]"
             >
               <div className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-emerald-500 shadow-xs" />
@@ -163,7 +163,7 @@ export function SidebarTasasCard({
             </button>
 
             {acordeonHoyAbierto && (
-              <div className="space-y-1.5 border-t border-zinc-100 px-2.5 pt-2.5 pb-2.5 animate-in slide-in-from-top-1 duration-150 dark:border-zinc-800/60">
+              <div className="space-y-1.5 border-t border-zinc-100 px-2.5 pt-2.5 pb-2.5 animate-in slide-in-from-top-1 duration-150 dark:border-[#24283b]">
                 <RenglonTasa
                   divisa="USD"
                   valor={tasaHoy}
@@ -183,10 +183,8 @@ export function SidebarTasasCard({
 
           {/* =====================================================================
               3. ACORDEÓN 2: MAÑANA
-                 - Borde naranja/ámbar solamente (border-amber-500/50)
-                 - Mismo fondo que el de hoy (bg-white/90 dark:bg-zinc-900/90)
-                 - Sin fondo naranja
-                 - SIN la palabra BCV en el encabezado
+                 - Borde naranja/ámbar (border-amber-500/50)
+                 - Fondo Tokyo Night surface (#1f202c)
                  - Circulito encendido (si hay tasa) u opaco (si está pendiente)
                  - Estado persistente al navegar entre vistas
               ===================================================================== */}
@@ -194,14 +192,14 @@ export function SidebarTasasCard({
             className={`overflow-hidden rounded-xl border transition-colors shadow-xs ${
               hayTasaManana
                 ? "border-amber-500/50 dark:border-amber-600/50"
-                : "border-zinc-300/80 dark:border-zinc-800"
-            } bg-white/90 dark:bg-zinc-900/90`}
+                : "border-zinc-300/80 dark:border-[#24283b]"
+            } bg-white/90 dark:bg-[#1f202c]`}
           >
             <button
               type="button"
               onClick={toggleAcordeonManana}
               aria-expanded={acordeonMananaAbierto}
-              className="flex w-full items-center justify-between p-2.5 text-left transition hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+              className="flex w-full items-center justify-between p-2.5 text-left transition hover:bg-zinc-50 dark:hover:bg-[#252b42]"
             >
               <div className="flex items-center gap-2">
                 {/* Circulito: ámbar encendido si hay tasa, o gris opaco si está pendiente */}
@@ -222,7 +220,6 @@ export function SidebarTasasCard({
                 </span>
               </div>
 
-              {/* Solo la flechita chevron: eliminada la palabra BCV */}
               <ChevronDown
                 className={`size-3.5 text-zinc-400 transition-transform duration-200 dark:text-zinc-500 ${
                   acordeonMananaAbierto ? "rotate-180" : ""
@@ -232,7 +229,7 @@ export function SidebarTasasCard({
 
             {/* Contenido desplegable con espaciado pt-2.5 */}
             {acordeonMananaAbierto && (
-              <div className="space-y-1.5 border-t border-zinc-100 px-2.5 pt-2.5 pb-2.5 animate-in slide-in-from-top-1 duration-150 dark:border-zinc-800/60">
+              <div className="space-y-1.5 border-t border-zinc-100 px-2.5 pt-2.5 pb-2.5 animate-in slide-in-from-top-1 duration-150 dark:border-[#24283b]">
                 <RenglonTasa
                   divisa="USD"
                   valor={tasaSiguiente}

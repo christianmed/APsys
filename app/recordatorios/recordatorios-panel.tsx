@@ -83,7 +83,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar orden o cliente..."
-              className="h-10 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm text-zinc-900 focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              className="h-10 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm text-zinc-900 focus:border-[#7aa2f7] focus:bg-white focus:outline-none dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-100 dark:focus:border-[#7aa2f7]"
             />
             {busqueda && (
               <button
@@ -101,7 +101,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
 
       {/* Tarjetas de Métricas Resumen */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Total Listos sin Retirar
           </span>
@@ -116,7 +116,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
           className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-98 ${
             filtro === "atencion_48h"
               ? "border-amber-500 bg-amber-50/70 dark:border-amber-600 dark:bg-amber-950/40 ring-2 ring-amber-500"
-              : "border-zinc-200 bg-white hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
+              : "border-zinc-200 bg-white hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:bg-[#1f202c]/50"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -136,7 +136,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
           className={`rounded-2xl border p-4 text-left shadow-sm transition active:scale-98 ${
             filtro === "urgente_72h"
               ? "border-red-500 bg-red-50/70 dark:border-red-600 dark:bg-red-950/40 ring-2 ring-red-500"
-              : "border-zinc-200 bg-white hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
+              : "border-zinc-200 bg-white hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:bg-[#1f202c]/50"
           }`}
         >
           <div className="flex items-center justify-between">
@@ -150,7 +150,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
           </p>
         </button>
 
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
             Saldo Retenido por Cobrar
           </span>
@@ -163,7 +163,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
 
       {/* Lista de Pedidos en Espera */}
       {pedidosFiltrados.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-300 bg-white p-12 text-center dark:border-[#24283b] dark:bg-[#1a1b26]">
           <Package className="size-12 text-zinc-400" />
           <h2 className="mt-3 text-base font-semibold text-zinc-900 dark:text-zinc-100">
             No hay pedidos en este umbral
@@ -200,7 +200,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
                     ? "border-red-200 bg-red-50/30 dark:border-red-900/60 dark:bg-red-950/20"
                     : umbral === "atencion_48h"
                       ? "border-amber-200 bg-amber-50/30 dark:border-amber-900/60 dark:bg-amber-950/20"
-                      : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
+                      : "border-zinc-200 bg-white dark:border-[#24283b] dark:bg-[#1a1b26]"
                 }`}
               >
                 {/* Datos del Pedido */}
@@ -212,21 +212,21 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
 
                     {/* Badge de Antigüedad */}
                     {umbral === "urgente_72h" && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-bold text-red-800 dark:bg-red-900/40 dark:text-red-300">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-bold text-red-800 dark:border dark:border-[#f7768e]/30 dark:bg-[#f7768e]/15 dark:text-[#f7768e]">
                         <AlertCircle className="size-3" />
                         URGENTE: {pedido.horasTranscurridas} h ({diasEspera} días)
                       </span>
                     )}
 
                     {umbral === "atencion_48h" && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-800 dark:border dark:border-[#e0af68]/30 dark:bg-[#e0af68]/15 dark:text-[#e0af68]">
                         <AlertTriangle className="size-3" />
                         ATENCIÓN: {pedido.horasTranscurridas} h
                       </span>
                     )}
 
                     {umbral === "reciente" && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                         <Clock className="size-3" />
                         Listo hace {pedido.horasTranscurridas} h
                       </span>
@@ -235,7 +235,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
                     <Link
                       href={`/comanda/${pedido.id}`}
                       target="_blank"
-                      className="inline-flex size-6 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 hover:text-zinc-800 dark:border-zinc-700 dark:hover:text-zinc-200"
+                      className="inline-flex size-6 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 hover:text-zinc-800 dark:border-[#24283b] dark:hover:text-zinc-200 dark:hover:bg-[#1f202c]"
                       aria-label={`Ver comanda de ${ordenStr}`}
                     >
                       <ExternalLink className="size-3" />
@@ -290,7 +290,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
                       Enviar Recordatorio (1 Clic)
                     </a>
                   ) : (
-                    <span className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-100 px-3 text-xs text-zinc-400 dark:border-zinc-800 dark:bg-zinc-800">
+                    <span className="inline-flex h-11 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-100 px-3 text-xs text-zinc-400 dark:border-[#24283b] dark:bg-[#1f202c]">
                       Sin teléfono registrado
                     </span>
                   )}

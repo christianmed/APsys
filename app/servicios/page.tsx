@@ -11,16 +11,16 @@ import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 export const instant = false;
 
 const CLASES_FILA =
-  "block rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900";
+  "block rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]";
 
-const CLASES_FILA_ENLACE = `${CLASES_FILA} transition-colors hover:border-zinc-300 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:hover:border-zinc-700 dark:hover:bg-zinc-800/60`;
+const CLASES_FILA_ENLACE = `${CLASES_FILA} transition-colors hover:border-zinc-300 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50`;
 
 const CLASES_BADGE =
   "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium";
 
 const CLASES_BADGE_ACTIVO = `${CLASES_BADGE} bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300`;
 
-const CLASES_BADGE_INACTIVO = `${CLASES_BADGE} bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300`;
+const CLASES_BADGE_INACTIVO = `${CLASES_BADGE} bg-zinc-100 text-zinc-600 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300`;
 
 /**
  * Catálogo de servicios (RF-04/T-007b): listado completo ordenado por `orden`
@@ -61,13 +61,13 @@ export default async function ServiciosPage() {
               <div className="flex flex-wrap items-center gap-2">
                 <Link
                   href="/dashboard/rotacion"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 text-xs sm:text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 text-xs sm:text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42]"
                 >
                   Rotación
                 </Link>
                 <Link
                   href="/servicios/nuevo"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
                 >
                   <Plus className="size-4" />
                   Nuevo Servicio
@@ -125,7 +125,7 @@ export default async function ServiciosPage() {
             })}
           </ul>
         ) : (
-          <p className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400">
+          <p className="rounded-2xl border border-dashed border-zinc-300 bg-white p-8 text-center text-sm text-zinc-500 dark:border-[#24283b] dark:bg-[#1a1b26] dark:text-zinc-400">
             Aún no hay servicios
           </p>
         )}

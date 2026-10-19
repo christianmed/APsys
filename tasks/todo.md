@@ -294,3 +294,54 @@
   - [x] **Paso 7 (Sincronización Mandatoria de Documentación):**
     - [x] Actualizar `docs/arquitectura/manual-tecnico-sistema.md` con la Sección 13.
     - [x] Actualizar `docs/capacitacion/guia-rapida-usuarios.md` reflejando el conmutador de tema, paleta Tokyo Night y nuevas tarjetas.
+
+- [x] **Fase 34: Sistema de Diseño Integral APSys Tokyo Night y Armonización Universal de Pantallas**
+  - [x] **Etapa 1: Fundación y Tokens Semánticos Globales (app/globals.css, lib/design-system.ts)**
+    - [x] Configurar variables semánticas Tokyo Night en app/globals.css (#16161e canvas, #1a1b26 cards/sidebar, #1f202c elevated/inputs/hover, #24283b borders, #7aa2f7 blue, #e0af68 amber, #9ece6a emerald, #bb9af7 purple, #f7768e red).
+    - [x] En app/globals.css, remapear a nivel de .dark las clases utilitarias de Tailwind dark:bg-zinc-900, dark:bg-zinc-950, dark:border-zinc-800, dark:border-zinc-700 para resolver directamente en la paleta Tokyo Night, blindando de raíz cualquier componente o página no intervenida manualmente.
+    - [x] Crear lib/design-system.ts con constantes semánticas tipadas: CARD, INPUT, BUTTON_PRIMARY, BUTTON_SECONDARY, BUTTON_NEUTRAL, SELECT, BADGE, TABLE.
+    - [x] Crear test/design-system.test.ts verificando la coherencia de tokens y exportaciones.
+  - [x] **Etapa 2: Unificación Estricta del Color Azul y Estados Semánticos (lib/pedidos/estados.ts, app/page.tsx)**
+    - [x] Unificar el Azul Primario del sistema: "Por Iniciar", "Gestión de Pedidos", Euro y badges de recepción adoptan de manera 100% coherente el tono Azul Zafiro Tokyo Night (#7aa2f7 / Tailwind sky-400 / blue-400 calibrado), erradicando mezclas arbitrarias de sky, blue e indigo.
+    - [x] Actualizar lib/pedidos/estados.ts: recibido = Azul Zafiro, en_produccion = Ámbar Noche, listo = Esmeralda, entregado = Neutral elevado, cancelado = Rojo coral.
+    - [x] Sincronizar tarjeta "Por Iniciar" y "Gestión de Pedidos" en app/page.tsx para usar exactamente el mismo azul calibrado.
+  - [x] **Etapa 3: Rediseño del Cascarón, Widget de Tasas BCV y Pie de Sidebar (components/shell/)**
+    - [x] En components/shell/sidebar-tasas-card.tsx: contenedor de tasas a fondo #1a1b26 con borde #24283b, acordeones internos #1f202c, y hovers #252b42.
+    - [x] En components/shell/app-shell.tsx: hover de los enlaces de navegación del Sidebar a #1f202c con texto blanco #f8fafc.
+    - [x] En components/shell/app-shell.tsx: perfil de usuario al pie a superficie #1f202c con micro-borde #24283b, icono #252b42 y botón de logout #252b42.
+    - [x] En components/shell/app-shell.tsx: sincronizar el cajón móvil (menuMovilAbierto) y barra inferior con las mismas clases Tokyo Night.
+    - [x] En components/shell/page-header.tsx: fondo #1a1b26, borde #24283b, badge en #1f202c con borde #24283b.
+  - [x] **Etapa 4: Rediseño Integral de CustomSelect (components/ui/custom-select.tsx)**
+    - [x] Botón del selector: fondo #16161e en variante form, bordes #24283b, hover #252b42 y anillo de foco azul #7aa2f7 (reemplazando el verde desentonado).
+    - [x] Menú desplegable (listbox): fondo #1a1b26, borde #2f3654, separadores #24283b, items hover #1f202c y activo con check #7aa2f7.
+    - [x] Campo de búsqueda: fondo #16161e y borde #24283b.
+  - [x] **Etapa 5: Armonización de Pantallas de Pedidos y Formularios (/pedidos, /pedidos/nuevo)**
+    - [x] En app/pedidos/pedido-form.tsx: secciones de formulario (Cliente, Renglones, Cobranza) con fondo #1a1b26 y borde #24283b.
+    - [x] En app/pedidos/pedido-form.tsx: CLASES_INPUT con fondo #16161e, borde #24283b, texto #f8fafc, focus ring #7aa2f7.
+    - [x] En app/pedidos/pedido-form.tsx: renglones de trabajo dinámicos en #1f202c con bordes #24283b.
+    - [x] En app/pedidos/pedido-form.tsx: botón "+ Agregar ítem" y controles de abono con superficies Tokyo Night.
+    - [x] En app/pedidos/page.tsx: buscador de órdenes, barra de filtros, tarjetas y tabla con superficies #1a1b26 y bordes #24283b.
+    - [x] En app/pedidos/page.tsx: paginación CursorPagination adaptada a #1f202c y #24283b.
+  - [x] **Etapa 6: Armonización de Pantallas de Tasas y Finanzas (/tasas, /cuentas-por-cobrar, /dashboard)**
+    - [x] En app/tasas/page.tsx y app/tasas/bcv-sync-panel.tsx: tarjeta hero de tasa vigente a #1a1b26 con borde #24283b.
+    - [x] En app/tasas/page.tsx y app/tasas/bcv-sync-panel.tsx: panel de sincronización BCV a #1a1b26 y bordes #24283b.
+    - [x] En app/tasas/page.tsx: tabla del histórico inmutable con thead en #1f202c, filas en #1a1b26 y bordes #24283b.
+    - [x] En /cuentas-por-cobrar y /dashboard: tarjetas métricas, gráficos, selectores de rango y modales a #1a1b26 y #1f202c.
+  - [x] **Etapa 7: Armonización del Resto del Ecosistema de Pantallas**
+    - [x] /clientes, /clientes/[id], /clientes/nuevo
+    - [x] /servicios, /servicios/[id], /servicios/nuevo
+    - [x] /plantillas, /recordatorios, /ayuda, /comanda/[id], /login
+  - [x] **Etapa 8: Inspección Visual con Browser Subagent (DevTools)**
+    - [x] Captura e inspección visual en / (Home).
+    - [x] Captura e inspección visual en /pedidos/nuevo (Formulario con CustomSelect).
+    - [x] Captura e inspección visual en /taller (Tablero Kanban).
+    - [x] Captura e inspección visual en /tasas (Panel BCV e Histórico).
+    - [x] Captura e inspección visual en /clientes y /servicios.
+    - [x] Validar que no existan parpadeos, contrastes pobres ni bordes incompatibles.
+  - [x] **Etapa 9: Compuerta de Calidad DoD y Documentación**
+    - [x] Vitest 100% verde (npx vitest run).
+    - [x] Chequeo de tipos TypeScript (npm run typecheck - 0 errores).
+    - [x] Linter (npm run lint - 0 advertencias).
+    - [x] Compilación Next.js (npm run build - exitosa).
+    - [x] Actualizar docs/arquitectura/manual-tecnico-sistema.md con la Sección 14 (Sistema de Diseño Integral APSys).
+    - [x] Actualizar docs/capacitacion/guia-rapida-usuarios.md.

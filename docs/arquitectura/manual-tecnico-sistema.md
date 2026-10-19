@@ -558,7 +558,79 @@ El estado de la orden en el tablero de taller se comunica a través del fondo co
 
 1. **Navegación Directa de KPIs al Taller:** Las 4 tarjetas de resumen de taller ahora son enlaces interactivos (`<Link href="/taller?tab=...">`), permitiendo acceder directamente a la vista filtrada con 1 toque.
 2. **Corrección de Hover Fantasma:** Eliminado el efecto de hover beige/grisáceo lavado en modo oscuro mediante `dark:hover:bg-amber-950/40` y `dark:hover:bg-emerald-950/40`.
-3. **Polaridad Normalizada en Accesos Rápidos:** Tarjetas con dos botones ("Gestión de Pedidos", "Clientes") estandarizadas con botón principal neutral a la izquierda y botón de creación rápida outline a la derecha. El acceso al taller adoptó un botón neutral con micro-icono de acento, eliminando el color naranja saturado anterior.
+3. **Polaridad Normalizada en Accesos Rápidos:** Tarjetas con dos botones ("Gestión de Pedidos", "Clientes") estandarizadas con botón principal neutral a la izquierda y botón de creación rápida outline a la derecha. El acceso al taller adoptó un botón neutral con micro-icono de acento, eliminando el color naranja saturado anterior.---
 
+## 14. Sistema de Diseño Integral APSys Tokyo Night
 
+### 14.1 Diagnóstico de Inconsistencias Heredadas (Fase 34)
+
+Previo a la Fase 34, el sistema presentaba inconsistencias visuales en el tema oscuro derivadas de la migración progresiva de pantallas:
+1. **Componentes Aislados en el Sidebar:** El widget de tasas BCV y el pie del operador conservaban clases `zinc-900`/`zinc-800` heredadas, contrastando con la superficie de la barra lateral.
+2. **Hover Grisáceo Antiguo en Navegación:** Los enlaces del sidebar usaban `hover:bg-zinc-800`, produciendo un tono gris cenizo desentonado con el matiz azul medianoche de Tokyo Night.
+3. **Disparidad de Azules:** La tarjeta "Por Iniciar" utilizaba una variante de `sky-400`, mientras que el módulo de tasas utilizaba `blue-400` y otras secciones recurrían a `indigo`, rompiendo la coherencia visual.
+4. **CustomSelect Desalineado:** El menú selector universal conservaba anillos de foco verdes (`focus-visible:ring-emerald-500`) en formularios generales y fondos grises lavados en el desplegable.
+5. **Divergencia entre Páginas:** Las pantallas de `/pedidos`, `/tasas`, `/cuentas-por-cobrar`, `/clientes` y `/servicios` tenían combinaciones dispares de clases `dark:bg-zinc-950` y `dark:border-zinc-800`.
+
+### 14.2 Arquitectura de Tokens Globales y Remapping en Tailwind CSS v4
+
+Para erradicar de raíz la inconsistencia, se implementó una estrategia en dos capas:
+
+1. **Tokens Semánticos Oficiales (`app/globals.css` y `lib/design-system.ts`):**
+   ```css
+   @theme inline {
+     --color-tokyo-canvas: #16161e;
+     --color-tokyo-surface: #1a1b26;
+     --color-tokyo-elevated: #1f202c;
+     --color-tokyo-hover: #252b42;
+     --color-tokyo-border: #24283b;
+     --color-tokyo-border-active: #2f3654;
+     --color-tokyo-blue: #7aa2f7;
+     --color-tokyo-amber: #e0af68;
+     --color-tokyo-emerald: #9ece6a;
+     --color-tokyo-purple: #bb9af7;
+     --color-tokyo-red: #f7768e;
+   }
+   ```
+2. **Blindaje de Raíz vía CSS Remapping en `.dark`:**
+   En `app/globals.css`, las utilidades nativas de Tailwind se remapearon dentro del selector `.dark`:
+   ```css
+   .dark {
+     --color-zinc-950: #16161e;
+     --color-zinc-900: #1a1b26;
+     --color-zinc-800: #1f202c;
+     --color-zinc-700: #24283b;
+     --color-zinc-600: #565f89;
+   }
+   ```
+   Esto garantiza que cualquier componente de terceros, biblioteca o utilería heredada resuelva automáticamente en el color Tokyo Night correspondiente, evitando pantallas o modales con grises incompatibles.
+
+### 14.3 Mapeo Semántico Universal de Estados y Colores
+
+| Concepto Visual | Hex / Token | Aplicación en APSys |
+| :--- | :--- | :--- |
+| **Canvas** | `#16161e` | Fondo raíz de aplicación, página de login y contenedor general. |
+| **Superficie** | `#1a1b26` | Tarjetas KPI, sidebar, paneles de formulario, modales y tablas. |
+| **Superficie Elevada** | `#1f202c` | Inputs, header thead, botones secundarios, badges neutrales y pie de usuario. |
+| **Hover Activo** | `#252b42` | Estado hover de botones de navegación, botones secundarios y dropdowns. |
+| **Borde Estándar** | `#24283b` | Divisores de fila, bordes de tarjeta e inputs en reposo. |
+| **Borde Activo / Ring** | `#2f3654` / `#7aa2f7` | Foco de inputs, selector abierto y bordes seleccionados. |
+| **Azul Zafiro Semántico** | `#7aa2f7` | **Color Azul Unificado de APSys:** Estado "Recibido / Por Iniciar", Gestión de Pedidos, Tasa Euro BCV informativa, botones de acción secundaria y rings de foco en CustomSelect. |
+| **Ámbar Noche** | `#e0af68` | Estado "En Producción", avisos de tasas para mañana y recordatorios 48h. |
+| **Esmeralda Bosque** | `#9ece6a` | Estado "Listo para Retiro", totales pagados y tasa USD oficial vigente. |
+| **Rojo Coral** | `#f7768e` | Estado "Cancelado", pedidos anulados, saldos retenidos y alertas urgentes 72h. |
+
+### 14.4 Rediseño Integral de Componentes Clave
+
+1. **Cascarón y Sidebar (`components/shell/`):**
+   - **Widget Tasas BCV:** Contenedor `#1a1b26`, borde `#24283b`, acordeones `#1f202c` y hover `#252b42`.
+   - **Pie de Operador:** Superficie `#1f202c` con borde `#24283b`, botón logout con hover `#252b42`.
+   - **Navegación:** Enlaces con hover `#1f202c` y texto `#f8fafc`.
+2. **Selector Universal (`components/ui/custom-select.tsx`):**
+   - Variante `form`: Botón disparador con fondo `#16161e`, borde `#24283b`, hover `#2f3654` y anillo de foco azul `#7aa2f7` (reemplazando el anillo verde desentonado).
+   - Menú listbox desplegable: Fondo `#1a1b26`, borde `#2f3654`, buscador `#16161e`, ítems con hover `#1f202c` y activo con check `#7aa2f7`.
+3. **Módulos Operativos y Comerciales:**
+   - **Pedidos y Nuevo Pedido:** Secciones a `#1a1b26`, renglones dinámicos a `#1f202c`, inputs a `#16161e` con foco `#7aa2f7`.
+   - **Taller Kanban:** Tarjetas unificadas con bordes tonales de estado y botones táctiles de avance.
+   - **Tasas y Finanzas:** Tarjeta hero en gradiente `#1a1b26`, panel BCV y tabla histórica inmutable sincronizados.
+   - **Clientes y Servicios:** Directorio, formularios de alta/edición y fichas de historial consolidados en Tokyo Night.
 

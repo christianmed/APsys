@@ -150,7 +150,7 @@ export default async function EditarClientePage({
           actions={
             <Link
               href={`/pedidos/nuevo?cliente_id=${cliente.id}`}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
             >
               Crear Pedido para Cliente
             </Link>
@@ -161,7 +161,7 @@ export default async function EditarClientePage({
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           {/* Columna Izquierda: Formulario de Datos del Cliente */}
           <div className="lg:col-span-4">
-            <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <section className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
               <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
                 Datos del Cliente
               </h2>

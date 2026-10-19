@@ -98,7 +98,7 @@ export default async function TasasPage() {
           actions={
             <Link
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
             >
               Ver Pedidos
             </Link>
@@ -106,7 +106,7 @@ export default async function TasasPage() {
         />
 
         {/* Tarjeta destacada de la tasa vigente */}
-        <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/60 dark:from-emerald-950/40 dark:via-zinc-900 dark:to-emerald-950/20 sm:p-8">
+        <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/40 dark:from-emerald-950/30 dark:via-[#1a1b26] dark:to-emerald-950/20 sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-6">
             {/* USD principal */}
             <div className="flex-1 min-w-[200px]">
@@ -138,7 +138,7 @@ export default async function TasasPage() {
 
             {/* Nota de inmutabilidad */}
             <div className="min-w-[200px] max-w-sm">
-              <div className="rounded-2xl border border-emerald-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-emerald-900/40 dark:bg-zinc-900/80 text-xs text-zinc-600 dark:text-zinc-300 space-y-1">
+              <div className="rounded-2xl border border-emerald-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-[#24283b] dark:bg-[#16161e]/80 text-xs text-zinc-600 dark:text-zinc-300 space-y-1">
                 <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-300">
                   <ShieldCheck className="size-4 text-emerald-600" />
                   Inmutabilidad Histórica
@@ -169,7 +169,7 @@ export default async function TasasPage() {
         {/* Sección de 2 columnas de igual ancho: Sincronización BCV en Vivo e Histórico (en móvil: Sincronización arriba, Histórico abajo) */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Columna 1: Sincronización BCV en Vivo */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
             <BcvSyncPanel
               tasaActualUsd={tasaVigente?.valor_bs_por_usd}
               tasasIniciales={tasasBcvIniciales}
@@ -177,8 +177,8 @@ export default async function TasasPage() {
           </div>
 
           {/* Columna 2: Histórico Inmutable de Tasas */}
-          <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="border-b border-zinc-200 px-6 py-4 dark:border-zinc-800 flex items-center justify-between">
+          <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <div className="border-b border-zinc-200 px-6 py-4 dark:border-[#24283b] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <History className="size-4 text-zinc-400" />
                 <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
@@ -197,14 +197,14 @@ export default async function TasasPage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400">
+                    <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                       <tr>
                         <th className="px-6 py-3.5">Valor (Bs. / USD)</th>
                         <th className="px-6 py-3.5">Vigente Desde</th>
                         <th className="px-6 py-3.5 text-center">Estado</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                    <tbody className="divide-y divide-zinc-200 dark:divide-[#24283b]">
                       {historial.map((t) => {
                         const esLaVigente = tasaVigente?.id === t.id;
                         const estadoVigencia = describirEstadoVigencia({
@@ -216,7 +216,7 @@ export default async function TasasPage() {
                         return (
                           <tr
                             key={t.id}
-                            className={`transition-colors hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40 ${
+                            className={`transition-colors hover:bg-zinc-50/70 dark:hover:bg-[#1f202c]/50 ${
                               esLaVigente
                                 ? "bg-emerald-50/30 dark:bg-emerald-950/10 font-bold"
                                 : esLaProgramada
