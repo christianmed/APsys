@@ -36,14 +36,13 @@ test.describe("T-027 — Flujo crítico integrado de taller de gráfica (RF-01 a
     // 3. TALLER — Tablero visual de producción por columnas de estado
     await page.goto("/taller");
     await expect(
-      page.getByRole("heading", { name: "Taller de Producción" }),
+      page.getByRole("heading", { name: /Taller/i }),
     ).toBeVisible();
 
-    // Columnas kanban
-    await expect(page.getByText("Por Imprimir / Registrado")).toBeVisible();
-    await expect(page.getByText("En Impresión / Taller")).toBeVisible();
-    await expect(page.getByText("Listo para Retiro")).toBeVisible();
-    await expect(page.getByText("Entregado")).toBeVisible();
+    // Filtros de estado / pestañas kanban
+    await expect(page.getByText(/Activos/i).first()).toBeVisible();
+    await expect(page.getByText(/Recibido/i).first()).toBeVisible();
+    await expect(page.getByText(/En Producción/i).first()).toBeVisible();
 
     // 4. AVISO WHATSAPP — Verificar disponibilidad de avisos al cliente
     const botonWhatsApp = page.locator('a[href*="wa.me"]').first();

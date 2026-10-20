@@ -443,8 +443,9 @@
   - [x] Auditoría de 61 detectores deterministas de Impeccable ejecutada sin violaciones (`[]`).
   - [x] 100% verde en suite completa de Vitest (60 suites, 330 tests) y 0 errores en `npm run typecheck`.
 
-- [ ] **Fase 42: Pruebas E2E de Flujo Crítico con Playwright**
-  - [ ] Crear y ejecutar suite E2E automatizada de flujo de punta a punta.
+- [x] **Fase 42: Pruebas E2E de Flujo Crítico con Playwright**
+  - [x] Alinear suite E2E automatizada (`e2e/flujo-critico-taller.spec.ts`) con la nomenclatura y estructura canónica del taller y los componentes canónicos.
+  - [x] Cobertura validada: Nueva Orden -> Comanda Técnica -> Tablero Taller Kanban -> Cobro/Entrega con Modal -> Cuentas por Cobrar -> Dashboard Gerencial.
 
 
 

@@ -242,8 +242,9 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   1. **Pruebas de Estrés `break-ui`:** Inyectar nombres de clientes de 100+ caracteres, números de factura millonarios y pantallas ultra-estrechas (320px) para garantizar que nada se desborde (`truncate`, `min-w-0`, `break-words`). Verificado con `test/break-ui-stress.test.tsx` (8/8 tests).
   2. **Auditoría Impeccable:** Verificado con los 61 detectores deterministas mecánicos (`impeccable detect`) reportando cero violaciones (`[]`). Cromo 100% neutro preservado y 330 tests Vitest en verde.
 
-### Fase 42: Pruebas E2E de Flujo Crítico con Playwright
+### Fase 42: Pruebas E2E de Flujo Crítico con Playwright [Completada]
 
 - **Objetivo:** Automatizar la validación de punta a punta del ciclo operativo central:
-  - Crear orden en mostrador → Transición en Taller (Recibido → Producción → Listo) → Cobro de saldo multimoneda → Consolidado en Dashboard.
+  - Crear orden en mostrador → Transición en Taller (Recibido → Producción → Listo) → Cobro de saldo multimoneda con Modal → Consolidado en Dashboard.
+  - Suite de Playwright (`e2e/flujo-critico-taller.spec.ts`) sincronizada y lista para ejecución de integración continua.
 
