@@ -1,4 +1,5 @@
 import React, { forwardRef, type ButtonHTMLAttributes } from "react";
+import Link from "next/link";
 import { type LucideIcon } from "lucide-react";
 
 export type ButtonVariant =
@@ -34,11 +35,13 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   size?: ButtonSize;
   icon?: LucideIcon;
   isLoading?: boolean;
+  href?: string;
 };
 
 /**
  * Botón universal con micro-interacción física (:active:scale-[0.97])
  * y optimización contra tap-delay (touch-action: manipulation).
+ * Soporta tanto acciones interactivas (`<button>`) como navegación accesible (`<Link>`).
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -48,17 +51,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       icon: Icon,
       isLoading,
       disabled,
+      href,
       children,
       className = "",
       ...props
     },
     ref,
   ) => {
+    const classes = `inline-flex items-center justify-center font-medium transition-all duration-150 touch-manipulation active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 ${BUTTON_VARIANT_STYLES[variant]} ${BUTTON_SIZE_STYLES[size]} ${className}`;
+
+    if (href) {
+      return (
+        <Link href={href} className={classes}>
+          {Icon && <Icon className="size-4 shrink-0" />}
+          {children}
+        </Link>
+      );
+    }
+
     return (
       <button
         ref={ref}
         disabled={disabled || isLoading}
-        className={`inline-flex items-center justify-center font-medium transition-all duration-150 touch-manipulation active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 ${BUTTON_VARIANT_STYLES[variant]} ${BUTTON_SIZE_STYLES[size]} ${className}`}
+        className={classes}
         {...props}
       >
         {Icon && <Icon className="size-4 shrink-0" />}

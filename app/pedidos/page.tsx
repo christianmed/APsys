@@ -23,6 +23,7 @@ import { PedidosBuscador } from "./pedidos-buscador";
 import { AnularPedidoModal } from "./anular-pedido-modal";
 import { AuditoriaModal } from "./auditoria-modal";
 import { CursorPagination } from "@/components/ui/cursor-pagination";
+import { Button } from "@/components/ui/button";
 import { procesarPaginacionCursor } from "@/lib/paginacion/cursor";
 import { formatearFechaHoraCaracas } from "@/lib/fechas";
 
@@ -128,13 +129,13 @@ export default async function PedidosPage({ searchParams }: Props) {
             </span>
           }
           actions={
-            <Link
+            <Button
               href="/pedidos/nuevo"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
+              variant="primary"
             >
               <Plus className="size-4" />
               Nueva Orden
-            </Link>
+            </Button>
           }
         />
 
@@ -156,12 +157,14 @@ export default async function PedidosPage({ searchParams }: Props) {
                 <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                   No hay órdenes que coincidan con el criterio &quot;{q}&quot;.
                 </p>
-                <Link
+                <Button
                   href="/pedidos"
-                  className="mt-5 inline-flex h-9 items-center justify-center rounded-xl border border-zinc-300 px-3.5 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
+                  variant="outline"
+                  size="sm"
+                  className="mt-5"
                 >
                   Ver todos los pedidos
-                </Link>
+                </Button>
               </>
             ) : (
               <>
@@ -174,13 +177,15 @@ export default async function PedidosPage({ searchParams }: Props) {
                 <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                   Comienza registrando la primera orden de trabajo.
                 </p>
-                <Link
+                <Button
                   href="/pedidos/nuevo"
-                  className="mt-5 inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
+                  variant="primary"
+                  size="sm"
+                  className="mt-5"
                 >
                   <Plus className="size-4" />
                   Nueva Orden
-                </Link>
+                </Button>
               </>
             )}
           </div>

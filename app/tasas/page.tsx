@@ -18,6 +18,9 @@ import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert } from "@/components/ui/alert";
 import { BcvSyncPanel } from "./bcv-sync-panel";
 
 export const instant = false;
@@ -96,12 +99,13 @@ export default async function TasasPage() {
             </span>
           }
           actions={
-            <Link
+            <Button
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f8fafc] dark:hover:bg-[#252b42]"
+              variant="outline"
+              size="sm"
             >
               Ver Pedidos
-            </Link>
+            </Button>
           }
         />
 
@@ -111,10 +115,9 @@ export default async function TasasPage() {
             {/* USD principal */}
             <div className="flex-1 min-w-[200px]">
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-0.5 text-xs font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                  <CheckCircle className="size-3.5" />
+                <Badge variant="success" icon={CheckCircle}>
                   Tasa Vigente — USD
-                </span>
+                </Badge>
               </div>
               <div className="mt-3 flex items-baseline gap-2">
                 <span className="text-4xl font-black tracking-tight text-zinc-900 dark:text-white sm:text-5xl">
@@ -152,17 +155,14 @@ export default async function TasasPage() {
 
           {/* Banner de tasa futura programada (si existe) */}
           {tasaProgramada && (
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-300 bg-amber-50/90 p-4 text-xs dark:border-amber-900/60 dark:bg-amber-950/40">
-              <div className="flex items-center gap-2.5">
-                <Clock className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                <span className="text-amber-950 dark:text-amber-100">
-                  <strong>Tasa Oficial Programada para Mañana:</strong> Bs. {formatearTasaBs(tasaProgramada.valor_bs_por_usd)} / USD (vigente a partir de {formatoFechaCompleta(tasaProgramada.vigente_desde)}).
-                </span>
-              </div>
-              <span className="rounded-full bg-amber-200/80 px-2.5 py-0.5 text-[10px] font-bold text-amber-900 dark:bg-amber-900/80 dark:text-amber-200">
-                Siguiente Día Hábil
-              </span>
-            </div>
+            <Alert
+              variant="warning"
+              icon={Clock}
+              title="Tasa Oficial Programada para Mañana:"
+              className="mt-6"
+            >
+              Bs. {formatearTasaBs(tasaProgramada.valor_bs_por_usd)} / USD (vigente a partir de {formatoFechaCompleta(tasaProgramada.vigente_desde)}).
+            </Alert>
           )}
         </div>
 
@@ -231,17 +231,19 @@ export default async function TasasPage() {
                               {formatoFechaCompleta(t.vigente_desde)}
                             </td>
                             <td className="px-6 py-4 text-center">
-                              {esLaVigente ? (
-                                <span className="inline-flex rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                                  {estadoVigencia.etiquetaBadge}
-                                </span>
-                              ) : esLaProgramada ? (
-                                <span className="inline-flex rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
-                                  {estadoVigencia.etiquetaBadge}
-                                </span>
-                              ) : (
-                                <span className="text-[11px] text-zinc-400">Histórica</span>
-                              )}
+                              <Badge
+                                variant={
+                                  esLaVigente
+                                    ? "success"
+                                    : esLaProgramada
+                                    ? "warning"
+                                    : "neutral"
+                                }
+                              >
+                                {esLaVigente || esLaProgramada
+                                  ? estadoVigencia.etiquetaBadge
+                                  : "Histórica"}
+                              </Badge>
                             </td>
                           </tr>
                         );

@@ -86,5 +86,18 @@ describe("Design System Atomic Components", () => {
       fireEvent.click(btn);
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
+
+    it("renderiza como enlace accesible cuando se proporciona href", () => {
+      render(
+        <Button variant="primary" href="/pedidos/nuevo">
+          Nueva Orden
+        </Button>,
+      );
+
+      const link = screen.getByRole("link", { name: "Nueva Orden" });
+      expect(link.getAttribute("href")).toBe("/pedidos/nuevo");
+      expect(link.className).toContain("active:scale-[0.97]");
+      expect(link.className).toContain("touch-manipulation");
+    });
   });
 });

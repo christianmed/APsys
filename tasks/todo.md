@@ -430,12 +430,12 @@
   - [x] TDD (Verde): Implementar componentes en `@/components/ui/` respetando tokens de `app/globals.css` y micro-interacciones de Emil Kowalski.
   - [x] TDD (Refactor): Validar contrastes, micro-escalas y supresión de `scale(0)` (321 tests aprobados en Vitest, 0 errores en `npm run typecheck`).
 
-- [ ] **Fase 40: Migración de Pantallas Operativas a Componentes Canónicos**
-  - [ ] Migrar Tablero de Taller (`/taller`) y modales de cobro/entrega.
-  - [ ] Migrar formulario de registro de pedido (`/pedidos/nuevo`) y lista (`/pedidos`).
-  - [ ] Migrar Directorio de Clientes (`/clientes`) y ficha (`/clientes/[id]`).
-  - [ ] Migrar Catálogo de Servicios (`/servicios`).
-  - [ ] Migrar Módulo de Tasas (`/tasas`).
+- [x] **Fase 40: Migración de Pantallas Operativas a Componentes Canónicos**
+  - [x] Migrar Tablero de Taller (`/taller`) y modal de cobro/entrega (`CobrarYEntregarModal`, buscador `Input`, `Alert`).
+  - [x] Migrar formulario de registro de pedido (`/pedidos/nuevo` con `Alert`, `Button`) y lista (`/pedidos` con `PedidosBuscador`, `Button`).
+  - [x] Migrar Directorio de Clientes (`/clientes` con `Card`, `Badge`, `Button`, `ClientesBuscador`), formulario (`ClienteForm` con `Input`, `Alert`, `Button`) y ficha (`/clientes/[id]` con `KpiCard`, `Button`).
+  - [x] Migrar Catálogo de Servicios (`/servicios` con `Card`, `Badge`, `Button` y `ServicioForm` con `Input`, `Alert`, `Button`).
+  - [x] Migrar Módulo de Tasas (`/tasas` con `Badge`, `Alert`, `Button` y `BcvSyncPanel` con `Alert`, `Button`).
 
 - [ ] **Fase 41: Pruebas de Estrés `break-ui` y Auditoría Quirúrgica Impeccable**
   - [ ] Ejecutar pruebas de estrés con datos extremos (`break-ui`).

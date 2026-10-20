@@ -3,6 +3,7 @@
 import { ScanBarcode, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   valorInicial?: string;
@@ -72,17 +73,15 @@ export function PedidosBuscador({ valorInicial = "" }: Props) {
   return (
     <form onSubmit={handleSubmit} className="relative w-full">
       <div className="relative flex items-center">
-        <span className="pointer-events-none absolute left-3.5 flex items-center text-zinc-400">
-          <ScanBarcode className="size-4" />
-        </span>
-
-        <input
+        <Input
           ref={inputRef}
           type="text"
+          icon={ScanBarcode}
           value={termino}
           onChange={(e) => setTermino(e.target.value)}
           placeholder="Buscar por N° orden (#1001), cliente o escanear comanda... (Atajo: /)"
-          className="h-11 w-full rounded-xl border border-zinc-200 bg-white pl-10 pr-20 text-sm text-zinc-900 shadow-sm transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:ring-2 focus:ring-[#7aa2f7]/20 focus:outline-none dark:border-[#24283b] dark:bg-[#1a1b26] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25"
+          className="pr-20 text-sm"
+          sizeVariant="lg"
         />
 
         <div className="absolute right-2 flex items-center gap-1">

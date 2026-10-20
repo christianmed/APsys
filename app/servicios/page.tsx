@@ -3,24 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
-
-// Con Cache Components, leer la sesión (cookies) impide el shell estático:
-// se bloquea la ruta con la opción documentada (`instant = false`),
-// igual que en / y /login.
-export const instant = false;
-
-const CLASES_FILA =
-  "block rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]";
-
-const CLASES_FILA_ENLACE = `${CLASES_FILA} transition-colors hover:border-zinc-300 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50`;
-
-const CLASES_BADGE =
-  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium";
-
-const CLASES_BADGE_ACTIVO = `${CLASES_BADGE} bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300`;
-
-const CLASES_BADGE_INACTIVO = `${CLASES_BADGE} bg-zinc-100 text-zinc-600 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300`;
 
 /**
  * Catálogo de servicios (RF-04/T-007b): listado completo ordenado por `orden`
@@ -59,19 +45,19 @@ export default async function ServiciosPage() {
           actions={
             esGerencial ? (
               <div className="flex flex-wrap items-center gap-2">
-                <Link
+                <Button
                   href="/dashboard/rotacion"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-3.5 text-xs sm:text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42]"
+                  variant="outline"
                 >
                   Rotación
-                </Link>
-                <Link
+                </Button>
+                <Button
                   href="/servicios/nuevo"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
+                  variant="primary"
                 >
                   <Plus className="size-4" />
                   Nuevo Servicio
-                </Link>
+                </Button>
               </div>
             ) : null
           }
@@ -92,18 +78,12 @@ export default async function ServiciosPage() {
                     <p className="font-medium text-zinc-900 dark:text-zinc-50">
                       {servicio.nombre}
                     </p>
-                    <span
-                      className={
-                        servicio.activo
-                          ? CLASES_BADGE_ACTIVO
-                          : CLASES_BADGE_INACTIVO
-                      }
-                    >
+                    <Badge variant={servicio.activo ? "success" : "neutral"}>
                       {servicio.activo ? "Activo" : "Inactivo"}
-                    </span>
+                    </Badge>
                   </div>
                   <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                    Orden {servicio.orden}
+                    Prioridad en Catálogo: {servicio.orden}
                   </p>
                 </>
               );
@@ -111,14 +91,14 @@ export default async function ServiciosPage() {
               return (
                 <li key={servicio.id}>
                   {esGerencial ? (
-                    <Link
+                    <Card
                       href={`/servicios/${servicio.id}`}
-                      className={CLASES_FILA_ENLACE}
+                      className="p-4"
                     >
                       {contenido}
-                    </Link>
+                    </Card>
                   ) : (
-                    <div className={CLASES_FILA}>{contenido}</div>
+                    <Card className="p-4">{contenido}</Card>
                   )}
                 </li>
               );

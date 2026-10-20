@@ -1,8 +1,10 @@
 "use client";
 
-import { CircleAlert, LoaderCircle, Save, TriangleAlert } from "lucide-react";
-import Link from "next/link";
+import { LoaderCircle, Save, TriangleAlert } from "lucide-react";
 import { useActionState } from "react";
+import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   actualizarCliente,
   crearCliente,
@@ -19,18 +21,6 @@ type ClienteExistente = {
 type Props =
   | { modo: "crear"; cliente?: undefined }
   | { modo: "editar"; cliente: ClienteExistente };
-
-const CLASES_INPUT =
-  "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-[#7aa2f7] dark:focus-visible:ring-[#7aa2f7]/20";
-
-const CLASES_TEXTAREA =
-  "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-[#7aa2f7] dark:focus-visible:ring-[#7aa2f7]/20";
-
-const CLASES_BOTON =
-  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:focus-visible:ring-[#7aa2f7] dark:focus-visible:ring-offset-[#1a1b26]";
-
-const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 text-base font-medium text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42]";
 
 /**
  * Formulario de alta/edición de cliente (RF-01). Resuelve la acción con
@@ -55,14 +45,14 @@ export function ClienteForm({ modo, cliente }: Props) {
 
   return (
     <form action={accion} className="space-y-5">
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <label
           htmlFor="nombre"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300"
         >
-          Nombre
+          Nombre completo <span className="text-rose-500">*</span>
         </label>
-        <input
+        <Input
           id="nombre"
           name="nombre"
           type="text"
@@ -71,34 +61,35 @@ export function ClienteForm({ modo, cliente }: Props) {
           disabled={pendiente}
           aria-invalid={estado.errores?.nombre ? true : undefined}
           defaultValue={valores.nombre}
-          className={CLASES_INPUT}
+          sizeVariant="lg"
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <label
           htmlFor="telefono"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300"
         >
-          Teléfono
+          Teléfono (Móvil / WhatsApp)
         </label>
-        <input
+        <Input
           id="telefono"
           name="telefono"
           type="tel"
           autoComplete="tel"
           disabled={pendiente}
           defaultValue={valores.telefono}
-          className={CLASES_INPUT}
+          placeholder="Ej: 0414-1234567"
+          sizeVariant="lg"
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <label
           htmlFor="notas"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="block text-xs font-semibold uppercase tracking-wider text-zinc-700 dark:text-zinc-300"
         >
-          Notas
+          Notas u Observaciones (Opcional)
         </label>
         <textarea
           id="notas"
@@ -106,57 +97,59 @@ export function ClienteForm({ modo, cliente }: Props) {
           rows={3}
           disabled={pendiente}
           defaultValue={valores.notas}
-          className={CLASES_TEXTAREA}
+          placeholder="Dirección fiscal, persona de contacto, condiciones..."
+          className="w-full rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:outline-none focus:ring-1 focus:ring-[#7aa2f7] dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25"
         />
       </div>
 
       {mensajeError ? (
-        <p
-          role="alert"
-          className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
-        >
-          <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-          <span>{mensajeError}</span>
-        </p>
+        <Alert variant="danger">
+          {mensajeError}
+        </Alert>
       ) : null}
 
       {estado.avisoDuplicado ? (
-        <div
-          role="alert"
-          className="space-y-3 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-100"
-        >
-          <p className="flex items-start gap-2">
-            <TriangleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-            <span>{estado.avisoDuplicado}</span>
-          </p>
-          <button
-            type="submit"
-            name="confirmar"
-            value="1"
-            disabled={pendiente}
-            className={CLASES_BOTON_SECUNDARIO}
-          >
-            Guardar de todas formas
-          </button>
-        </div>
+        <Alert variant="warning" icon={TriangleAlert} title="Posible cliente duplicado">
+          <div className="space-y-2 mt-1">
+            <p>{estado.avisoDuplicado}</p>
+            <Button
+              type="submit"
+              name="confirmar"
+              value="1"
+              variant="outline"
+              size="sm"
+              disabled={pendiente}
+            >
+              Guardar de todas formas
+            </Button>
+          </div>
+        </Alert>
       ) : null}
 
-      <div className="space-y-3">
-        <button type="submit" disabled={pendiente} className={CLASES_BOTON}>
+      <div className="space-y-2.5 pt-2">
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          disabled={pendiente}
+          className="w-full"
+        >
           {pendiente ? (
             <LoaderCircle aria-hidden className="size-4 animate-spin" />
           ) : (
             <Save aria-hidden className="size-4" />
           )}
-          Guardar cliente
-        </button>
+          <span>{enEdicion ? "Guardar cambios" : "Registrar cliente"}</span>
+        </Button>
 
-        <Link
+        <Button
           href="/clientes"
-          className={CLASES_BOTON_SECUNDARIO}
+          variant="outline"
+          size="lg"
+          className="w-full"
         >
           Cancelar
-        </Link>
+        </Button>
       </div>
     </form>
   );

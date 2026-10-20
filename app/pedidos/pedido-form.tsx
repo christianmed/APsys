@@ -16,6 +16,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useActionState, useId, useMemo, useState } from "react";
 import { CustomSelect } from "@/components/ui/custom-select";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
 import { crearPedido, type EstadoFormularioPedido } from "./actions";
 import {
   calcularCobranzaInicial,
@@ -209,13 +212,9 @@ export function PedidoForm({
     <form action={accion} className="space-y-8">
       {/* Mensaje de error general si aplica */}
       {errorGeneral ? (
-        <div
-          role="alert"
-          className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300"
-        >
-          <CircleAlert aria-hidden className="size-5 shrink-0" />
-          <span>{errorGeneral}</span>
-        </div>
+        <Alert variant="danger">
+          {errorGeneral}
+        </Alert>
       ) : null}
 
       {/* Inputs ocultos con datos serializados */}
@@ -255,13 +254,14 @@ export function PedidoForm({
           >
             Cliente <span className="text-red-500">*</span>
           </label>
-          <Link
+          <Button
             href="/clientes/nuevo"
-            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
+            variant="secondary"
+            size="sm"
+            icon={UserPlus}
           >
-            <UserPlus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
             Nuevo Cliente
-          </Link>
+          </Button>
         </div>
 
         <div>
@@ -484,16 +484,16 @@ export function PedidoForm({
         </div>
 
         {servicios.length === 0 ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/20 dark:text-amber-300">
+          <Alert variant="warning">
             No hay servicios activos en el catálogo.{" "}
             <Link
               href="/servicios/nuevo"
-              className="font-bold underline hover:text-amber-950 dark:hover:text-amber-100"
+              className="font-bold underline hover:opacity-80"
             >
               Registra un nuevo servicio aquí
             </Link>{" "}
             para poder cotizar la orden de trabajo.
-          </div>
+          </Alert>
         ) : null}
 
         <button
@@ -738,16 +738,20 @@ export function PedidoForm({
 
       {/* ACCIONES DEL FORMULARIO */}
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <Link
+        <Button
           href="/pedidos"
-          className={`${CLASES_BOTON_SECUNDARIO} w-full sm:w-auto px-6`}
+          variant="outline"
+          size="lg"
+          className="w-full sm:w-auto px-6"
         >
           Cancelar
-        </Link>
-        <button
+        </Button>
+        <Button
           type="submit"
           disabled={pendiente}
-          className={`${CLASES_BOTON} w-full sm:w-auto px-6`}
+          variant="primary"
+          size="lg"
+          className="w-full sm:w-auto px-6"
         >
           {pendiente ? (
             <>
@@ -760,7 +764,7 @@ export function PedidoForm({
               Registrar pedido
             </>
           )}
-        </button>
+        </Button>
       </div>
     </form>
   );
