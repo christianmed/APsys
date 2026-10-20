@@ -28,6 +28,11 @@ import {
   CustomSelect,
   type CustomSelectOption,
 } from "@/components/ui/custom-select";
+import {
+  SegmentedProgressBar,
+  PROGRESS_VARIANT_STYLES,
+  type ProgressVariant,
+} from "@/components/ui/progress-bar";
 
 type CriterioOrdenCuentas =
   | "mayor_saldo"
@@ -49,31 +54,41 @@ type Props = {
 
 const NOMBRES_TRAMOS: Record<
   TramoAntiguedad,
-  { titulo: string; descripcion: string; color: string; badgeColor: string }
+  {
+    titulo: string;
+    descripcion: string;
+    variant: ProgressVariant;
+    color: string;
+    badgeColor: string;
+  }
 > = {
   "0_a_7": {
     titulo: "0 a 7 días",
     descripcion: "Corriente / Reciente",
-    color: "bg-blue-500",
-    badgeColor: "bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800",
+    variant: "info",
+    color: PROGRESS_VARIANT_STYLES.info.bar,
+    badgeColor: PROGRESS_VARIANT_STYLES.info.badge,
   },
   "8_a_15": {
     titulo: "8 a 15 días",
     descripcion: "Vencimiento moderado",
-    color: "bg-amber-500",
-    badgeColor: "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
+    variant: "warning",
+    color: PROGRESS_VARIANT_STYLES.warning.bar,
+    badgeColor: PROGRESS_VARIANT_STYLES.warning.badge,
   },
   "16_a_30": {
     titulo: "16 a 30 días",
     descripcion: "Alerta de cobranza",
-    color: "bg-orange-500",
-    badgeColor: "bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-800",
+    variant: "orange",
+    color: PROGRESS_VARIANT_STYLES.orange.bar,
+    badgeColor: PROGRESS_VARIANT_STYLES.orange.badge,
   },
   mas_de_30: {
     titulo: "Más de 30 días",
     descripcion: "Crítico / Moroso",
-    color: "bg-rose-600",
-    badgeColor: "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800",
+    variant: "danger",
+    color: PROGRESS_VARIANT_STYLES.danger.bar,
+    badgeColor: PROGRESS_VARIANT_STYLES.danger.badge,
   },
 };
 
@@ -212,20 +227,19 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         </p>
 
         {/* Barra proporcional visual */}
-        <div className="mt-4 flex h-3.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-[#16161e]">
-          {(["0_a_7", "8_a_15", "16_a_30", "mas_de_30"] as TramoAntiguedad[]).map((t) => {
+        <SegmentedProgressBar
+          className="mt-4"
+          size="lg"
+          segments={(["0_a_7", "8_a_15", "16_a_30", "mas_de_30"] as TramoAntiguedad[]).map((t) => {
             const tramoInfo = resumenInicial.tramos[t];
-            if (tramoInfo.porcentaje_del_total <= 0) return null;
-            return (
-              <div
-                key={t}
-                className={NOMBRES_TRAMOS[t].color}
-                style={{ width: `${Math.max(4, tramoInfo.porcentaje_del_total)}%` }}
-                title={`${NOMBRES_TRAMOS[t].titulo}: ${formatearMonedaUSD(tramoInfo.monto_usd)} (${tramoInfo.porcentaje_del_total}%)`}
-              />
-            );
+            return {
+              key: t,
+              value: tramoInfo.porcentaje_del_total,
+              variant: NOMBRES_TRAMOS[t].variant,
+              title: `${NOMBRES_TRAMOS[t].titulo}: ${formatearMonedaUSD(tramoInfo.monto_usd)} (${tramoInfo.porcentaje_del_total}%)`,
+            };
           })}
-        </div>
+        />
 
         {/* Tarjetas de cada tramo */}
         <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -447,10 +461,10 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
                               href={enlaceWhatsApp}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-emerald-300 bg-emerald-50 px-2.5 text-[11px] font-bold text-emerald-900 shadow-sm transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+                              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-2.5 text-[11px] font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:border-emerald-700/60 dark:hover:bg-[#252b42]"
                               title="Enviar recordatorio formal de cobro por WhatsApp"
                             >
-                              <MessageCircle className="size-3.5 text-emerald-600 dark:text-emerald-400" />
+                              <MessageCircle className="size-3.5 text-emerald-600 dark:text-[#9ece6a]" />
                               Cobrar WA
                             </a>
                           ) : (
@@ -459,7 +473,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
 
                           <Link
                             href={`/pedidos/${cuenta.pedido_id}`}
-                            className="inline-flex h-8 items-center rounded-lg border border-zinc-200 bg-white px-2.5 text-[11px] font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
+                            className="inline-flex h-8 items-center rounded-lg border border-zinc-200 bg-white px-2.5 text-[11px] font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
                           >
                             Abonar
                           </Link>

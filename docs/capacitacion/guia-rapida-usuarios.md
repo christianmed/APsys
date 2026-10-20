@@ -201,3 +201,7 @@ A partir de la versión v1.0.0, la experiencia visual de APSys fue unificada tra
      - Navegación táctil ágil adaptada para tablets de mostrador y teléfonos móviles.
 3. **Consistencia en Todas las Pantallas:**
    - La barra lateral (Sidebar), el widget de tasas BCV, el pie de usuario, las listas de clientes, catálogo de servicios, comanda técnica, paneles de cobranza y reportes financieros comparten ahora la misma armonía cromática (`#16161e` en fondos, `#1a1b26` en tarjetas, `#1f202c` en controles interactivos y `#24283b` en divisiones), ofreciendo una apariencia profesional, moderna y libre de saturación visual.
+4. **Barras de Progreso Canónicas:**
+   - Tanto las barras de participación y demanda por servicio en *Rotación* como la barra acumulativa de vencimiento de cartera (*Aging*) en *Cuentas por Cobrar* comparten los mismos tokens cromáticos (Azul Zafiro `#7aa2f7`, Ámbar `#e0af68`, Naranja `#ff9e64` y Rojo `#f7768e` en modo oscuro, con contraste calibrado en modo claro).
+5. **Navegación Fluida y Retención de Scroll en Menú Lateral:**
+   - Al desplazarse por la barra lateral para acceder a módulos inferiores como *Rotación de Servicios* o *Cuentas por Cobrar*, el menú retiene de forma continua su posición exacta de desplazamiento entre navegaciones, evitando molestos saltos a la parte superior.

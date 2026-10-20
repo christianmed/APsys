@@ -404,6 +404,27 @@ El sistema visual de APSys está optimizado para funcionar tanto en computadoras
   - Se implementó `React.useSyncExternalStore(emptySubscribe, () => true, () => false)` para determinar el estado de montaje del cliente.
   - Garantiza que durante SSR y el paso de hidratación inicial se renderice un placeholder neutro con dimensiones y clases idénticas, activando el conmutador dinámico de forma determinista y sin parpadeo de layout (*Layout Shift*).
 
+### 8.6 Componente Canónico de Barras de Progreso (`components/ui/progress-bar.tsx`)
+
+- **Centralización y Erradicación de Slop:** Elimina clases utilitarias de color dispersas en cada pantalla, centralizando los tokens cromáticos definidos en `DESIGN.md` para Tokyo Night (modo oscuro) y modo claro equilibrado (regla 3–5% de color en datos).
+- **Variantes y Tokens Semánticos (`PROGRESS_VARIANT_STYLES`):**
+  - `info`: Azul nítido en claro (`#2563eb`), Tokyo Blue en oscuro (`#7aa2f7`).
+  - `warning`: Ámbar equilibrado en claro (`#d97706`), Tokyo Amber en oscuro (`#e0af68`).
+  - `orange`: Naranja en claro (`#f97316`), Tokyo Orange en oscuro (`#ff9e64`).
+  - `danger`: Rojo en claro (`#dc2626`), Tokyo Red en oscuro (`#f7768e`).
+  - `success`: Verde en claro (`#16a34a`), Tokyo Green en oscuro (`#9ece6a`).
+- **Modos de Presentación:**
+  - `<ProgressBar value={num} variant="info" size="md" />`: Barra individual para métricas de demanda y distribución (ej. Rotación de Servicios).
+  - `<SegmentedProgressBar segments={items} size="lg" />`: Barra acumulativa multi-segmento proporcional para análisis de vencimiento y antigüedad de cartera (*Aging* en Cuentas por Cobrar).
+
+### 8.7 Persistencia de Scroll en Navegación Lateral (`components/shell/app-shell.tsx`)
+
+- **Diagnóstico del Salto:** Debido a que cada vista de página monta su propio contenedor `AuthenticatedShell`, la navegación por defecto en Next.js desmontaba el menú lateral reiniciando el scroll a `0`, obligando al usuario a volver a desplazarse hacia abajo tras hacer clic en enlaces inferiores como *Rotación de Servicios* o *Cuentas por Cobrar*.
+- **Solución Implementada:**
+  - Integración de `ref={navDesktopRef}` en el elemento `<nav>` con almacenamiento síncrono de posición en `sessionStorage` (`apsys_sidebar_scroll`).
+  - Restauración determinista de `scrollTop` en el hook `useEffect([pathname])`.
+  - Configuración de `scroll={false}` en los elementos `<Link>` del menú lateral para evitar saltos forzados de viewport.
+
 ---
 
 ## 9. Procedimientos Operativos de Base de Datos y Backups
