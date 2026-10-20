@@ -418,11 +418,11 @@
   - [x] Escribir pruebas unitarias en `test/design-system-components.test.tsx` (6/6 passing).
   - [x] Validar calidad: 313/313 tests en verde, 0 errores en `npm run typecheck`.
 
-- [ ] **Fase 38: Fusión Controlada a `dev` (Sin tocar `main`)**
-  - [ ] Commit de archivos pendientes (`scripts/cambiar-password.mjs`, `tasks/`).
-  - [ ] Cambiar a rama `dev` (`git checkout dev`).
-  - [ ] Ejecutar merge de `feat/sistema-diseno-impeccable-tokens` en `dev`.
-  - [ ] Validar compuerta de calidad DoD en `dev` (`npm run typecheck` y `npm test`).
+- [x] **Fase 38: Fusión Controlada a `dev` (Sin tocar `main`)**
+  - [x] Commit de archivos pendientes (`scripts/cambiar-password.mjs`, `tasks/`).
+  - [x] Cambiar a rama `dev` (`git checkout dev`).
+  - [x] Ejecutar merge de `feat/sistema-diseno-impeccable-tokens` en `dev`.
+  - [x] Validar compuerta de calidad DoD en `dev` (`npm run typecheck` y `npm test`).
 
 - [ ] **Fase 39: Ampliación del Catálogo de Componentes Canónicos Atómicos (@/components/ui/)**
   - [ ] Diseñar y documentar nuevos componentes en `DESIGN.md`: `<Input />`, `<Alert />`, `<Tabs />`, `<Modal />`.
