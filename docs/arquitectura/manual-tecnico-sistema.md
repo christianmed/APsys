@@ -772,3 +772,27 @@ Para proteger la interfaz contra fallas por datos extremos o impredecibles (nomb
 5. **Auditoría Mecánica Impeccable:**
    - Verificación continua con los 61 detectores deterministas de Impeccable asegurando 0 violaciones sintácticas o visuales en todos los componentes canónicos.
 
+### 15.8 Refactorización Integral de Pantallas Periféricas a Componentes Canónicos (Fase 42)
+
+En cumplimiento de la auditoría Impeccable & Taste Skill, las pantallas periféricas del sistema fueron normalizadas para utilizar exclusivamente la librería canónica `@/components/ui/`:
+
+1. **Panel de Recordatorios (`app/recordatorios/recordatorios-panel.tsx`):**
+   - Sustitución de bloques ad-hoc por 4 `<KpiCard>` canónicos con variantes semánticas (`default`, `info`, `warning`, `danger`).
+   - Conmutador de filtros temporales migrado a `<Tabs>` con soporte táctil, `active:scale-[0.97]` y `<Badge>` numéricos.
+   - Búsqueda en vivo estandarizada con `<Input icon={Search} />` y botones de acción rápida con `<Button variant="secondary" size="sm" />`.
+2. **Editor de Plantillas de Mensajería (`app/plantillas/plantilla-editor.tsx`):**
+   - Contenedores de edición y simulador WhatsApp migrados a `<Card>`.
+   - Notificaciones de guardado y error convertidas a `<Alert variant="success|danger">`.
+   - Conmutación entre plantillas unificada bajo `<Tabs>`.
+   - Acciones operativas refactorizadas a `<Button variant="primary|ghost">` con estados de carga (`isLoading`).
+3. **Formulario de Inicio de Sesión (`app/login/login-form.tsx`):**
+   - Erradicación de cadenas de estilo sueltas (`CLASES_INPUT`, `CLASES_BOTON`).
+   - Implementación de `<Input icon={Mail}>` e `<Input icon={Lock}>` con foco Tokyo Night (`#7aa2f7`).
+   - Manejo de excepciones y errores visuales a través de `<Alert variant="danger">`.
+   - Botón de acceso estandarizado con `<Button variant="primary" size="lg" icon={LogIn}>`.
+4. **Guía Rápida y Manual Operativo (`app/ayuda/page.tsx`):**
+   - Eliminación definitiva de tonalidades índigo fuera de norma (`indigo-700`, `indigo-200`, `indigo-600`), consolidando el azul institucional Tokyo Night (`#7aa2f7` / `--color-info`).
+   - Secciones y tarjeta de rol activo migradas a `<Card>` y `<Button>`.
+5. **Normalización de Tasa Referencial (`app/tasas/page.tsx`):**
+   - Eliminación del gradiente ornamental del encabezado, unificando la tarjeta de tasa vigente bajo el contenedor neutro `<Card>` y preservando el acento cromático al 3–5% con `<Badge variant="success">`.
+

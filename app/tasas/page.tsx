@@ -18,6 +18,7 @@ import { obtenerTasasBcvCompletas } from "@/lib/tasas/bcv-service";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert } from "@/components/ui/alert";
@@ -110,7 +111,7 @@ export default async function TasasPage() {
         />
 
         {/* Tarjeta destacada de la tasa vigente */}
-        <div className="rounded-3xl border border-emerald-200 bg-gradient-to-br from-emerald-50/80 via-white to-emerald-50/30 p-6 shadow-sm dark:border-emerald-900/40 dark:from-emerald-950/30 dark:via-[#1a1b26] dark:to-emerald-950/20 sm:p-8">
+        <Card className="p-6 sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-6">
             {/* USD principal */}
             <div className="flex-1 min-w-[200px]">
@@ -141,9 +142,9 @@ export default async function TasasPage() {
 
             {/* Nota de inmutabilidad */}
             <div className="min-w-[200px] max-w-sm">
-              <div className="rounded-2xl border border-emerald-200/80 bg-white/80 p-4 backdrop-blur-sm dark:border-[#24283b] dark:bg-[#16161e]/80 text-xs text-zinc-600 dark:text-zinc-300 space-y-1">
-                <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-300">
-                  <ShieldCheck className="size-4 text-emerald-600" />
+              <div className="space-y-1 rounded-2xl border border-zinc-200 bg-zinc-50/70 p-4 text-xs text-zinc-600 dark:border-[#24283b] dark:bg-[#1f202c]/70 dark:text-zinc-300">
+                <div className="flex items-center gap-1.5 font-bold text-zinc-900 dark:text-zinc-100">
+                  <ShieldCheck className="size-4 text-[#2e6237] dark:text-[#9ece6a]" />
                   Inmutabilidad Histórica
                 </div>
                 <p className="leading-relaxed text-[11px] text-zinc-500 dark:text-zinc-400">
@@ -164,20 +165,20 @@ export default async function TasasPage() {
               Bs. {formatearTasaBs(tasaProgramada.valor_bs_por_usd)} / USD (vigente a partir de {formatoFechaCompleta(tasaProgramada.vigente_desde)}).
             </Alert>
           )}
-        </div>
+        </Card>
 
         {/* Sección de 2 columnas de igual ancho: Sincronización BCV en Vivo e Histórico (en móvil: Sincronización arriba, Histórico abajo) */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Columna 1: Sincronización BCV en Vivo */}
-          <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+          <Card className="p-6">
             <BcvSyncPanel
               tasaActualUsd={tasaVigente?.valor_bs_por_usd}
               tasasIniciales={tasasBcvIniciales}
             />
-          </div>
+          </Card>
 
           {/* Columna 2: Histórico Inmutable de Tasas */}
-          <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+          <Card className="overflow-hidden">
             <div className="border-b border-zinc-200 px-6 py-4 dark:border-[#24283b] flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <History className="size-4 text-zinc-400" />
@@ -252,7 +253,7 @@ export default async function TasasPage() {
                   </table>
                 </div>
               )}
-            </div>
+          </Card>
         </div>
       </div>
     </AuthenticatedShell>
