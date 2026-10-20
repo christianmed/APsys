@@ -73,11 +73,11 @@ export function Alert({
         <Icon className={`mt-0.5 size-5 shrink-0 ${config.iconClass}`} />
         <div className="space-y-0.5 min-w-0">
           {title && (
-            <h4 className={`text-xs font-bold leading-tight ${config.titleClass}`}>
+            <h4 className={`text-xs font-bold leading-tight break-words ${config.titleClass}`}>
               {title}
             </h4>
           )}
-          <div className={`text-xs leading-relaxed ${config.textClass}`}>
+          <div className={`text-xs leading-relaxed break-words ${config.textClass}`}>
             {children}
           </div>
         </div>

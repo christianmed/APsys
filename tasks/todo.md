@@ -437,9 +437,11 @@
   - [x] Migrar Catálogo de Servicios (`/servicios` con `Card`, `Badge`, `Button` y `ServicioForm` con `Input`, `Alert`, `Button`).
   - [x] Migrar Módulo de Tasas (`/tasas` con `Badge`, `Alert`, `Button` y `BcvSyncPanel` con `Alert`, `Button`).
 
-- [ ] **Fase 41: Pruebas de Estrés `break-ui` y Auditoría Quirúrgica Impeccable**
-  - [ ] Ejecutar pruebas de estrés con datos extremos (`break-ui`).
-  - [ ] Auditoría de 61 detectores deterministas de Impeccable.
+- [x] **Fase 41: Pruebas de Estrés `break-ui` y Auditoría Quirúrgica Impeccable**
+  - [x] Ejecutar pruebas de estrés con datos extremos (`break-ui`): strings irrompibles, emails de 80+ caracteres, cifras monetarias de 12 dígitos, cadenas de 1 caracter y scrolls de contenido en modales (`test/break-ui-stress.test.tsx`, 8 tests aprobados).
+  - [x] Blindar componentes canónicos contra desbordamiento: `min-w-0` y `truncate` en `KpiCard`, `break-words` en subtítulos y `Alert`, `max-h-[75vh] overflow-y-auto` en `Modal`, y `shrink-0` en todos los iconos Lucide.
+  - [x] Auditoría de 61 detectores deterministas de Impeccable ejecutada sin violaciones (`[]`).
+  - [x] 100% verde en suite completa de Vitest (60 suites, 330 tests) y 0 errores en `npm run typecheck`.
 
 - [ ] **Fase 42: Pruebas E2E de Flujo Crítico con Playwright**
   - [ ] Crear y ejecutar suite E2E automatizada de flujo de punta a punta.

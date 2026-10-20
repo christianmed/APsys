@@ -87,7 +87,7 @@ export function KpiCard({
   const content = (
     <div className="p-5">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 truncate">
+        <span className="min-w-0 truncate text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
           {title}
         </span>
         {Icon && (
@@ -106,7 +106,7 @@ export function KpiCard({
       </div>
 
       {subtitle && (
-        <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="mt-1 text-xs text-zinc-500 dark:text-zinc-400 break-words">
           {subtitle}
         </div>
       )}

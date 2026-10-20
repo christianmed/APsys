@@ -84,14 +84,14 @@ export function Modal({
         {/* Cabecera */}
         {(title || description) && (
           <div className="flex items-start justify-between gap-4 pb-4 border-b border-zinc-100 dark:border-[#24283b]">
-            <div className="space-y-1 pr-6">
+            <div className="space-y-1 pr-6 min-w-0">
               {title && (
-                <h3 className="text-base font-semibold tracking-tight text-zinc-900 dark:text-[#f8fafc]">
+                <h3 className="text-base font-semibold tracking-tight text-zinc-900 dark:text-[#f8fafc] break-words">
                   {title}
                 </h3>
               )}
               {description && (
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs text-zinc-500 dark:text-zinc-400 break-words">
                   {description}
                 </p>
               )}
@@ -102,13 +102,13 @@ export function Modal({
               aria-label="Cerrar modal"
               className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#7aa2f7] active:scale-[0.97] touch-manipulation dark:text-zinc-500 dark:hover:bg-[#1f202c] dark:hover:text-zinc-200"
             >
-              <X className="size-4" />
+              <X className="size-4 shrink-0" />
             </button>
           </div>
         )}
 
         {/* Cuerpo */}
-        <div className="pt-4 pb-2">{children}</div>
+        <div className="pt-4 pb-2 max-h-[75vh] overflow-y-auto">{children}</div>
 
         {/* Pie de acción */}
         {footer && (

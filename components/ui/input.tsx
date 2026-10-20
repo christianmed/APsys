@@ -27,7 +27,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative w-full">
           {Icon && (
             <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 dark:text-zinc-500">
-              <Icon className="size-4" />
+              <Icon className="size-4 shrink-0" />
             </div>
           )}
           <input
@@ -43,7 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
         {errorMessage && (
-          <p className="text-[11px] font-medium text-rose-600 dark:text-[#f7768e]">
+          <p className="text-[11px] font-medium text-rose-600 dark:text-[#f7768e] break-words">
             {errorMessage}
           </p>
         )}

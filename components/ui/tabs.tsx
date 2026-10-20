@@ -54,9 +54,9 @@ export function Tabs({
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
             }`}
           >
-            {Icon && <Icon className="size-3.5" />}
-            <span>{tab.label}</span>
-            {tab.badge && <span className="ml-0.5">{tab.badge}</span>}
+            {Icon && <Icon className="size-3.5 shrink-0" />}
+            <span className="truncate">{tab.label}</span>
+            {tab.badge && <span className="ml-0.5 shrink-0">{tab.badge}</span>}
           </button>
         );
       })}

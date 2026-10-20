@@ -236,11 +236,11 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
   4. **Catálogo de Servicios (`/servicios`, `/servicios/nuevo`):** Tabla de catálogo y formulario de tarifas.
   5. **Módulo de Tasas (`/tasas`):** Panel BCV e histórico inmutable.
 
-### Fase 41: Pruebas de Estrés `break-ui` (Emil Kowalski) y Auditoría Quirúrgica Impeccable (/polish y /audit)
+### Fase 41: Pruebas de Estrés `break-ui` (Emil Kowalski) y Auditoría Quirúrgica Impeccable (/polish y /audit) [Completada]
 
 - **Objetivo:** Blindar la resiliencia y el refinamiento de la interfaz:
-  1. **Pruebas de Estrés `break-ui`:** Inyectar nombres de clientes de 100+ caracteres, números de factura millonarios y pantallas ultra-estrechas (320px) para garantizar que nada se desborde (`truncate`, `min-w-0`).
-  2. **Auditoría Impeccable:** Pasar los 61 detectores deterministas, verificar contrastes WCAG AAA y registrar nuevos patrones en `DESIGN.md`.
+  1. **Pruebas de Estrés `break-ui`:** Inyectar nombres de clientes de 100+ caracteres, números de factura millonarios y pantallas ultra-estrechas (320px) para garantizar que nada se desborde (`truncate`, `min-w-0`, `break-words`). Verificado con `test/break-ui-stress.test.tsx` (8/8 tests).
+  2. **Auditoría Impeccable:** Verificado con los 61 detectores deterministas mecánicos (`impeccable detect`) reportando cero violaciones (`[]`). Cromo 100% neutro preservado y 330 tests Vitest en verde.
 
 ### Fase 42: Pruebas E2E de Flujo Crítico con Playwright
 

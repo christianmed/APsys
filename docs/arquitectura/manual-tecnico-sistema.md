@@ -756,3 +756,19 @@ Se agregaron al catálogo oficial en `@/components/ui/` cuatro nuevos componente
 4. **`<Modal />` (`@/components/ui/modal.tsx`):**
    - Diálogo modal accesible con backdrop desenfocado (`backdrop-blur-xs`) y supresión estricta de `scale(0)` (reemplazado por animación física de entrada `zoom-in-[0.98]` con opacidad).
    - Manejo integrado de escape en teclado, bloqueo del scroll de fondo y botón de cierre ergonómico.
+
+### 15.7 Blindaje Contra Desbordamientos y Pruebas de Estrés Break-UI (Fase 41)
+
+Para proteger la interfaz contra fallas por datos extremos o impredecibles (nombres corporativos gigantes, cifras monetarias masivas, cadenas irrompibles o pantallas ultra-estrechas):
+
+1. **Regla `min-w-0` en Contenedores Flex:**
+   - La especificación CSS Flexbox define `min-width: auto` por defecto en hijos flexibles, impidiendo el truncado con `truncate`. Se incorporó `min-w-0` en `KpiCard`, `Modal` y `Alert` para garantizar que el texto se trunque o ajuste sin expandir artificialmente el contenedor.
+2. **Ajuste de Cadenas Irrompibles (`break-words`):**
+   - Incorporación de `break-words` en mensajes de error de `Input`, títulos/subtítulos de `Modal` y descripciones de `Alert`, evitando que URLs o tokens largos desborden la tarjeta.
+3. **Scroll Vertical Aislado en Modales (`max-h-[75vh] overflow-y-auto`):**
+   - Los diálogos modales garantizan que listas largas de ítems o comprobantes extensos permanezcan dentro del viewport sin cortar los botones de acción del pie ni empujar la cabecera fuera de la pantalla.
+4. **Protección de Iconos con `shrink-0`:**
+   - Todos los iconos Lucide en botones, tabs, badges y modales cuentan con `shrink-0` explícito, previniendo su deformación en óvalos cuando el texto circundante crece.
+5. **Auditoría Mecánica Impeccable:**
+   - Verificación continua con los 61 detectores deterministas de Impeccable asegurando 0 violaciones sintácticas o visuales en todos los componentes canónicos.
+
