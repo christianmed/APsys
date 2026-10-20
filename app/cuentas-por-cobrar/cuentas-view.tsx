@@ -33,6 +33,8 @@ import {
   PROGRESS_VARIANT_STYLES,
   type ProgressVariant,
 } from "@/components/ui/progress-bar";
+import { Card, KpiCard } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 type CriterioOrdenCuentas =
   | "mayor_saldo"
@@ -145,80 +147,42 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       {/* Tarjetas KPI de resumen */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total por Cobrar USD */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Total por Cobrar (USD)
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-rose-600 dark:bg-[#1f202c] dark:text-[#f7768e]">
-              <Wallet className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-3xl font-extrabold tracking-tight text-rose-600 dark:text-[#f7768e]">
-            {formatearMonedaUSD(resumenInicial.total_por_cobrar_usd)}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            En {resumenInicial.total_pedidos_con_deuda} orden{resumenInicial.total_pedidos_con_deuda === 1 ? "" : "es"} activas
-          </p>
-        </div>
+        <KpiCard
+          title="Total por Cobrar (USD)"
+          value={formatearMonedaUSD(resumenInicial.total_por_cobrar_usd)}
+          subtitle={`En ${resumenInicial.total_pedidos_con_deuda} orden${resumenInicial.total_pedidos_con_deuda === 1 ? "" : "es"} activas`}
+          icon={Wallet}
+          variant="danger"
+        />
 
         {/* Total por Cobrar en Bs */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Equivalente en Bolívares
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-200">
-              <TrendingDown className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-            {formatearMonedaBs(resumenInicial.total_por_cobrar_bs)}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Calculado a tasa referencial de cada pedido
-          </p>
-        </div>
+        <KpiCard
+          title="Equivalente en Bolívares"
+          value={formatearMonedaBs(resumenInicial.total_por_cobrar_bs)}
+          subtitle="Calculado a tasa referencial de cada pedido"
+          icon={TrendingDown}
+        />
 
         {/* Clientes Deudores */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Clientes con Saldo
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-200">
-              <Users className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-            {resumenInicial.total_clientes_deudores}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Clientes únicos con pedidos pendientes de cobro
-          </p>
-        </div>
+        <KpiCard
+          title="Clientes con Saldo"
+          value={resumenInicial.total_clientes_deudores}
+          subtitle="Clientes únicos con pedidos pendientes de cobro"
+          icon={Users}
+        />
 
         {/* Tramo Crítico (> 30 días) */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Cartera Morosa (&gt; 30 días)
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-amber-600 dark:bg-[#1f202c] dark:text-[#e0af68]">
-              <AlertTriangle className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-amber-600 dark:text-[#e0af68]">
-            {formatearMonedaUSD(resumenInicial.tramos.mas_de_30.monto_usd)}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            {resumenInicial.tramos.mas_de_30.porcentaje_del_total}% del total ({resumenInicial.tramos.mas_de_30.cantidad} pedidos)
-          </p>
-        </div>
+        <KpiCard
+          title="Cartera Morosa (> 30 días)"
+          value={formatearMonedaUSD(resumenInicial.tramos.mas_de_30.monto_usd)}
+          subtitle={`${resumenInicial.tramos.mas_de_30.porcentaje_del_total}% del total (${resumenInicial.tramos.mas_de_30.cantidad} pedidos)`}
+          icon={AlertTriangle}
+          variant="warning"
+        />
       </div>
 
       {/* Visualización de Tramos de Antigüedad */}
-      <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+      <Card className="mb-8 p-6">
         <h2 className="text-base font-bold text-zinc-900 dark:text-white">
           Antigüedad de la Cartera por Cobrar (Aging)
         </h2>
@@ -253,7 +217,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
                 key={t}
                 type="button"
                 onClick={() => setTramoSeleccionado(estaActivo ? "todos" : t)}
-                className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
+                className={`flex flex-col justify-between rounded-xl border p-4 text-left transition-all touch-manipulation active:scale-[0.97] ${
                   estaActivo
                     ? "border-zinc-900 bg-zinc-50 ring-2 ring-zinc-900 dark:border-[#7aa2f7] dark:bg-[#1f202c] dark:ring-2 dark:ring-[#7aa2f7]/40"
                     : "border-zinc-200 bg-white hover:border-zinc-300 dark:border-[#24283b] dark:bg-[#16161e] dark:hover:border-[#2f3654]"
@@ -282,16 +246,16 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             );
           })}
         </div>
-      </div>
+      </Card>
 
       {/* Controles de Filtros y Búsqueda */}
-      <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26] lg:flex-row lg:items-center lg:justify-between min-w-0 max-w-full">
+      <Card className="mb-6 flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between min-w-0 max-w-full">
         {/* Pestañas de tramo */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <button
             type="button"
             onClick={() => setTramoSeleccionado("todos")}
-            className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               tramoSeleccionado === "todos"
                 ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
@@ -304,7 +268,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
               key={t}
               type="button"
               onClick={() => setTramoSeleccionado(t)}
-              className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
+              className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
                 tramoSeleccionado === t
                   ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                   : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
@@ -337,10 +301,10 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             className="w-full sm:w-auto min-w-0 sm:min-w-[200px]"
           />
         </div>
-      </div>
+      </Card>
 
       {/* Tabla detallada de cuentas por cobrar */}
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+      <Card className="overflow-hidden">
         <div className="border-b border-zinc-200 px-6 py-4 dark:border-[#24283b]">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
@@ -420,14 +384,12 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
 
                       {/* Antigüedad */}
                       <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-[11px] font-bold ${meta.badgeColor}`}
-                        >
+                        <Badge variant={meta.variant} className="gap-1">
                           <Clock className="size-3" />
                           {cuenta.dias_antiguedad === 0
                             ? "Hoy"
                             : `${cuenta.dias_antiguedad} día${cuenta.dias_antiguedad === 1 ? "" : "s"}`}
-                        </span>
+                        </Badge>
                         <div className="mt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
                           {formatoFechaCorta(cuenta.creado_en)}
                         </div>
@@ -486,7 +448,7 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
             </table>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

@@ -24,6 +24,8 @@ import {
   type CustomSelectOption,
 } from "@/components/ui/custom-select";
 import { ProgressBar } from "@/components/ui/progress-bar";
+import { Card, KpiCard } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   metricasIniciales: MetricaServicioRotacion[];
@@ -212,80 +214,46 @@ export function RotacionServiciosView({
       {/* Tarjetas KPI de rotación */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Líder en Facturación */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Mayor Facturación
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-[#7aa2f7] dark:bg-[#1f202c] dark:text-[#7aa2f7]">
-              <Sparkles className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 truncate">
-            {resumenInicial.servicio_lider_ingresos?.nombre ?? "Sin datos"}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            {resumenInicial.servicio_lider_ingresos
+        <KpiCard
+          title="Mayor Facturación"
+          value={resumenInicial.servicio_lider_ingresos?.nombre ?? "Sin datos"}
+          subtitle={
+            resumenInicial.servicio_lider_ingresos
               ? `${formatearUSD(resumenInicial.servicio_lider_ingresos.ingresos_usd)} (${resumenInicial.servicio_lider_ingresos.porcentaje_ingresos}% del total)`
-              : "0 en el período"}
-          </p>
-        </div>
+              : "0 en el período"
+          }
+          icon={Sparkles}
+          variant="info"
+        />
 
         {/* Líder en Volumen / Demanda */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Mayor Demanda (Piezas)
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-emerald-600 dark:bg-[#1f202c] dark:text-[#9ece6a]">
-              <Flame className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 truncate">
-            {resumenInicial.servicio_lider_volumen?.nombre ?? "Sin datos"}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            {resumenInicial.servicio_lider_volumen
+        <KpiCard
+          title="Mayor Demanda (Piezas)"
+          value={resumenInicial.servicio_lider_volumen?.nombre ?? "Sin datos"}
+          subtitle={
+            resumenInicial.servicio_lider_volumen
               ? `${resumenInicial.servicio_lider_volumen.cantidad_total} unidades (${resumenInicial.servicio_lider_volumen.porcentaje_cantidad}% del volumen)`
-              : "0 en el período"}
-          </p>
-        </div>
+              : "0 en el período"
+          }
+          icon={Flame}
+          variant="success"
+        />
 
         {/* Total Facturado en Servicios */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Total Facturado
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-200">
-              <DollarSign className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-            {formatearUSD(resumenInicial.total_ingresos_usd)}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            En {resumenInicial.total_ordenes_procesadas} órdenes procesadas
-          </p>
-        </div>
+        <KpiCard
+          title="Total Facturado"
+          value={formatearUSD(resumenInicial.total_ingresos_usd)}
+          subtitle={`En ${resumenInicial.total_ordenes_procesadas} órdenes procesadas`}
+          icon={DollarSign}
+        />
 
         {/* Total de Trabajos/Ítems Producidos */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Unidades Producidas
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-[#1f202c] dark:text-zinc-200">
-              <Package className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-            {resumenInicial.total_items_producidos}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Piezas y renglones confeccionados
-          </p>
-        </div>
+        <KpiCard
+          title="Unidades Producidas"
+          value={resumenInicial.total_items_producidos}
+          subtitle="Piezas y renglones confeccionados"
+          icon={Package}
+        />
       </div>
 
       {/* Alerta de servicios sin demanda */}
@@ -310,7 +278,7 @@ export function RotacionServiciosView({
       )}
 
       {/* Visualización de Barras de Participación */}
-      <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+      <Card className="mb-8 p-6">
         <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
           Participación de Facturación por Servicio
         </h2>
@@ -337,10 +305,10 @@ export function RotacionServiciosView({
             </div>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* Tabla detallada de rotación */}
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+      <Card className="overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 px-4 sm:px-6 py-4 dark:border-[#24283b]">
           <div>
             <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
@@ -379,30 +347,30 @@ export function RotacionServiciosView({
             <tbody className="divide-y divide-zinc-200 dark:divide-[#24283b]">
               {metricasIniciales.map((m, index) => {
                 let rotacionBadge = (
-                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-600 dark:border dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-400">
+                  <Badge variant="neutral">
                     Sin ventas
-                  </span>
+                  </Badge>
                 );
 
                 if (m.cantidad_total > 0) {
                   if (index < 2 && m.porcentaje_ingresos >= 25) {
                     rotacionBadge = (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:border dark:border-emerald-800/60 dark:bg-emerald-950/40 dark:text-emerald-300">
+                      <Badge variant="success" className="gap-1">
                         <Flame className="size-3 text-emerald-600 dark:text-[#9ece6a]" />
                         Alta rotación
-                      </span>
+                      </Badge>
                     );
                   } else if (m.cantidad_total >= 3) {
                     rotacionBadge = (
-                      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800 dark:border dark:border-blue-800/60 dark:bg-blue-950/40 dark:text-[#7aa2f7]">
+                      <Badge variant="info">
                         Media rotación
-                      </span>
+                      </Badge>
                     );
                   } else {
                     rotacionBadge = (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:border dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-[#e0af68]">
+                      <Badge variant="warning">
                         Baja rotación
-                      </span>
+                      </Badge>
                     );
                   }
                 }
@@ -450,7 +418,7 @@ export function RotacionServiciosView({
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

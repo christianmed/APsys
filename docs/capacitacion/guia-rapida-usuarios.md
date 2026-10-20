@@ -205,3 +205,5 @@ A partir de la versión v1.0.0, la experiencia visual de APSys fue unificada tra
    - Tanto las barras de participación y demanda por servicio en *Rotación* como la barra acumulativa de vencimiento de cartera (*Aging*) en *Cuentas por Cobrar* comparten los mismos tokens cromáticos (Azul Zafiro `#7aa2f7`, Ámbar `#e0af68`, Naranja `#ff9e64` y Rojo `#f7768e` en modo oscuro, con contraste calibrado en modo claro).
 5. **Navegación Fluida y Retención de Scroll en Menú Lateral:**
    - Al desplazarse por la barra lateral para acceder a módulos inferiores como *Rotación de Servicios* o *Cuentas por Cobrar*, el menú retiene de forma continua su posición exacta de desplazamiento entre navegaciones, evitando molestos saltos a la parte superior.
+6. **Tarjetas de Métricas e Indicadores Homogéneos:**
+   - Todas las tarjetas de métricas cuantitativas (KPIs) en la página de Inicio, el Dashboard de Ingresos, Cuentas por Cobrar y Rotación comparten exactamente la misma anatomía visual, superficie neutra y jerarquía tipográfica audaz, asegurando que el color resalte exclusivamente la información operativa relevante.

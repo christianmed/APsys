@@ -718,4 +718,17 @@ Siguiendo los principios de **Emil Kowalski**:
 1. **Feedback Inmediato en `:active`:** Estandarización de `active:scale-[0.97]` en todos los botones operativos, enlaces interactivos y disparadores de avance (reemplazando saltos inconsistentes de escala o ausencia de compresión).
 2. **Supresión del Tap-Delay Móvil:** Incorporación sistemática de `touch-action: manipulation` en botones de taller y formularios para anular el retardo de 300ms en navegadores táctiles de tablets Android/iPad.
 
+### 15.5 Sistema de Diseño Atómico y Manifiesto Replicable (DESIGN.md & @/components/ui/)
+Para garantizar que cualquier elemento visual sea idéntico entre pantallas y configurable desde una sola fuente de verdad:
+1. **Tokens Centralizados en CSS (`app/globals.css`):**
+   - Definición de variables semánticas en `:root` y `.dark`: `--color-info`, `--color-warning`, `--color-orange`, `--color-danger`, `--color-success`, `--surface`, `--surface-elevated`, `--border`, `--border-strong`.
+   - Modificar una variable en el CSS propaga instantáneamente el cambio en toda la aplicación.
+2. **Componentes Canónicos (`@/components/ui/`):**
+   - `<Card />`: Contenedor universal con superficie neutra, borde sutil y soporte para click (`onClick`) o navegación accesible (`href`) con micro-interacción física `:active:scale-[0.97]`.
+   - `<KpiCard />`: Tarjeta de métrica cuantitativa estandarizada con jerarquía tipográfica audaz (`text-3xl font-extrabold tracking-tight`), cromo 100% neutro y color restringido exclusivamente al dato numérico y al icono semántico.
+   - `<Badge />`: Píldora de estado con variantes (`info`, `warning`, `orange`, `danger`, `success`, `neutral`) enlazadas a los tokens Tokyo Night.
+   - `<Button />`: Botón interactivo con supresión de retardo táctil (`touch-manipulation`) y variantes (`primary`, `secondary`, `outline`, `danger`).
+   - `<ProgressBar />` y `<SegmentedProgressBar />`: Barras de progreso porcentual y distribución de cartera acumulada (*Aging*) basadas en tokens semánticos desaturados.
+3. **Manifiesto Replicable (`DESIGN.md`):** Documento maestro exportable a otros proyectos que compila la filosofía, tokens, contraste WCAG y catálogo de componentes.
+
 

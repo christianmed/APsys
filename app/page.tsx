@@ -20,6 +20,7 @@ import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { FechaEnVivoBadge } from "@/components/shell/fecha-en-vivo-badge";
 import { calcularContadoresProduccion } from "@/lib/pedidos/estados";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
+import { Card, KpiCard } from "@/components/ui/card";
 
 export const instant = false;
 
@@ -51,9 +52,8 @@ export default async function Home() {
         {/* =========================================================================
             1. BANNER DE BIENVENIDA Y ACCIONES RÁPIDAS
             ========================================================================= */}
-        <section
-          aria-label="Bienvenida"
-          className="relative overflow-hidden rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]"
+        <Card
+          className="relative overflow-hidden p-6 sm:p-8"
         >
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-2">
@@ -85,7 +85,7 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-        </section>
+        </Card>
 
         {/* =========================================================================
             2. KPIS EN VIVO DE PRODUCCIÓN (TALLER)
@@ -106,72 +106,43 @@ export default async function Home() {
 
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {/* Activos en taller */}
-            <Link
+            <KpiCard
+              title="Activas en Taller"
+              value={totalActivos}
+              subtitle="Trabajos en curso"
+              icon={Package}
               href="/taller?tab=activos"
-              className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 touch-manipulation active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654]"
-            >
-              <div className="flex items-center justify-between text-zinc-500 dark:text-zinc-400">
-                <span className="text-xs font-medium">Activas en Taller</span>
-                <Package className="size-4 group-hover:scale-105 transition-transform" />
-              </div>
-              <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50 group-hover:text-zinc-700 dark:group-hover:text-white transition-colors">
-                {totalActivos}
-              </p>
-              <span className="mt-1 block text-[11px] text-zinc-400">
-                Trabajos en curso
-              </span>
-            </Link>
+            />
 
             {/* Recibido */}
-            <Link
+            <KpiCard
+              title="Recibido"
+              value={porIniciar}
+              subtitle="En cola de inicio"
+              icon={ClipboardList}
+              variant="info"
               href="/taller?tab=recibido"
-              className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 touch-manipulation active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Recibido</span>
-                <ClipboardList className="size-4 text-blue-600 dark:text-[#7aa2f7] group-hover:scale-105 transition-transform" />
-              </div>
-              <p className="mt-2 text-3xl font-black text-blue-600 dark:text-[#7aa2f7] transition-colors">
-                {porIniciar}
-              </p>
-              <span className="mt-1 block text-[11px] text-zinc-400">
-                En cola de inicio
-              </span>
-            </Link>
+            />
 
             {/* En producción */}
-            <Link
+            <KpiCard
+              title="En Producción"
+              value={enProduccion}
+              subtitle="En máquina / acabados"
+              icon={Printer}
+              variant="warning"
               href="/taller?tab=en_produccion"
-              className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 touch-manipulation active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">En Producción</span>
-                <Printer className="size-4 text-amber-600 dark:text-[#e0af68] group-hover:scale-105 transition-transform" />
-              </div>
-              <p className="mt-2 text-3xl font-black text-amber-600 dark:text-[#e0af68] transition-colors">
-                {enProduccion}
-              </p>
-              <span className="mt-1 block text-[11px] text-zinc-400">
-                En máquina / acabados
-              </span>
-            </Link>
+            />
 
             {/* Listos para entrega */}
-            <Link
+            <KpiCard
+              title="Listos para Retiro"
+              value={listos}
+              subtitle="Aviso WhatsApp disponible"
+              icon={Flame}
+              variant="success"
               href="/taller?tab=listo"
-              className="group rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 touch-manipulation active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Listos para Retiro</span>
-                <Flame className="size-4 text-emerald-600 dark:text-[#9ece6a] group-hover:scale-105 transition-transform" />
-              </div>
-              <p className="mt-2 text-3xl font-black text-emerald-600 dark:text-[#9ece6a] transition-colors">
-                {listos}
-              </p>
-              <span className="mt-1 block text-[11px] text-zinc-400">
-                Aviso WhatsApp disponible
-              </span>
-            </Link>
+            />
           </div>
         </section>
 
@@ -181,7 +152,7 @@ export default async function Home() {
         <section aria-label="Módulos del sistema" className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Tarjeta: Gestión de Órdenes */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <Card className="flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                   <ClipboardList className="size-5" />
@@ -197,21 +168,21 @@ export default async function Home() {
               <div className="mt-5 flex items-center gap-2 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/pedidos"
-                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white"
+                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 touch-manipulation active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Ver Pedidos
                 </Link>
                 <Link
                   href="/pedidos/nuevo"
-                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-white"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-white"
                 >
                   + Nuevo
                 </Link>
               </div>
-            </div>
+            </Card>
 
             {/* Tarjeta: Taller Kanban */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <Card className="flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                   <Flame className="size-5" />
@@ -227,15 +198,15 @@ export default async function Home() {
               <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/taller"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white shadow-xs"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 touch-manipulation active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white shadow-xs"
                 >
                   Abrir Tablero de Taller
                 </Link>
               </div>
-            </div>
+            </Card>
 
             {/* Tarjeta: Directorio de Clientes */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <Card className="flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                   <Users className="size-5" />
@@ -251,21 +222,21 @@ export default async function Home() {
               <div className="mt-5 flex items-center gap-2 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/clientes"
-                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white"
+                  className="inline-flex h-9 flex-1 items-center justify-center rounded-lg bg-zinc-900 text-xs font-semibold text-white transition hover:bg-zinc-800 touch-manipulation active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Directorio
                 </Link>
                 <Link
                   href="/clientes/nuevo"
-                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-white"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-zinc-200 px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:text-zinc-300 dark:hover:bg-[#1f202c] dark:hover:text-white"
                 >
                   + Agregar
                 </Link>
               </div>
-            </div>
+            </Card>
 
             {/* Tarjeta: Catálogo de Servicios */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <Card className="flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                   <Tag className="size-5" />
@@ -281,15 +252,15 @@ export default async function Home() {
               <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/servicios"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Gestionar Catálogo
                 </Link>
               </div>
-            </div>
+            </Card>
 
             {/* Tarjeta: Recordatorios */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <Card className="flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                   <Bell className="size-5" />
@@ -305,15 +276,15 @@ export default async function Home() {
               <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/recordatorios"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Revisar Alertas (48–72h)
                 </Link>
               </div>
-            </div>
+            </Card>
 
             {/* Tarjeta: Plantillas WhatsApp */}
-            <div className="flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+            <Card className="flex flex-col justify-between p-6">
               <div className="space-y-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
                   <MessageSquare className="size-5" />
@@ -329,12 +300,12 @@ export default async function Home() {
               <div className="mt-5 pt-4 border-t border-zinc-100 dark:border-[#24283b]">
                 <Link
                   href="/plantillas"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
                 >
                   Editar Mensajes
                 </Link>
               </div>
-            </div>
+            </Card>
           </div>
         </section>
 
@@ -358,9 +329,9 @@ export default async function Home() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Link
+              <Card
                 href="/dashboard"
-                className="group flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50/50 active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50"
+                className="group flex flex-col justify-between p-5"
               >
                 <div>
                   <TrendingUp className="size-5 text-emerald-600 dark:text-emerald-400" />
@@ -375,11 +346,11 @@ export default async function Home() {
                   <span>Abrir</span>
                   <ArrowRight className="size-3" />
                 </span>
-              </Link>
+              </Card>
 
-              <Link
+              <Card
                 href="/cuentas-por-cobrar"
-                className="group flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50/50 active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50"
+                className="group flex flex-col justify-between p-5"
               >
                 <div>
                   <Wallet className="size-5 text-rose-600 dark:text-rose-400" />
@@ -394,11 +365,11 @@ export default async function Home() {
                   <span>Revisar saldos</span>
                   <ArrowRight className="size-3" />
                 </span>
-              </Link>
+              </Card>
 
-              <Link
+              <Card
                 href="/dashboard/rotacion"
-                className="group flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50/50 active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50"
+                className="group flex flex-col justify-between p-5"
               >
                 <div>
                   <Package className="size-5 text-indigo-600 dark:text-indigo-400" />
@@ -413,11 +384,11 @@ export default async function Home() {
                   <span>Ver rotación</span>
                   <ArrowRight className="size-3" />
                 </span>
-              </Link>
+              </Card>
 
-              <Link
+              <Card
                 href="/tasas"
-                className="group flex flex-col justify-between rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50/50 active:scale-[0.97] dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50"
+                className="group flex flex-col justify-between p-5"
               >
                 <div>
                   <Banknote className="size-5 text-emerald-600 dark:text-emerald-400" />
@@ -432,7 +403,7 @@ export default async function Home() {
                   <span>Actualizar</span>
                   <ArrowRight className="size-3" />
                 </span>
-              </Link>
+              </Card>
             </div>
           </section>
         )}
@@ -440,7 +411,7 @@ export default async function Home() {
         {/* =========================================================================
             5. PIE DE PÁGINA: GUÍA RÁPIDA DE USO
             ========================================================================= */}
-        <footer className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+        <Card className="p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div className="flex size-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-[#7aa2f7]">
@@ -458,12 +429,12 @@ export default async function Home() {
 
             <Link
               href="/ayuda"
-              className="inline-flex h-8 items-center justify-center rounded-lg border border-transparent bg-zinc-100 px-3 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
+              className="inline-flex h-8 items-center justify-center rounded-lg border border-transparent bg-zinc-100 px-3 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-200 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               Consultar Guía
             </Link>
           </div>
-        </footer>
+        </Card>
       </div>
     </AuthenticatedShell>
   );
