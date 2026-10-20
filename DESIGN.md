@@ -95,26 +95,27 @@ Este documento define la **Fuente Única de Verdad (Single Source of Truth)** pa
 
 Cualquier cambio en la identidad visual se realiza **modificando la variable en `app/globals.css`**, actualizando automáticamente cada componente del sistema:
 
-| Token Semántico | Variable CSS | Modo Claro (Light) | Modo Oscuro (Tokyo Night) |
-| :--- | :--- | :--- | :--- |
-| **Fondo Base** | `--background` | `#f8fafc` | `#16161e` |
-| **Superficie Tarjeta** | `--surface` | `#ffffff` | `#1a1b26` |
-| **Superficie Elevada** | `--surface-elevated` | `#f1f5f9` | `#1f202c` |
-| **Borde Sutil** | `--border` | `#e2e8f0` | `#24283b` |
-| **Borde Activo** | `--border-strong` | `#cbd5e1` | `#2f3654` |
-| **Azul Informativo** | `--color-info` | `#5a82d6` | `#7aa2f7` |
-| **Ámbar Preventivo** | `--color-warning` | `#cf9b4e` | `#e0af68` |
-| **Naranja Alerta** | `--color-orange` | `#d67644` | `#ff9e64` |
-| **Rojo Peligro/Mora** | `--color-danger` | `#cf586c` | `#f7768e` |
-| **Verde Éxito/Listo** | `--color-success` | `#4f8a5a` | `#9ece6a` |
+| Token Semántico        | Variable CSS         | Modo Claro (Light) | Modo Oscuro (Tokyo Night) |
+| :--------------------- | :------------------- | :----------------- | :------------------------ |
+| **Fondo Base**         | `--background`       | `#f8fafc`          | `#16161e`                 |
+| **Superficie Tarjeta** | `--surface`          | `#ffffff`          | `#1a1b26`                 |
+| **Superficie Elevada** | `--surface-elevated` | `#f1f5f9`          | `#1f202c`                 |
+| **Borde Sutil**        | `--border`           | `#e2e8f0`          | `#24283b`                 |
+| **Borde Activo**       | `--border-strong`    | `#cbd5e1`          | `#2f3654`                 |
+| **Azul Informativo**   | `--color-info`       | `#5a82d6`          | `#7aa2f7`                 |
+| **Ámbar Preventivo**   | `--color-warning`    | `#cf9b4e`          | `#e0af68`                 |
+| **Naranja Alerta**     | `--color-orange`     | `#d67644`          | `#ff9e64`                 |
+| **Rojo Peligro/Mora**  | `--color-danger`     | `#cf586c`          | `#f7768e`                 |
+| **Verde Éxito/Listo**  | `--color-success`    | `#4f8a5a`          | `#9ece6a`                 |
 
 ---
 
 ## 3. Catálogo de Componentes Canónicos (`@/components/ui/`)
 
 ### 3.1 `<Card />` y `<KpiCard />` (`@/components/ui/card.tsx`)
-* **Uso:** Todas las pantallas deben usar este contenedor estándar para métricas y paneles.
-* **Propiedades de `<KpiCard />`:**
+
+- **Uso:** Todas las pantallas deben usar este contenedor estándar para métricas y paneles.
+- **Propiedades de `<KpiCard />`:**
   - `title`: Título en mayúsculas (`text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400`).
   - `value`: Métrica cuantitativa (`text-3xl font-extrabold tracking-tight`).
   - `subtitle`?: Texto descriptivo contextual o desglose secundario.
@@ -124,31 +125,58 @@ Cualquier cambio en la identidad visual se realiza **modificando la variable en 
   - `href`?: Si es un enlace de navegación, renderiza un `next/link` accesible con la misma interacción `:active:scale-[0.97]`.
 
 ### 3.2 `<Badge />` (`@/components/ui/badge.tsx`)
-* **Uso:** Píldoras de estado en tablas, encabezados y listas.
-* **Variantes:** `"info"` | `"warning"` | `"orange"` | `"danger"` | `"success"` | `"neutral"`.
-* **Formato:** Píldora redondeada (`rounded-full border px-2.5 py-0.5 text-[11px] font-bold`).
+
+- **Uso:** Píldoras de estado en tablas, encabezados y listas.
+- **Variantes:** `"info"` | `"warning"` | `"orange"` | `"danger"` | `"success"` | `"neutral"`.
+- **Formato:** Píldora redondeada (`rounded-full border px-2.5 py-0.5 text-[11px] font-bold`).
 
 ### 3.3 `<Button />` (`@/components/ui/button.tsx`)
-* **Uso:** Disparadores de acciones y navegación.
-* **Variantes:**
+
+- **Uso:** Disparadores de acciones y navegación.
+- **Variantes:**
   - `"primary"`: Sólido oscuro en claro (`bg-zinc-900 text-white`), superficie elevada en oscuro (`dark:bg-[#1f202c] dark:border dark:border-[#2f3654]`).
   - `"secondary"` / `"outline"`: Borde sutil, fondo blanco / `#1a1b26`, hover neutral.
   - `"danger"`: Destructivo con advertencia clara.
-* **Comportamiento:** `:active:scale-[0.97] touch-manipulation transition-all duration-150`.
+- **Comportamiento:** `:active:scale-[0.97] touch-manipulation transition-all duration-150`.
 
 ### 3.4 `<ProgressBar />` y `<SegmentedProgressBar />` (`@/components/ui/progress-bar.tsx`)
-* **Uso:** Distribución porcentual y barras acumulativas de antigüedad de cartera (*Aging*).
-* **Consumo:** Lee directamente los tokens semánticos `--color-info`, `--color-warning`, `--color-orange`, `--color-danger` y `--color-success`.
+
+- **Uso:** Distribución porcentual y barras acumulativas de antigüedad de cartera (_Aging_).
+- **Consumo:** Lee directamente los tokens semánticos `--color-info`, `--color-warning`, `--color-orange`, `--color-danger` y `--color-success`.
 
 ### 3.5 `<CustomSelect />` (`@/components/ui/custom-select.tsx`)
-* **Uso:** Selectores accesibles WAI-ARIA con búsqueda en tiempo real, prevención de scroll exterior y dropdown elevado con borde Tokyo Night.
+
+- **Uso:** Selectores accesibles WAI-ARIA con búsqueda en tiempo real, prevención de scroll exterior y dropdown elevado con borde Tokyo Night.
+
+### 3.6 `<Input />` (`@/components/ui/input.tsx`)
+
+- **Uso:** Entradas de texto estándar y numéricas, con soporte de icono integrado (ej. `Search`), mensajes de error semánticos y 3 tamaños (`sm`, `md`, `lg`).
+- **Estilo:** Superficie neutra (`bg-zinc-50` / `dark:bg-[#16161e]`), micro-borde sutil (`border-zinc-200` / `dark:border-[#24283b]`), y anillo de foco Tokyo Night (`#7aa2f7`).
+
+### 3.7 `<Alert />` (`@/components/ui/alert.tsx`)
+
+- **Uso:** Banners contextuales para notificaciones de advertencia, confirmación o error de negocio.
+- **Variantes:** `"info"`, `"warning"`, `"danger"`, `"success"`.
+- **Estilo:** Fondos suaves al 60% en claro y 20% en oscuro, bordes sutiles y contraste tipográfico WCAG AAA.
+
+### 3.8 `<Tabs />` (`@/components/ui/tabs.tsx`)
+
+- **Uso:** Navegación por pestañas y filtros Kanban horizontales.
+- **Comportamiento:** Scroll horizontal táctil sin barras intrusivas (`scrollbar-none`), `active:scale-[0.97]` y `touch-action: manipulation` para eliminación del tap-delay en tablets.
+
+### 3.9 `<Modal />` (`@/components/ui/modal.tsx`)
+
+- **Uso:** Diálogos modales y ventanas emergentes operativas (ej. Cobro de Saldo en Taller).
+- **Física Emil Kowalski:** Cero `scale(0)` para prevenir desgarre visual. Apertura suave con transición `zoom-in-[0.98]` y backdrop con desenfoque suave (`backdrop-blur-xs`).
+- **Accesibilidad:** Cierre con tecla Escape, bloqueo de scroll en fondo y accesibilidad WAI-ARIA.
 
 ---
 
 ## 4. Convención de Replicación en Otros Proyectos
 
 Para llevar este sistema de diseño a un nuevo proyecto:
+
 1. Copia este archivo `DESIGN.md` en la raíz del repositorio.
 2. Copia la sección `:root` y `.dark` de `app/globals.css`.
-3. Copia la carpeta `components/ui/` (`card.tsx`, `badge.tsx`, `button.tsx`, `progress-bar.tsx`, `custom-select.tsx`).
+3. Copia la carpeta `components/ui/` (`card.tsx`, `badge.tsx`, `button.tsx`, `progress-bar.tsx`, `custom-select.tsx`, `input.tsx`, `alert.tsx`, `tabs.tsx`, `modal.tsx`).
 4. Toda la interfaz del nuevo sistema heredará inmediatamente la misma estética prémium, sobria, accesible y verificada en 120fps.

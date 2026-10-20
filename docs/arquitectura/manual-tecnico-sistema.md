@@ -731,4 +731,21 @@ Para garantizar que cualquier elemento visual sea idéntico entre pantallas y co
    - `<ProgressBar />` y `<SegmentedProgressBar />`: Barras de progreso porcentual y distribución de cartera acumulada (*Aging*) basadas en tokens semánticos desaturados.
 3. **Manifiesto Replicable (`DESIGN.md`):** Documento maestro exportable a otros proyectos que compila la filosofía, tokens, contraste WCAG y catálogo de componentes.
 
+### 15.6 Catálogo de Componentes Canónicos Atómicos Expandido (Fase 39)
+
+Se agregaron al catálogo oficial en `@/components/ui/` cuatro nuevos componentes de alta frecuencia:
+
+1. **`<Input />` (`@/components/ui/input.tsx`):**
+   - Entrada de datos estandarizada con superficie neutra (`dark:bg-[#16161e]`), micro-borde (`dark:border-[#24283b]`) y anillo de foco Tokyo Night (`#7aa2f7`).
+   - Soporte para icono contextual integrado (`icon={Search}`), tres tamaños ergonómicos (`sm`, `md`, `lg`) y variantes de error accesibles con tipografía de alerta.
+2. **`<Alert />` (`@/components/ui/alert.tsx`):**
+   - Notificación o advertencia contextual (`info`, `warning`, `danger`, `success`) con fondos desaturados y alto contraste tipográfico WCAG AAA.
+3. **`<Tabs />` (`@/components/ui/tabs.tsx`):**
+   - Selector horizontal de pestañas y filtros Kanban.
+   - Cuenta con scroll táctil sin barras invasivas (`scrollbar-none`), micro-compresión `:active:scale-[0.97]` y `touch-action: manipulation` para eliminar retardos en tablets.
+4. **`<Modal />` (`@/components/ui/modal.tsx`):**
+   - Diálogo modal accesible con backdrop desenfocado (`backdrop-blur-xs`) y supresión estricta de `scale(0)` (reemplazado por animación física de entrada `zoom-in-[0.98]` con opacidad).
+   - Manejo integrado de escape en teclado, bloqueo del scroll de fondo y botón de cierre ergonómico.
+
+
 

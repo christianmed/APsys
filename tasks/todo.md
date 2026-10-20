@@ -424,11 +424,11 @@
   - [x] Ejecutar merge de `feat/sistema-diseno-impeccable-tokens` en `dev`.
   - [x] Validar compuerta de calidad DoD en `dev` (`npm run typecheck` y `npm test`).
 
-- [ ] **Fase 39: Ampliación del Catálogo de Componentes Canónicos Atómicos (@/components/ui/)**
-  - [ ] Diseñar y documentar nuevos componentes en `DESIGN.md`: `<Input />`, `<Alert />`, `<Tabs />`, `<Modal />`.
-  - [ ] TDD (Rojo): Escribir pruebas unitarias en `test/` para cada nuevo componente.
-  - [ ] TDD (Verde): Implementar componentes en `@/components/ui/` respetando tokens de `app/globals.css` y micro-interacciones de Emil Kowalski.
-  - [ ] TDD (Refactor): Validar contrastes y micro-escalas.
+- [x] **Fase 39: Ampliación del Catálogo de Componentes Canónicos Atómicos (@/components/ui/)**
+  - [x] Diseñar y documentar nuevos componentes en `DESIGN.md`: `<Input />`, `<Alert />`, `<Tabs />`, `<Modal />`.
+  - [x] TDD (Rojo): Escribir pruebas unitarias en `test/` para cada nuevo componente (`test/canonical-atomic-components.test.tsx`).
+  - [x] TDD (Verde): Implementar componentes en `@/components/ui/` respetando tokens de `app/globals.css` y micro-interacciones de Emil Kowalski.
+  - [x] TDD (Refactor): Validar contrastes, micro-escalas y supresión de `scale(0)` (321 tests aprobados en Vitest, 0 errores en `npm run typecheck`).
 
 - [ ] **Fase 40: Migración de Pantallas Operativas a Componentes Canónicos**
   - [ ] Migrar Tablero de Taller (`/taller`) y modales de cobro/entrega.
