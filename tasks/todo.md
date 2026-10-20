@@ -410,4 +410,39 @@
     - [x] Actualizar `docs/arquitectura/manual-tecnico-sistema.md`.
     - [x] Verificación DoD completa (`npm test`, `npm run typecheck`).
 
+- [x] **Fase 37b: Sistema de Diseño Atómico Impeccable, Manifiesto Replicable DESIGN.md y Migración Analítica**
+  - [x] Centralizar tokens semánticos en `app/globals.css` (`--color-info`, `--color-warning`, `--color-orange`, `--color-danger`, `--color-success`).
+  - [x] Redactar manifiesto exportable `DESIGN.md`.
+  - [x] Implementar componentes canónicos atómicos en `@/components/ui/` (`Card`, `KpiCard`, `Badge`, `Button`, `ProgressBar`).
+  - [x] Migrar pantallas analíticas: Home (`/`), Dashboard (`/dashboard`), Cuentas por Cobrar (`/cuentas-por-cobrar`) y Rotación (`/dashboard/rotacion`).
+  - [x] Escribir pruebas unitarias en `test/design-system-components.test.tsx` (6/6 passing).
+  - [x] Validar calidad: 313/313 tests en verde, 0 errores en `npm run typecheck`.
+
+- [ ] **Fase 38: Fusión Controlada a `dev` (Sin tocar `main`)**
+  - [ ] Commit de archivos pendientes (`scripts/cambiar-password.mjs`, `tasks/`).
+  - [ ] Cambiar a rama `dev` (`git checkout dev`).
+  - [ ] Ejecutar merge de `feat/sistema-diseno-impeccable-tokens` en `dev`.
+  - [ ] Validar compuerta de calidad DoD en `dev` (`npm run typecheck` y `npm test`).
+
+- [ ] **Fase 39: Ampliación del Catálogo de Componentes Canónicos Atómicos (@/components/ui/)**
+  - [ ] Diseñar y documentar nuevos componentes en `DESIGN.md`: `<Input />`, `<Alert />`, `<Tabs />`, `<Modal />`.
+  - [ ] TDD (Rojo): Escribir pruebas unitarias en `test/` para cada nuevo componente.
+  - [ ] TDD (Verde): Implementar componentes en `@/components/ui/` respetando tokens de `app/globals.css` y micro-interacciones de Emil Kowalski.
+  - [ ] TDD (Refactor): Validar contrastes y micro-escalas.
+
+- [ ] **Fase 40: Migración de Pantallas Operativas a Componentes Canónicos**
+  - [ ] Migrar Tablero de Taller (`/taller`) y modales de cobro/entrega.
+  - [ ] Migrar formulario de registro de pedido (`/pedidos/nuevo`) y lista (`/pedidos`).
+  - [ ] Migrar Directorio de Clientes (`/clientes`) y ficha (`/clientes/[id]`).
+  - [ ] Migrar Catálogo de Servicios (`/servicios`).
+  - [ ] Migrar Módulo de Tasas (`/tasas`).
+
+- [ ] **Fase 41: Pruebas de Estrés `break-ui` y Auditoría Quirúrgica Impeccable**
+  - [ ] Ejecutar pruebas de estrés con datos extremos (`break-ui`).
+  - [ ] Auditoría de 61 detectores deterministas de Impeccable.
+
+- [ ] **Fase 42: Pruebas E2E de Flujo Crítico con Playwright**
+  - [ ] Crear y ejecutar suite E2E automatizada de flujo de punta a punta.
+
+
 

@@ -209,19 +209,41 @@ Este plan aborda de forma exhaustiva los 8 puntos solicitados por el usuario, as
      - Vitest 100% verde (294+ tests), Typecheck 0 errores, ESLint 0 advertencias, Next.js build exitoso.
      - Actualizar `docs/arquitectura/manual-tecnico-sistema.md` (Sección 14: Sistema de Diseño APSys) y `docs/capacitacion/guia-rapida-usuarios.md`.
 
-### Fase 35: Potencia Comercial y Finanzas (Versión 1.1.0)
+### Fase 37: Sistema de Diseño Atómico Impeccable, Manifiesto Replicable DESIGN.md y Migración Analítica (Completada)
 
-- **Objetivo:** Elevar la imagen corporativa del taller ante clientes corporativos y eliminar descuadres de caja en pagos combinados.
-- **Acciones Clave:**
-  1. **Presupuestos Formales en PDF Vectorial:** Endpoint de generación y descarga en PDF con membrete, especificaciones de m², acabados y montos en USD y Bs para compartir por WhatsApp o imprimir.
-  2. **Desglose de Pagos Mixtos y Multimoneda:** Crear tabla `pedido_pagos` para registrar abonos combinados (Efectivo USD + Zelle + Pago Móvil con tasa congelada y referencia bancaria).
-  3. **Suite E2E Playwright Completa:** Pruebas E2E del flujo completo: Login → Cotización con tasa de mañana → Kanban de Taller → Comanda.
+- **Objetivo:** Establecer la infraestructura de diseño canónica del sistema basada en tokens CSS centralizados en `app/globals.css`, el manifiesto exportable `DESIGN.md` y componentes atómicos en `@/components/ui/` (`Card`, `KpiCard`, `Badge`, `Button`, `ProgressBar`), migrando Home, Dashboard, Cuentas por Cobrar y Rotación.
+- **Resultados:** 313 tests aprobados en Vitest, 0 errores de TypeScript, micro-interacciones `:active:scale-[0.97]` y cromo 100% neutro.
 
-### Fase 36: Planta Inteligente y Manufactura (Versión 1.2.0)
+### Fase 38: Fusión Controlada de la Rama de Diseño hacia `dev`
 
-- **Objetivo:** Automatizar la comunicación con clientes y controlar el consumo de insumos de impresión.
-- **Acciones Clave:**
-  1. **WhatsApp Cloud API Desatendido:** Disparo automático de mensaje al cliente cuando la orden se marca como "Listo para Retiro", sin interacción manual.
-  2. **Módulo de Inventario de Bobinas y Merma:** Control de metros lineales disponibles de lona y vinil con descuento automático por orden procesada y cálculo de merma por corte.
-  3. **Estimación Predictiva en Taller Kanban:** Cálculo automático del tiempo estimado de entrega basado en la carga histórica de m² en producción.
+- **Objetivo:** Integrar todo el trabajo atómico de diseño (`feat/sistema-diseno-impeccable-tokens`) en la rama de desarrollo `dev` mediante un merge limpio sin tocar `main`.
+- **Verificación:** Ejecutar la compuerta de calidad DoD (`npm test`, `npm run typecheck`) directamente sobre la rama `dev`.
+
+### Fase 39: Ampliación del Catálogo de Componentes Canónicos Atómicos (@/components/ui/)
+
+- **Objetivo:** Desarrollar los componentes canónicos identificados por la "Regla de Tres" y la auditoría de Impeccable, documentándolos en `DESIGN.md` y respaldándolos con pruebas TDD en `test/`:
+  1. `<Input />` / `<TextField />`: Entradas de texto y números con tipografía tabular, soporte táctil móvil, anillo de foco Tokyo Night (`#7aa2f7`), estados de error y variantes con icono (búsqueda).
+  2. `<Alert />` / `<Banner />`: Notificaciones contextuales para alertas operativas (servicios sin demanda, morosidad crítica, avisos de sistema).
+  3. `<Tabs />`: Selector de pestañas accesible para filtros de tramos de cobro y columnas Kanban.
+  4. `<Modal />` / `<Dialog />`: Ventanas emergentes accesibles con backdrop sutil, micro-animación de entrada consciente del origen y supresión de `scale(0)`.
+
+### Fase 40: Migración de Pantallas Operativas a Componentes Canónicos
+
+- **Objetivo:** Reemplazar las clases manuales y contenedores dispersos en las pantallas operativas de captura y manufactura por los componentes atómicos canónicos:
+  1. **Tablero de Taller (`/taller`):** Columnas Kanban, tarjetas táctiles de estado y modales de cobro/entrega.
+  2. **Gestión de Pedidos (`/pedidos` y `/pedidos/nuevo`):** Secciones de formulario de nueva orden (`PedidoForm`), filtros rápidos y buscador.
+  3. **Directorio de Clientes (`/clientes`, `/clientes/[id]`, `/clientes/nuevo`):** Fichas de cliente, formulario de alta e historial.
+  4. **Catálogo de Servicios (`/servicios`, `/servicios/nuevo`):** Tabla de catálogo y formulario de tarifas.
+  5. **Módulo de Tasas (`/tasas`):** Panel BCV e histórico inmutable.
+
+### Fase 41: Pruebas de Estrés `break-ui` (Emil Kowalski) y Auditoría Quirúrgica Impeccable (/polish y /audit)
+
+- **Objetivo:** Blindar la resiliencia y el refinamiento de la interfaz:
+  1. **Pruebas de Estrés `break-ui`:** Inyectar nombres de clientes de 100+ caracteres, números de factura millonarios y pantallas ultra-estrechas (320px) para garantizar que nada se desborde (`truncate`, `min-w-0`).
+  2. **Auditoría Impeccable:** Pasar los 61 detectores deterministas, verificar contrastes WCAG AAA y registrar nuevos patrones en `DESIGN.md`.
+
+### Fase 42: Pruebas E2E de Flujo Crítico con Playwright
+
+- **Objetivo:** Automatizar la validación de punta a punta del ciclo operativo central:
+  - Crear orden en mostrador → Transición en Taller (Recibido → Producción → Listo) → Cobro de saldo multimoneda → Consolidado en Dashboard.
 
