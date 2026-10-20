@@ -402,7 +402,28 @@ El sistema visual de APSys está optimizado para funcionar tanto en computadoras
 - **Solución Arquitectónica con `React.useSyncExternalStore`:**
   - Se evitó el antipatrón de llamar a `setState` síncrono dentro de un `useEffect` (prohibido por las reglas de rendimiento de React 19 y Next.js 16).
   - Se implementó `React.useSyncExternalStore(emptySubscribe, () => true, () => false)` para determinar el estado de montaje del cliente.
-  - Garantiza que durante SSR y el paso de hidratación inicial se renderice un placeholder neutro con dimensiones y clases idénticas, activando el conmutador dinámico de forma determinista y sin parpadeo de layout (*Layout Shift*).
+  - Garantiza que durante SSR y el paso de hidratación inicial se renderice un placeholder neutro con dimensiones y clases idénticas, activando el conmutador dinámico de forma determinista y sin parpadeo de layout (_Layout Shift_).
+
+### 8.6 Componente Canónico de Barras de Progreso (`components/ui/progress-bar.tsx`)
+
+- **Centralización y Erradicación de Slop:** Elimina clases utilitarias de color dispersas en cada pantalla, centralizando los tokens cromáticos definidos en `DESIGN.md` para Tokyo Night (modo oscuro) y modo claro equilibrado (regla 3–5% de color en datos).
+- **Variantes y Tokens Semánticos (`PROGRESS_VARIANT_STYLES`):**
+  - `info`: Azul nítido en claro (`#2563eb`), Tokyo Blue en oscuro (`#7aa2f7`).
+  - `warning`: Ámbar equilibrado en claro (`#d97706`), Tokyo Amber en oscuro (`#e0af68`).
+  - `orange`: Naranja en claro (`#f97316`), Tokyo Orange en oscuro (`#ff9e64`).
+  - `danger`: Rojo en claro (`#dc2626`), Tokyo Red en oscuro (`#f7768e`).
+  - `success`: Verde en claro (`#16a34a`), Tokyo Green en oscuro (`#9ece6a`).
+- **Modos de Presentación:**
+  - `<ProgressBar value={num} variant="info" size="md" />`: Barra individual para métricas de demanda y distribución (ej. Rotación de Servicios).
+  - `<SegmentedProgressBar segments={items} size="lg" />`: Barra acumulativa multi-segmento proporcional para análisis de vencimiento y antigüedad de cartera (_Aging_ en Cuentas por Cobrar).
+
+### 8.7 Persistencia de Scroll en Navegación Lateral (`components/shell/app-shell.tsx`)
+
+- **Diagnóstico del Salto:** Debido a que cada vista de página monta su propio contenedor `AuthenticatedShell`, la navegación por defecto en Next.js desmontaba el menú lateral reiniciando el scroll a `0`, obligando al usuario a volver a desplazarse hacia abajo tras hacer clic en enlaces inferiores como _Rotación de Servicios_ o _Cuentas por Cobrar_.
+- **Solución Implementada:**
+  - Integración de `ref={navDesktopRef}` en el elemento `<nav>` con almacenamiento síncrono de posición en `sessionStorage` (`apsys_sidebar_scroll`).
+  - Restauración determinista de `scrollTop` en el hook `useEffect([pathname])`.
+  - Configuración de `scroll={false}` en los elementos `<Link>` del menú lateral para evitar saltos forzados de viewport.
 
 ---
 
@@ -441,7 +462,7 @@ El módulo de tasas de cambio está diseñado como una capacidad autónoma, modu
    Almacena cada vigencia con precisión `NUMERIC(16, 4)` y fecha/hora con zona horaria (`TIMESTAMPTZ`). Los pedidos retienen la tasa histórica exacta de su creación o abono.
 2. **Servicio de Integración y Caché (`lib/tasas/bcv-service.ts`):**  
    Consumo unificado de `https://rates.dolarvzla.com/bcv/current.json` (USD + EUR) con fallback automático de alta disponibilidad a `https://ve.dolarapi.com/v1`. Dispone de caché en memoria RAM con TTL de 15 minutos en el servidor para evitar llamadas HTTP redundantes en cada petición SSR.
-3. **Lógica Pura y Calendario Bancario (`lib/tasas/tasas.ts`):**  
+3. **Lógica Pura y Calendario Bancario (`lib/tasas/tasas.ts`):**
    - `calcularDiferenciaDiasCaracas`: Calcula la distancia exacta en días naturales calendario según la zona horaria `America/Caracas` (UTC-4), blindado contra saltos horarios.
    - `describirEstadoVigencia`: Clasifica dinámicamente cada registro histórico (`vigente_hoy`, `vigente_fin_de_semana`, `programada_manana`, `programada_proximo_dia_habil`, `historica`).
    - `formatearEtiquetaSidebar`: Genera las etiquetas de los acordeones del Sidebar (`Hoy`, `Vigente • DD/MM`, `Mañana`, `Lunes, DD/MM`).
@@ -529,19 +550,19 @@ Para eliminar inconsistencias causadas por la diferencia horaria entre los servi
      - `totalActivos`: `porIniciar + enProduccion + listos` (excluyendo estrictamente `entregado` y `cancelado`).
 2. **Unificación de Nomenclatura:**
    - Las tarjetas KPI del panel de inicio se alinearon con las pestañas del tablero de taller:
-     - *"Por Iniciar"* (antes "Por Imprimir").
-     - *"En Producción"* (antes "En Impresión").
-     - *"Listos para Retiro"*.
+     - _"Por Iniciar"_ (antes "Por Imprimir").
+     - _"En Producción"_ (antes "En Impresión").
+     - _"Listos para Retiro"_.
 
 ### 12.3 Sistema de Conmutación Visual de Estilos en Taller (`app/taller/taller-tablero.tsx`)
 
 Para responder al requerimiento de eliminar colores saturados estridentes y permitir la evaluación comparativa en vivo por parte del usuario, se implementó un conmutador interactivo con persistencia local (`localStorage.getItem("apsys_taller_estilo")`):
 
-| Propuesta | Estilo Visual | Botón Recibido | Botón Producción | Botón WhatsApp | Botón Cobro / Entrega |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Estilo A (Recomendado)** | Minimalista Monocromático (Linear / Vercel) | `bg-zinc-900 text-white` con icono `Sparkles` azul sutil | `bg-zinc-900 text-white` con icono `CheckCircle2` ámbar | Outline refinado `border-emerald-300 bg-emerald-50/70 text-emerald-950` | `bg-zinc-900 text-white` con badge interior ámbar para saldos |
-| **Estilo B** | Tonales Pastel Suaves (Apple HIG) | `border-sky-200 bg-sky-50 text-sky-900` | `border-amber-300 bg-amber-50 text-amber-950` | `border-emerald-200 bg-emerald-50 text-emerald-900` | `border-amber-300 bg-amber-100/70 text-amber-950` |
-| **Estilo C** | Jerarquía Progresiva (Stripe) | Botón neutro `border-zinc-200 bg-white text-zinc-700` | Borde ámbar suave `border-amber-300/80 bg-amber-50/50` | Outline gris neutro | Botón sólido de certeza con peso visual en la fase final de cobro |
+| Propuesta                  | Estilo Visual                               | Botón Recibido                                           | Botón Producción                                        | Botón WhatsApp                                                          | Botón Cobro / Entrega                                             |
+| :------------------------- | :------------------------------------------ | :------------------------------------------------------- | :------------------------------------------------------ | :---------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| **Estilo A (Recomendado)** | Minimalista Monocromático (Linear / Vercel) | `bg-zinc-900 text-white` con icono `Sparkles` azul sutil | `bg-zinc-900 text-white` con icono `CheckCircle2` ámbar | Outline refinado `border-emerald-300 bg-emerald-50/70 text-emerald-950` | `bg-zinc-900 text-white` con badge interior ámbar para saldos     |
+| **Estilo B**               | Tonales Pastel Suaves (Apple HIG)           | `border-sky-200 bg-sky-50 text-sky-900`                  | `border-amber-300 bg-amber-50 text-amber-950`           | `border-emerald-200 bg-emerald-50 text-emerald-900`                     | `border-amber-300 bg-amber-100/70 text-amber-950`                 |
+| **Estilo C**               | Jerarquía Progresiva (Stripe)               | Botón neutro `border-zinc-200 bg-white text-zinc-700`    | Borde ámbar suave `border-amber-300/80 bg-amber-50/50`  | Outline gris neutro                                                     | Botón sólido de certeza con peso visual en la fase final de cobro |
 
 ---
 
@@ -557,6 +578,7 @@ Para ofrecer una experiencia nocturna profesional con tonos azulados profundos y
 - **Líneas y Micro-Bordes (`--border`):** `#24283b` y `#2f3654` (delimitadores sutiles de alto contraste).
 
 En `app/globals.css`, se configuró la directiva oficial de Tailwind CSS v4 para soporte de modo oscuro por clase DOM:
+
 ```css
 @custom-variant dark (&:where(.dark, .dark *));
 ```
@@ -596,6 +618,7 @@ El estado de la orden en el tablero de taller se comunica a través del fondo co
 ### 14.1 Diagnóstico de Inconsistencias Heredadas (Fase 34)
 
 Previo a la Fase 34, el sistema presentaba inconsistencias visuales en el tema oscuro derivadas de la migración progresiva de pantallas:
+
 1. **Componentes Aislados en el Sidebar:** El widget de tasas BCV y el pie del operador conservaban clases `zinc-900`/`zinc-800` heredadas, contrastando con la superficie de la barra lateral.
 2. **Hover Grisáceo Antiguo en Navegación:** Los enlaces del sidebar usaban `hover:bg-zinc-800`, produciendo un tono gris cenizo desentonado con el matiz azul medianoche de Tokyo Night.
 3. **Disparidad de Azules:** La tarjeta "Por Iniciar" utilizaba una variante de `sky-400`, mientras que el módulo de tasas utilizaba `blue-400` y otras secciones recurrían a `indigo`, rompiendo la coherencia visual.
@@ -637,18 +660,18 @@ Para erradicar de raíz la inconsistencia, se implementó una estrategia en dos 
 
 ### 14.3 Mapeo Semántico Universal de Estados y Colores
 
-| Concepto Visual | Hex / Token | Aplicación en APSys |
-| :--- | :--- | :--- |
-| **Canvas** | `#16161e` | Fondo raíz de aplicación, página de login y contenedor general. |
-| **Superficie** | `#1a1b26` | Tarjetas KPI, sidebar, paneles de formulario, modales y tablas. |
-| **Superficie Elevada** | `#1f202c` | Inputs, header thead, botones secundarios, badges neutrales y pie de usuario. |
-| **Hover Activo** | `#252b42` | Estado hover de botones de navegación, botones secundarios y dropdowns. |
-| **Borde Estándar** | `#24283b` | Divisores de fila, bordes de tarjeta e inputs en reposo. |
-| **Borde Activo / Ring** | `#2f3654` / `#7aa2f7` | Foco de inputs, selector abierto y bordes seleccionados. |
-| **Azul Zafiro Semántico** | `#7aa2f7` | **Color Azul Unificado de APSys:** Estado "Recibido / Por Iniciar", Gestión de Pedidos, Tasa Euro BCV informativa, botones de acción secundaria y rings de foco en CustomSelect. |
-| **Ámbar Noche** | `#e0af68` | Estado "En Producción", avisos de tasas para mañana y recordatorios 48h. |
-| **Esmeralda Bosque** | `#9ece6a` | Estado "Listo para Retiro", totales pagados y tasa USD oficial vigente. |
-| **Rojo Coral** | `#f7768e` | Estado "Cancelado", pedidos anulados, saldos retenidos y alertas urgentes 72h. |
+| Concepto Visual           | Hex / Token           | Aplicación en APSys                                                                                                                                                              |
+| :------------------------ | :-------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Canvas**                | `#16161e`             | Fondo raíz de aplicación, página de login y contenedor general.                                                                                                                  |
+| **Superficie**            | `#1a1b26`             | Tarjetas KPI, sidebar, paneles de formulario, modales y tablas.                                                                                                                  |
+| **Superficie Elevada**    | `#1f202c`             | Inputs, header thead, botones secundarios, badges neutrales y pie de usuario.                                                                                                    |
+| **Hover Activo**          | `#252b42`             | Estado hover de botones de navegación, botones secundarios y dropdowns.                                                                                                          |
+| **Borde Estándar**        | `#24283b`             | Divisores de fila, bordes de tarjeta e inputs en reposo.                                                                                                                         |
+| **Borde Activo / Ring**   | `#2f3654` / `#7aa2f7` | Foco de inputs, selector abierto y bordes seleccionados.                                                                                                                         |
+| **Azul Zafiro Semántico** | `#7aa2f7`             | **Color Azul Unificado de APSys:** Estado "Recibido / Por Iniciar", Gestión de Pedidos, Tasa Euro BCV informativa, botones de acción secundaria y rings de foco en CustomSelect. |
+| **Ámbar Noche**           | `#e0af68`             | Estado "En Producción", avisos de tasas para mañana y recordatorios 48h.                                                                                                         |
+| **Esmeralda Bosque**      | `#9ece6a`             | Estado "Listo para Retiro", totales pagados y tasa USD oficial vigente.                                                                                                          |
+| **Rojo Coral**            | `#f7768e`             | Estado "Cancelado", pedidos anulados, saldos retenidos y alertas urgentes 72h.                                                                                                   |
 
 ### 14.4 Rediseño Integral de Componentes Clave
 
@@ -664,4 +687,112 @@ Para erradicar de raíz la inconsistencia, se implementó una estrategia en dos 
    - **Taller Kanban:** Tarjetas unificadas con bordes tonales de estado y botones táctiles de avance.
    - **Tasas y Finanzas:** Tarjeta hero en gradiente `#1a1b26`, panel BCV y tabla histórica inmutable sincronizados.
    - **Clientes y Servicios:** Directorio, formularios de alta/edición y fichas de historial consolidados en Tokyo Night.
+
+---
+
+## 15. Integración Metodológica de Diseño Impeccable, Taste Skill y Emil Kowalski (Fase 37)
+
+Para elevar la experiencia de usuario a estándares profesionales de clase mundial y erradicar cualquier artefacto de diseño genérico o "AI slop", el sistema integra cuatro marcos metodológicos de referencia:
+
+### 15.1 Semántica Determinista de Estados Operativos (TB-UI-01)
+
+- **Alineación con GLOSSARY.md:** El estado inicial de una orden es canónicamente **`Recibido`** (no "Por Iniciar"), unificado en `lib/pedidos/estados.ts`, `app/page.tsx` y `app/taller/taller-tablero.tsx`.
+- **Contrato Cromático Inmutable:**
+  - `recibido`: Azul Zafiro Tokyo Night (`#7aa2f7`).
+  - `en_produccion`: Ámbar Noche (`#e0af68`).
+  - `listo`: Esmeralda Bosque (`#73daca` / `#9ece6a`).
+  - `entregado`: Neutro / Púrpura suave.
+  - `cancelado`: Rojo Coral (`#f7768e`).
+- **Verificación TDD:** Test automatizado en `test/estados-badges.test.ts` que previene regresiones en la asignación cromática de badges y controles de estado.
+
+### 15.2 Erradicación de Rainbow Slop & Cromo Neutro Estricto (TB-UI-02)
+
+Siguiendo las reglas de **Taste Skill** para _App Screens_ (pantallas de trabajo continuo vs. marketing):
+
+1. **Regla del 3–5% de Color:** El color está estrictamente reservado para datos cuantitativos, métricas clave (KPIs) y badges de estado semántico.
+2. **Cromo Neutro en Tarjetas de Métricas:**
+   - En `app/page.tsx`, `app/dashboard/dashboard-view.tsx`, `app/cuentas-por-cobrar/cuentas-view.tsx` y `app/recordatorios/recordatorios-panel.tsx`, los contenedores de tarjetas eliminan fondos tintados (pasteles deslavados) y bordes de colores artificiales.
+   - Las tarjetas utilizan superficie neutra estándar (`bg-white dark:bg-[#1a1b26]`) con bordes homogéneos (`border-zinc-200 dark:border-[#24283b]`), destacando exclusivamente las cifras y los iconos de acento.
+
+### 15.3 Desanidado de Cajas y Densidad Visual (TB-UI-03)
+
+- **Eliminación de _Card-in-a-card_:** En el formulario de registro de órdenes (`app/pedidos/pedido-form.tsx`), los renglones de trabajo anteriormente encapsulados en cajas con bordes internos fueron transformados en una lista desanidada con divisores horizontales limpios (`divide-y divide-zinc-200 dark:divide-[#24283b]`).
+- Esto elimina el "efecto Bento saturado", incrementando la densidad de datos y mejorando la jerarquía tipográfica sin cajas redundantes.
+
+### 15.4 Micro-interacciones Físicas y Sensación Táctil (TB-UI-04)
+
+Siguiendo los principios de **Emil Kowalski**:
+
+1. **Feedback Inmediato en `:active`:** Estandarización de `active:scale-[0.97]` en todos los botones operativos, enlaces interactivos y disparadores de avance (reemplazando saltos inconsistentes de escala o ausencia de compresión).
+2. **Supresión del Tap-Delay Móvil:** Incorporación sistemática de `touch-action: manipulation` en botones de taller y formularios para anular el retardo de 300ms en navegadores táctiles de tablets Android/iPad.
+
+### 15.5 Sistema de Diseño Atómico y Manifiesto Replicable (DESIGN.md & @/components/ui/)
+
+Para garantizar que cualquier elemento visual sea idéntico entre pantallas y configurable desde una sola fuente de verdad:
+
+1. **Tokens Centralizados en CSS (`app/globals.css`):**
+   - Definición de variables semánticas en `:root` y `.dark`: `--color-info`, `--color-warning`, `--color-orange`, `--color-danger`, `--color-success`, `--surface`, `--surface-elevated`, `--border`, `--border-strong`.
+   - Modificar una variable en el CSS propaga instantáneamente el cambio en toda la aplicación.
+2. **Componentes Canónicos (`@/components/ui/`):**
+   - `<Card />`: Contenedor universal con superficie neutra, borde sutil y soporte para click (`onClick`) o navegación accesible (`href`) con micro-interacción física `:active:scale-[0.97]`.
+   - `<KpiCard />`: Tarjeta de métrica cuantitativa estandarizada con jerarquía tipográfica audaz (`text-3xl font-extrabold tracking-tight`), cromo 100% neutro y color restringido exclusivamente al dato numérico y al icono semántico.
+   - `<Badge />`: Píldora de estado con variantes (`info`, `warning`, `orange`, `danger`, `success`, `neutral`) enlazadas a los tokens Tokyo Night.
+   - `<Button />`: Botón interactivo con supresión de retardo táctil (`touch-manipulation`) y variantes (`primary`, `secondary`, `outline`, `danger`).
+   - `<ProgressBar />` y `<SegmentedProgressBar />`: Barras de progreso porcentual y distribución de cartera acumulada (_Aging_) basadas en tokens semánticos desaturados.
+3. **Manifiesto Replicable (`DESIGN.md`):** Documento maestro exportable a otros proyectos que compila la filosofía, tokens, contraste WCAG y catálogo de componentes.
+
+### 15.6 Catálogo de Componentes Canónicos Atómicos Expandido (Fase 39)
+
+Se agregaron al catálogo oficial en `@/components/ui/` cuatro nuevos componentes de alta frecuencia:
+
+1. **`<Input />` (`@/components/ui/input.tsx`):**
+   - Entrada de datos estandarizada con superficie neutra (`dark:bg-[#16161e]`), micro-borde (`dark:border-[#24283b]`) y anillo de foco Tokyo Night (`#7aa2f7`).
+   - Soporte para icono contextual integrado (`icon={Search}`), tres tamaños ergonómicos (`sm`, `md`, `lg`) y variantes de error accesibles con tipografía de alerta.
+2. **`<Alert />` (`@/components/ui/alert.tsx`):**
+   - Notificación o advertencia contextual (`info`, `warning`, `danger`, `success`) con fondos desaturados y alto contraste tipográfico WCAG AAA.
+3. **`<Tabs />` (`@/components/ui/tabs.tsx`):**
+   - Selector horizontal de pestañas y filtros Kanban.
+   - Cuenta con scroll táctil sin barras invasivas (`scrollbar-none`), micro-compresión `:active:scale-[0.97]` y `touch-action: manipulation` para eliminar retardos en tablets.
+4. **`<Modal />` (`@/components/ui/modal.tsx`):**
+   - Diálogo modal accesible con backdrop desenfocado (`backdrop-blur-xs`) y supresión estricta de `scale(0)` (reemplazado por animación física de entrada `zoom-in-[0.98]` con opacidad).
+   - Manejo integrado de escape en teclado, bloqueo del scroll de fondo y botón de cierre ergonómico.
+
+### 15.7 Blindaje Contra Desbordamientos y Pruebas de Estrés Break-UI (Fase 41)
+
+Para proteger la interfaz contra fallas por datos extremos o impredecibles (nombres corporativos gigantes, cifras monetarias masivas, cadenas irrompibles o pantallas ultra-estrechas):
+
+1. **Regla `min-w-0` en Contenedores Flex:**
+   - La especificación CSS Flexbox define `min-width: auto` por defecto en hijos flexibles, impidiendo el truncado con `truncate`. Se incorporó `min-w-0` en `KpiCard`, `Modal` y `Alert` para garantizar que el texto se trunque o ajuste sin expandir artificialmente el contenedor.
+2. **Ajuste de Cadenas Irrompibles (`break-words`):**
+   - Incorporación de `break-words` en mensajes de error de `Input`, títulos/subtítulos de `Modal` y descripciones de `Alert`, evitando que URLs o tokens largos desborden la tarjeta.
+3. **Scroll Vertical Aislado en Modales (`max-h-[75vh] overflow-y-auto`):**
+   - Los diálogos modales garantizan que listas largas de ítems o comprobantes extensos permanezcan dentro del viewport sin cortar los botones de acción del pie ni empujar la cabecera fuera de la pantalla.
+4. **Protección de Iconos con `shrink-0`:**
+   - Todos los iconos Lucide en botones, tabs, badges y modales cuentan con `shrink-0` explícito, previniendo su deformación en óvalos cuando el texto circundante crece.
+5. **Auditoría Mecánica Impeccable:**
+   - Verificación continua con los 61 detectores deterministas de Impeccable asegurando 0 violaciones sintácticas o visuales en todos los componentes canónicos.
+
+### 15.8 Refactorización Integral de Pantallas Periféricas a Componentes Canónicos (Fase 42)
+
+En cumplimiento de la auditoría Impeccable & Taste Skill, las pantallas periféricas del sistema fueron normalizadas para utilizar exclusivamente la librería canónica `@/components/ui/`:
+
+1. **Panel de Recordatorios (`app/recordatorios/recordatorios-panel.tsx`):**
+   - Sustitución de bloques ad-hoc por 4 `<KpiCard>` canónicos con variantes semánticas (`default`, `info`, `warning`, `danger`).
+   - Conmutador de filtros temporales migrado a `<Tabs>` con soporte táctil, `active:scale-[0.97]` y `<Badge>` numéricos.
+   - Búsqueda en vivo estandarizada con `<Input icon={Search} />` y botones de acción rápida con `<Button variant="secondary" size="sm" />`.
+2. **Editor de Plantillas de Mensajería (`app/plantillas/plantilla-editor.tsx`):**
+   - Contenedores de edición y simulador WhatsApp migrados a `<Card>`.
+   - Notificaciones de guardado y error convertidas a `<Alert variant="success|danger">`.
+   - Conmutación entre plantillas unificada bajo `<Tabs>`.
+   - Acciones operativas refactorizadas a `<Button variant="primary|ghost">` con estados de carga (`isLoading`).
+3. **Formulario de Inicio de Sesión (`app/login/login-form.tsx`):**
+   - Erradicación de cadenas de estilo sueltas (`CLASES_INPUT`, `CLASES_BOTON`).
+   - Implementación de `<Input icon={Mail}>` e `<Input icon={Lock}>` con foco Tokyo Night (`#7aa2f7`).
+   - Manejo de excepciones y errores visuales a través de `<Alert variant="danger">`.
+   - Botón de acceso estandarizado con `<Button variant="primary" size="lg" icon={LogIn}>`.
+4. **Guía Rápida y Manual Operativo (`app/ayuda/page.tsx`):**
+   - Eliminación definitiva de tonalidades índigo fuera de norma (`indigo-700`, `indigo-200`, `indigo-600`), consolidando el azul institucional Tokyo Night (`#7aa2f7` / `--color-info`).
+   - Secciones y tarjeta de rol activo migradas a `<Card>` y `<Button>`.
+5. **Normalización de Tasa Referencial (`app/tasas/page.tsx`):**
+   - Eliminación del gradiente ornamental del encabezado, unificando la tarjeta de tasa vigente bajo el contenedor neutro `<Card>` y preservando el acento cromático al 3–5% con `<Badge variant="success">`.
 

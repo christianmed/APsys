@@ -24,6 +24,8 @@ import { BotonAvisoWhatsApp } from "@/app/pedidos/boton-aviso-whatsapp";
 import { PageHeader } from "@/components/shell/page-header";
 import { CamaraEscanerModal } from "./camara-escaner-modal";
 import { CobrarYEntregarModal } from "./cobrar-entregar-modal";
+import { Input } from "@/components/ui/input";
+import { Alert } from "@/components/ui/alert";
 import { formatearMonedaUSD } from "@/lib/cobranzas/cuentas-por-cobrar";
 import {
   ESTADOS_METADATA,
@@ -294,23 +296,23 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         actions={
           <div className="flex w-full items-center gap-2 sm:w-auto">
             <div className="relative flex-1 sm:w-64">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-zinc-400" />
-              <input
+              <Input
                 type="search"
+                icon={Search}
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 placeholder="Escanear comanda o # orden..."
                 aria-label="Escanear comanda en taller"
-                className="h-11 w-full rounded-xl border border-zinc-300 bg-zinc-50 pl-9 pr-9 text-sm font-medium text-zinc-900 transition focus:border-zinc-900 focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-100"
+                sizeVariant="md"
               />
               {busqueda && (
                 <button
                   type="button"
                   onClick={() => setBusqueda("")}
                   aria-label="Limpiar búsqueda"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
                 >
-                  <X className="size-4" />
+                  <X className="size-3.5" />
                 </button>
               )}
             </div>
@@ -319,10 +321,10 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
               type="button"
               onClick={() => setModalCamaraAbierto(true)}
               aria-label="Escanear con cámara móvil"
-              className="inline-flex size-11 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm transition hover:bg-amber-600 active:scale-95 shrink-0"
+              className="inline-flex size-9 items-center justify-center rounded-xl border border-zinc-200 bg-zinc-50 text-zinc-700 shadow-xs transition-all hover:bg-zinc-100 active:scale-[0.97] touch-manipulation shrink-0 dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
               title="Escanear con cámara"
             >
-              <Camera className="size-5" />
+              <Camera className="size-4" />
             </button>
           </div>
         }
@@ -337,9 +339,9 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
       )}
 
       {errorFeedback && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
+        <Alert variant="danger">
           {errorFeedback}
-        </div>
+        </Alert>
       )}
 
       {/* Barra de estado del flujo de taller */}
@@ -354,7 +356,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
           </span>
         </div>
         <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
-          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-sky-500" />Por Iniciar</span>
+          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-blue-500" />Recibido</span>
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-amber-500" />En Producción</span>
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-emerald-500" />Listos</span>
         </div>
@@ -365,7 +367,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("activos")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("activos")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("activos")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Activos en Taller</span>
           <span className="text-lg font-bold leading-tight">{conteoActivos}</span>
@@ -374,16 +376,16 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("recibido")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("recibido")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("recibido")}`}
         >
-          <span className="text-xs font-semibold uppercase tracking-wider">Por Iniciar</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Recibido</span>
           <span className="text-lg font-bold leading-tight">{conteoRecibido}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setTabActual("en_produccion")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("en_produccion")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("en_produccion")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">En Producción</span>
           <span className="text-lg font-bold leading-tight">{conteoProduccion}</span>
@@ -392,7 +394,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("listo")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("listo")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("listo")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Listos para Retiro</span>
           <span className="text-lg font-bold leading-tight">{conteoListo}</span>

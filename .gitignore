@@ -49,3 +49,7 @@ next-env.d.ts
 *.code-workspace
 
 certificates
+
+# impeccable live runtime sessions
+.impeccable/live/sessions/
+.impeccable/live/annotations/

@@ -18,6 +18,8 @@ import {
 } from "@/lib/clientes/historial";
 import { generarMensajeCobranza } from "@/lib/cobranzas/cuentas-por-cobrar";
 import { formatearFechaHoraCaracas } from "@/lib/fechas";
+import { KpiCard } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   clienteId: string;
@@ -84,66 +86,29 @@ export function HistorialClienteView({
       {/* Tarjetas KPI de compras y recurrencia */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Comprado */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <span>Total Comprado</span>
-            <Wallet className="size-4 text-zinc-400" />
-          </div>
-          <p className="mt-2 text-2xl font-extrabold text-zinc-900 dark:text-white">
-            {formatearUSD(metricas.total_gastado_usd)}
-          </p>
-          <p className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
-            En {metricas.total_pedidos_activos} pedido{metricas.total_pedidos_activos === 1 ? "" : "s"} activos
-          </p>
-        </div>
+        <KpiCard
+          title="Total Comprado"
+          value={formatearUSD(metricas.total_gastado_usd)}
+          subtitle={`En ${metricas.total_pedidos_activos} pedido${metricas.total_pedidos_activos === 1 ? "" : "s"} activos`}
+          icon={Wallet}
+        />
 
         {/* Saldo Pendiente */}
-        <div
-          className={`rounded-2xl border p-4 shadow-sm ${
-            metricas.saldo_pendiente_usd > 0
-              ? "border-rose-200 bg-rose-50/40 dark:border-rose-900/40 dark:bg-rose-950/20"
-              : "border-zinc-200 bg-white dark:border-[#24283b] dark:bg-[#1a1b26]"
-          }`}
-        >
-          <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <span className={metricas.saldo_pendiente_usd > 0 ? "text-rose-700 dark:text-rose-300" : ""}>
-              Saldo por Cobrar
-            </span>
-            <AlertCircle
-              className={`size-4 ${
-                metricas.saldo_pendiente_usd > 0
-                  ? "text-rose-600 dark:text-rose-400"
-                  : "text-zinc-400"
-              }`}
-            />
-          </div>
-          <p
-            className={`mt-2 text-2xl font-extrabold ${
-              metricas.saldo_pendiente_usd > 0
-                ? "text-rose-900 dark:text-rose-100"
-                : "text-zinc-900 dark:text-white"
-            }`}
-          >
-            {formatearUSD(metricas.saldo_pendiente_usd)}
-          </p>
-          <p className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
-            {metricas.saldo_pendiente_usd > 0 ? "Saldo pendiente actual" : "100% al día"}
-          </p>
-        </div>
+        <KpiCard
+          title="Saldo por Cobrar"
+          value={formatearUSD(metricas.saldo_pendiente_usd)}
+          subtitle={metricas.saldo_pendiente_usd > 0 ? "Saldo pendiente actual" : "100% al día"}
+          icon={AlertCircle}
+          variant={metricas.saldo_pendiente_usd > 0 ? "danger" : "default"}
+        />
 
         {/* Ticket Promedio */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between text-xs font-semibold text-zinc-500 dark:text-zinc-400">
-            <span>Ticket Promedio</span>
-            <TrendingUp className="size-4 text-zinc-400" />
-          </div>
-          <p className="mt-2 text-2xl font-extrabold text-zinc-900 dark:text-white">
-            {formatearUSD(metricas.ticket_promedio_usd)}
-          </p>
-          <p className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">
-            Promedio por pedido
-          </p>
-        </div>
+        <KpiCard
+          title="Ticket Promedio"
+          value={formatearUSD(metricas.ticket_promedio_usd)}
+          subtitle="Promedio por pedido"
+          icon={TrendingUp}
+        />
 
         {/* Recurrencia */}
         <div className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
@@ -180,13 +145,14 @@ export function HistorialClienteView({
             </p>
           </div>
 
-          <Link
+          <Button
             href={`/pedidos/nuevo?cliente_id=${clienteId}`}
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
+            variant="primary"
+            size="sm"
           >
             <Plus className="size-3.5" />
             Nueva Orden
-          </Link>
+          </Button>
         </div>
 
         {metricas.historial_pedidos.length === 0 ? (

@@ -3,11 +3,39 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
   --surface: #ffffff;
-  --surface-elevated: #f4f4f5;
-  --border: #e4e4e7;
+  --surface-elevated: #f1f5f9;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  /* Semantic Data Colors - Light Mode (Editorial, desaturated) */
+  --color-info: #5a82d6;
+  --color-info-subtle: #f0f4fc;
+  --color-info-text: #3b5998;
+  --color-info-border: #c8d7f5;
+
+  --color-warning: #cf9b4e;
+  --color-warning-subtle: #fbf6ee;
+  --color-warning-text: #966b24;
+  --color-warning-border: #f0debe;
+
+  --color-orange: #d67644;
+  --color-orange-subtle: #fcf4ef;
+  --color-orange-text: #b05224;
+  --color-orange-border: #f5d4c2;
+
+  --color-danger: #cf586c;
+  --color-danger-subtle: #fcf1f3;
+  --color-danger-text: #a83246;
+  --color-danger-border: #f3c9d1;
+
+  --color-success: #4f8a5a;
+  --color-success-subtle: #f0f7f2;
+  --color-success-text: #2e6237;
+  --color-success-border: #c6e3cc;
+
   color-scheme: light;
 }
 
@@ -43,6 +71,33 @@ html {
     --surface: #1a1b26;
     --surface-elevated: #1f202c;
     --border: #24283b;
+    --border-strong: #2f3654;
+
+    --color-info: #7aa2f7;
+    --color-info-subtle: rgba(122, 162, 247, 0.12);
+    --color-info-text: #7aa2f7;
+    --color-info-border: rgba(122, 162, 247, 0.28);
+
+    --color-warning: #e0af68;
+    --color-warning-subtle: rgba(224, 175, 104, 0.12);
+    --color-warning-text: #e0af68;
+    --color-warning-border: rgba(224, 175, 104, 0.28);
+
+    --color-orange: #ff9e64;
+    --color-orange-subtle: rgba(255, 158, 100, 0.12);
+    --color-orange-text: #ff9e64;
+    --color-orange-border: rgba(255, 158, 100, 0.28);
+
+    --color-danger: #f7768e;
+    --color-danger-subtle: rgba(247, 118, 142, 0.12);
+    --color-danger-text: #f7768e;
+    --color-danger-border: rgba(247, 118, 142, 0.28);
+
+    --color-success: #9ece6a;
+    --color-success-subtle: rgba(158, 206, 106, 0.12);
+    --color-success-text: #9ece6a;
+    --color-success-border: rgba(158, 206, 106, 0.28);
+
     --color-zinc-950: #16161e;
     --color-zinc-900: #1a1b26;
     --color-zinc-800: #1f202c;
@@ -59,6 +114,33 @@ html.dark {
   --surface: #1a1b26;
   --surface-elevated: #1f202c;
   --border: #24283b;
+  --border-strong: #2f3654;
+
+  --color-info: #7aa2f7;
+  --color-info-subtle: rgba(122, 162, 247, 0.12);
+  --color-info-text: #7aa2f7;
+  --color-info-border: rgba(122, 162, 247, 0.28);
+
+  --color-warning: #e0af68;
+  --color-warning-subtle: rgba(224, 175, 104, 0.12);
+  --color-warning-text: #e0af68;
+  --color-warning-border: rgba(224, 175, 104, 0.28);
+
+  --color-orange: #ff9e64;
+  --color-orange-subtle: rgba(255, 158, 100, 0.12);
+  --color-orange-text: #ff9e64;
+  --color-orange-border: rgba(255, 158, 100, 0.28);
+
+  --color-danger: #f7768e;
+  --color-danger-subtle: rgba(247, 118, 142, 0.12);
+  --color-danger-text: #f7768e;
+  --color-danger-border: rgba(247, 118, 142, 0.28);
+
+  --color-success: #9ece6a;
+  --color-success-subtle: rgba(158, 206, 106, 0.12);
+  --color-success-text: #9ece6a;
+  --color-success-border: rgba(158, 206, 106, 0.28);
+
   --color-zinc-950: #16161e;
   --color-zinc-900: #1a1b26;
   --color-zinc-800: #1f202c;

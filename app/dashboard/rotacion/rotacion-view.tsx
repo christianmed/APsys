@@ -23,6 +23,9 @@ import {
   CustomSelect,
   type CustomSelectOption,
 } from "@/components/ui/custom-select";
+import { ProgressBar } from "@/components/ui/progress-bar";
+import { Card, KpiCard } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 type Props = {
   metricasIniciales: MetricaServicioRotacion[];
@@ -103,14 +106,14 @@ export function RotacionServiciosView({
           <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
             <Link
               href="/servicios"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               <Layers className="size-3.5" />
               Catálogo
             </Link>
             <Link
               href="/cuentas-por-cobrar"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 text-xs font-bold text-rose-900 shadow-sm transition hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               Cuentas por Cobrar
             </Link>
@@ -119,7 +122,7 @@ export function RotacionServiciosView({
       />
 
       {/* Selector de Períodos */}
-      <div className="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 min-w-0 max-w-full">
+      <div className="mb-8 flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26] min-w-0 max-w-full">
         {/* Presets rápidos con scroll horizontal nativo */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <span className="mr-1 text-xs font-semibold text-zinc-500 dark:text-zinc-400 shrink-0">
@@ -128,10 +131,10 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("hoy")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "hoy"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
             }`}
           >
             Hoy
@@ -139,10 +142,10 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("esta_semana")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "esta_semana"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
             }`}
           >
             Esta semana
@@ -150,10 +153,10 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("este_mes")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "este_mes"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
             }`}
           >
             Este mes
@@ -161,10 +164,10 @@ export function RotacionServiciosView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("todo")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "todo"
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
+                ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
+                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
             }`}
           >
             Todo el histórico
@@ -184,7 +187,7 @@ export function RotacionServiciosView({
                 value={fechaDesde}
                 onChange={(e) => setFechaDesde(e.target.value)}
                 aria-label="Fecha inicio"
-                className="h-9 w-full sm:w-36 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 min-w-0"
+                className="h-9 w-full sm:w-36 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-[#7aa2f7] focus:outline-none dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] min-w-0"
               />
             </div>
             <span className="hidden sm:inline text-zinc-400 text-center">a</span>
@@ -195,13 +198,13 @@ export function RotacionServiciosView({
                 value={fechaHasta}
                 onChange={(e) => setFechaHasta(e.target.value)}
                 aria-label="Fecha fin"
-                className="h-9 w-full sm:w-36 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-zinc-900 focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 min-w-0"
+                className="h-9 w-full sm:w-36 rounded-xl border border-zinc-200 bg-zinc-50 px-2.5 text-xs text-zinc-800 focus:border-[#7aa2f7] focus:outline-none dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] min-w-0"
               />
             </div>
           </div>
           <button
             type="submit"
-            className="inline-flex h-9 w-full sm:w-auto items-center justify-center rounded-xl bg-zinc-900 px-4 font-semibold text-white transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shrink-0"
+            className="inline-flex h-9 w-full sm:w-auto items-center justify-center rounded-xl bg-zinc-900 px-4 font-semibold text-white transition hover:bg-zinc-800 touch-manipulation active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42] shrink-0"
           >
             Filtrar
           </button>
@@ -211,80 +214,46 @@ export function RotacionServiciosView({
       {/* Tarjetas KPI de rotación */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Líder en Facturación */}
-        <div className="rounded-2xl border border-indigo-200 bg-indigo-50/50 p-5 shadow-sm dark:border-indigo-900/60 dark:bg-indigo-950/20">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-800 dark:text-indigo-300">
-              Mayor Facturación
-            </span>
-            <span className="rounded-lg bg-indigo-100 p-2 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-200">
-              <Sparkles className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-xl font-extrabold tracking-tight text-indigo-950 dark:text-indigo-100 truncate">
-            {resumenInicial.servicio_lider_ingresos?.nombre ?? "Sin datos"}
-          </p>
-          <p className="mt-1 text-xs text-indigo-800/80 dark:text-indigo-300/80">
-            {resumenInicial.servicio_lider_ingresos
+        <KpiCard
+          title="Mayor Facturación"
+          value={resumenInicial.servicio_lider_ingresos?.nombre ?? "Sin datos"}
+          subtitle={
+            resumenInicial.servicio_lider_ingresos
               ? `${formatearUSD(resumenInicial.servicio_lider_ingresos.ingresos_usd)} (${resumenInicial.servicio_lider_ingresos.porcentaje_ingresos}% del total)`
-              : "0 en el período"}
-          </p>
-        </div>
+              : "0 en el período"
+          }
+          icon={Sparkles}
+          variant="info"
+        />
 
         {/* Líder en Volumen / Demanda */}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm dark:border-emerald-900/60 dark:bg-emerald-950/20">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-              Mayor Demanda (Piezas)
-            </span>
-            <span className="rounded-lg bg-emerald-100 p-2 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-200">
-              <Flame className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-xl font-extrabold tracking-tight text-emerald-950 dark:text-emerald-100 truncate">
-            {resumenInicial.servicio_lider_volumen?.nombre ?? "Sin datos"}
-          </p>
-          <p className="mt-1 text-xs text-emerald-800/80 dark:text-emerald-300/80">
-            {resumenInicial.servicio_lider_volumen
+        <KpiCard
+          title="Mayor Demanda (Piezas)"
+          value={resumenInicial.servicio_lider_volumen?.nombre ?? "Sin datos"}
+          subtitle={
+            resumenInicial.servicio_lider_volumen
               ? `${resumenInicial.servicio_lider_volumen.cantidad_total} unidades (${resumenInicial.servicio_lider_volumen.porcentaje_cantidad}% del volumen)`
-              : "0 en el período"}
-          </p>
-        </div>
+              : "0 en el período"
+          }
+          icon={Flame}
+          variant="success"
+        />
 
         {/* Total Facturado en Servicios */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Total Facturado
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-              <DollarSign className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">
-            {formatearUSD(resumenInicial.total_ingresos_usd)}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            En {resumenInicial.total_ordenes_procesadas} órdenes procesadas
-          </p>
-        </div>
+        <KpiCard
+          title="Total Facturado"
+          value={formatearUSD(resumenInicial.total_ingresos_usd)}
+          subtitle={`En ${resumenInicial.total_ordenes_procesadas} órdenes procesadas`}
+          icon={DollarSign}
+        />
 
         {/* Total de Trabajos/Ítems Producidos */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Unidades Producidas
-            </span>
-            <span className="rounded-lg bg-zinc-100 p-2 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-              <Package className="size-5" />
-            </span>
-          </div>
-          <p className="mt-3 text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white">
-            {resumenInicial.total_items_producidos}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            Piezas y renglones confeccionados
-          </p>
-        </div>
+        <KpiCard
+          title="Unidades Producidas"
+          value={resumenInicial.total_items_producidos}
+          subtitle="Piezas y renglones confeccionados"
+          icon={Package}
+        />
       </div>
 
       {/* Alerta de servicios sin demanda */}
@@ -309,8 +278,8 @@ export function RotacionServiciosView({
       )}
 
       {/* Visualización de Barras de Participación */}
-      <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <h2 className="text-base font-bold text-zinc-900 dark:text-white">
+      <Card className="mb-8 p-6">
+        <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-50">
           Participación de Facturación por Servicio
         </h2>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
@@ -328,22 +297,21 @@ export function RotacionServiciosView({
                   {formatearUSD(item.ingresos_usd)} ({item.porcentaje_ingresos}%)
                 </span>
               </div>
-              <div className="h-2.5 w-full overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
-                <div
-                  className="h-full rounded-full bg-indigo-600 transition-all dark:bg-indigo-500"
-                  style={{ width: `${Math.max(2, item.porcentaje_ingresos)}%` }}
-                />
-              </div>
+              <ProgressBar
+                value={item.porcentaje_ingresos}
+                variant="info"
+                size="md"
+              />
             </div>
           ))}
         </div>
-      </div>
+      </Card>
 
       {/* Tabla detallada de rotación */}
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 px-4 sm:px-6 py-4 dark:border-zinc-800">
+      <Card className="overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-200 px-4 sm:px-6 py-4 dark:border-[#24283b]">
           <div>
-            <h3 className="text-sm font-bold text-zinc-900 dark:text-white">
+            <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50">
               Ranking de Servicios ({metricasIniciales.length})
             </h3>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -366,7 +334,7 @@ export function RotacionServiciosView({
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400">
+            <thead className="border-b border-zinc-200 bg-zinc-50/70 text-[11px] font-bold uppercase tracking-wider text-zinc-600 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
               <tr>
                 <th className="px-6 py-3.5">Servicio</th>
                 <th className="px-6 py-3.5 text-center">Estado</th>
@@ -376,33 +344,33 @@ export function RotacionServiciosView({
                 <th className="px-6 py-3.5 text-center">Nivel de Rotación</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-[#24283b]">
               {metricasIniciales.map((m, index) => {
                 let rotacionBadge = (
-                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-bold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                  <Badge variant="neutral">
                     Sin ventas
-                  </span>
+                  </Badge>
                 );
 
                 if (m.cantidad_total > 0) {
                   if (index < 2 && m.porcentaje_ingresos >= 25) {
                     rotacionBadge = (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
-                        <Flame className="size-3 text-emerald-600" />
+                      <Badge variant="success" className="gap-1">
+                        <Flame className="size-3 text-emerald-600 dark:text-[#9ece6a]" />
                         Alta rotación
-                      </span>
+                      </Badge>
                     );
                   } else if (m.cantidad_total >= 3) {
                     rotacionBadge = (
-                      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-[10px] font-bold text-blue-800 dark:bg-blue-950/40 dark:text-blue-300">
+                      <Badge variant="info">
                         Media rotación
-                      </span>
+                      </Badge>
                     );
                   } else {
                     rotacionBadge = (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:bg-amber-950/40 dark:text-amber-300">
+                      <Badge variant="warning">
                         Baja rotación
-                      </span>
+                      </Badge>
                     );
                   }
                 }
@@ -410,7 +378,7 @@ export function RotacionServiciosView({
                 return (
                   <tr
                     key={m.servicio_id}
-                    className="transition-colors hover:bg-zinc-50/70 dark:hover:bg-zinc-800/40"
+                    className="transition-colors hover:bg-zinc-50/70 dark:hover:bg-[#1f202c]/50"
                   >
                     <td className="px-6 py-4 font-bold text-zinc-900 dark:text-white">
                       {m.nombre}
@@ -436,7 +404,7 @@ export function RotacionServiciosView({
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-right font-bold text-indigo-600 dark:text-indigo-400">
+                    <td className="px-6 py-4 text-right font-bold text-[#7aa2f7] dark:text-[#7aa2f7]">
                       <div className="text-sm font-extrabold">{formatearUSD(m.ingresos_usd)}</div>
                       <div className="text-[10px] font-normal text-zinc-500 dark:text-zinc-400">
                         {m.porcentaje_ingresos}% ingresos
@@ -450,7 +418,7 @@ export function RotacionServiciosView({
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

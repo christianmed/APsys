@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { NAVIGATION_GROUPS } from "./app-nav-items";
 
 import { SidebarTasasCard } from "./sidebar-tasas-card";
@@ -50,6 +50,32 @@ export function AppShell({
   const [menuMovilAbierto, setMenuMovilAbierto] = useState(false);
 
   const esGerencial = usuarioRol === "gerencial";
+  const navDesktopRef = useRef<HTMLElement | null>(null);
+
+  // Restaurar la posición de scroll del Sidebar al montar o cambiar de ruta
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("apsys_sidebar_scroll");
+      if (saved && navDesktopRef.current) {
+        navDesktopRef.current.scrollTop = Number(saved);
+      }
+    } catch {
+      // Ignorar restricciones de almacenamiento
+    }
+  }, [pathname]);
+
+  const guardarScrollDesktop = () => {
+    if (navDesktopRef.current) {
+      try {
+        sessionStorage.setItem(
+          "apsys_sidebar_scroll",
+          String(navDesktopRef.current.scrollTop),
+        );
+      } catch {
+        // Ignorar
+      }
+    }
+  };
 
   const estaRutaActiva = (href: string, exactMatch?: boolean) => {
     if (exactMatch) {
@@ -96,7 +122,11 @@ export function AppShell({
         )}
 
         {/* Menú de navegación agrupado */}
-        <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4 text-xs">
+        <nav
+          ref={navDesktopRef}
+          onScroll={guardarScrollDesktop}
+          className="flex-1 space-y-6 overflow-y-auto px-3 py-4 text-xs"
+        >
           {NAVIGATION_GROUPS.map((grupo) => {
             // Filtrar grupos/items que requieren rol gerencial
             const itemsFiltrados = grupo.items.filter(
@@ -119,6 +149,8 @@ export function AppShell({
                       <Link
                         key={item.href}
                         href={item.href}
+                        scroll={false}
+                        onClick={guardarScrollDesktop}
                         className={`group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-medium transition-all duration-150 ${
                           activa
                             ? "bg-zinc-900 text-white font-semibold shadow-sm dark:bg-zinc-100 dark:text-zinc-900"

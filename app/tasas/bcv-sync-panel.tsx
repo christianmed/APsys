@@ -23,6 +23,8 @@ import {
   type EstadoSincronizacionBcv,
 } from "./actions";
 import type { TasasBcvCompletas } from "@/lib/tasas/bcv-service";
+import { Alert } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   tasaActualUsd?: number;
@@ -191,49 +193,48 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
           ) : null}
 
           {tasasEnVivo.error && (
-            <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-              <CircleAlert className="size-4 shrink-0" />
-              <span>{tasasEnVivo.error}</span>
-            </div>
+            <Alert variant="warning">
+              {tasasEnVivo.error}
+            </Alert>
           )}
 
           {/* Botón para aplicar la tasa USD como vigencia */}
           {tasaUsdEnVivo && (
             <div className="space-y-2 pt-1">
-              <button
+              <Button
                 type="button"
                 onClick={handleSincronizar}
                 disabled={sincronizando || consultando}
-                className={`inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold shadow-xs transition active:scale-98 disabled:opacity-60 ${
-                  esFutura
-                    ? "border border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#e0af68] dark:hover:bg-[#252b42] dark:hover:border-amber-600/60"
-                    : "border border-emerald-300/80 bg-emerald-50 text-emerald-950 hover:bg-emerald-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42] dark:hover:border-emerald-600/60"
-                }`}
+                variant="primary"
+                size="lg"
+                className="w-full text-xs"
               >
                 {sincronizando ? (
                   <>
                     <Loader2 className="size-4 animate-spin" />
-                    {esFutura
-                      ? `Programando tasa para ${nombreDiaFuturo}...`
-                      : "Aplicando tasa de hoy..."}
+                    <span>
+                      {esFutura
+                        ? `Programando tasa para ${nombreDiaFuturo}...`
+                        : "Aplicando tasa de hoy..."}
+                    </span>
                   </>
                 ) : esFutura ? (
                   <>
                     <Clock className="size-4" />
-                    Programar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} para {nombreDiaFuturo} (Día Hábil)
+                    <span>Programar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} para {nombreDiaFuturo} (Día Hábil)</span>
                   </>
                 ) : (
                   <>
                     <CheckCircle2 className="size-4" />
-                    Aplicar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} como Tasa Vigente de Hoy
+                    <span>Aplicar Bs. {tasaUsdEnVivo.valorBs.toFixed(4)} como Tasa Vigente de Hoy</span>
                   </>
                 )}
-              </button>
+              </Button>
 
               {esFutura && (
-                <div className="rounded-xl border border-amber-200 bg-amber-50/90 p-2.5 text-center text-[11px] leading-relaxed text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-300">
-                  <span className="font-bold">Nota operativa:</span> Esta tasa oficial entrará en vigencia automática el <strong>{nombreDiaFuturo} a las 12:00 a. m.</strong> La tasa actual permanece vigente para el cierre del día. Ya puedes usar la tasa programada para cotizar o facturar en <strong>Nuevo Pedido</strong> usando el selector interactivo.
-                </div>
+                <Alert variant="warning" title="Nota operativa:">
+                  Esta tasa oficial entrará en vigencia automática el <strong>{nombreDiaFuturo} a las 12:00 a. m.</strong> La tasa actual permanece vigente para el cierre del día. Ya puedes usar la tasa programada para cotizar o facturar en <strong>Nuevo Pedido</strong> usando el selector interactivo.
+                </Alert>
               )}
             </div>
           )}
@@ -242,17 +243,15 @@ export function BcvSyncPanel({ tasaActualUsd, tasasIniciales }: Props) {
 
       {/* Feedback de sincronización */}
       {resultadoSync?.exito && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800 dark:border-emerald-900/40 dark:bg-emerald-950/20 dark:text-emerald-300">
-          <CheckCircle2 className="size-4 shrink-0 text-emerald-600" />
-          <span>{resultadoSync.mensaje}</span>
-        </div>
+        <Alert variant="success">
+          {resultadoSync.mensaje}
+        </Alert>
       )}
 
       {resultadoSync?.error && (
-        <div className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs font-semibold text-rose-800 dark:border-rose-900/40 dark:bg-rose-950/20 dark:text-rose-300">
-          <CircleAlert className="size-4 shrink-0 text-rose-600" />
-          <span>{resultadoSync.error}</span>
-        </div>
+        <Alert variant="danger">
+          {resultadoSync.error}
+        </Alert>
       )}
     </div>
   );

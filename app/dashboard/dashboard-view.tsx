@@ -24,6 +24,7 @@ import {
 
 import { PageHeader } from "@/components/shell/page-header";
 import { formatearFechaHoraCaracas } from "@/lib/fechas";
+import { Card, KpiCard } from "@/components/ui/card";
 
 type Props = {
   pagos: PagoMétrica[];
@@ -90,7 +91,7 @@ export function DashboardView({
           <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:flex-wrap sm:items-center">
             <Link
               href="/tasas"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 text-xs font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               <Banknote className="size-3.5 text-emerald-600 dark:text-emerald-400" />
               Tasa del Día
@@ -98,23 +99,23 @@ export function DashboardView({
 
             <Link
               href="/dashboard/rotacion"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-indigo-300 bg-indigo-50 px-3 text-xs font-semibold text-indigo-900 transition hover:bg-indigo-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#7aa2f7] dark:hover:bg-[#252b42]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
-              <BarChart3 className="size-3.5 text-indigo-600 dark:text-[#7aa2f7]" />
+              <BarChart3 className="size-3.5 text-[#7aa2f7] dark:text-[#7aa2f7]" />
               Rotación
             </Link>
 
             <Link
               href="/cuentas-por-cobrar"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 text-xs font-semibold text-rose-900 transition hover:bg-rose-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f7768e] dark:hover:bg-[#252b42]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
-              <Wallet className="size-3.5 text-rose-600 dark:text-rose-400" />
+              <Wallet className="size-3.5 text-rose-500 dark:text-rose-400" />
               Cuentas por Cobrar
             </Link>
 
             <Link
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               <Receipt className="size-3.5" />
               Ver Pedidos
@@ -124,7 +125,7 @@ export function DashboardView({
       />
 
       {/* Barra de Filtros de Período */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26] min-w-0 max-w-full">
+      <Card className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 min-w-0 max-w-full">
         {/* Presets rápidos con scroll horizontal nativo en pantallas táctiles */}
         <div className="flex items-center gap-1.5 overflow-x-auto py-1 scrollbar-none min-w-0 max-w-full">
           <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mr-1 shrink-0">
@@ -133,7 +134,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("hoy")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "hoy"
                 ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
@@ -144,7 +145,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("esta_semana")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "esta_semana"
                 ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
@@ -155,7 +156,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("este_mes")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "este_mes"
                 ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
@@ -166,7 +167,7 @@ export function DashboardView({
           <button
             type="button"
             onClick={() => aplicarFiltroPreset("todo")}
-            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition ${
+            className={`shrink-0 rounded-xl px-3 py-1.5 text-xs font-semibold transition touch-manipulation active:scale-[0.97] ${
               preset === "todo"
                 ? "bg-zinc-900 text-white dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc]"
                 : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-[#16161e] dark:text-zinc-300 dark:hover:bg-[#1f202c]"
@@ -206,15 +207,15 @@ export function DashboardView({
           </div>
           <button
             type="submit"
-            className="inline-flex h-9 w-full sm:w-auto items-center justify-center rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white transition hover:bg-zinc-700 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42] shrink-0"
+            className="inline-flex h-9 w-full sm:w-auto items-center justify-center rounded-xl bg-zinc-900 px-4 text-xs font-semibold text-white transition hover:bg-zinc-700 touch-manipulation active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42] shrink-0"
           >
             Filtrar
           </button>
         </form>
-      </div>
+      </Card>
 
       {/* Botones de Exportación de Reportes (RF-17) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26] min-w-0">
+      <Card className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300">
             Exportar reporte del período:
@@ -228,7 +229,7 @@ export function DashboardView({
           <a
             href={`/api/reportes/exportar?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
             download
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc] truncate"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50 px-3.5 text-xs font-semibold text-zinc-800 transition hover:bg-zinc-100 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc] truncate"
           >
             <Download className="size-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" />
             <span className="truncate">Descargar CSV</span>
@@ -237,83 +238,54 @@ export function DashboardView({
           <Link
             href={`/reportes/imprimir?periodo=${preset}${fechaDesde ? `&desde=${fechaDesde}T00:00:00Z` : ""}${fechaHasta ? `&hasta=${fechaHasta}T23:59:59Z` : ""}`}
             target="_blank"
-            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-700 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42] truncate"
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl bg-zinc-900 px-3.5 text-xs font-semibold text-white shadow-sm transition hover:bg-zinc-700 touch-manipulation active:scale-[0.97] dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-[#f8fafc] dark:hover:bg-[#252b42] truncate"
           >
             <Printer className="size-3.5 shrink-0" />
             <span className="truncate">Imprimir / PDF</span>
           </Link>
         </div>
-      </div>
+      </Card>
 
       {/* Tarjetas de Métricas Financieras Consolidadas */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Consolidado */}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-950/20">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-              Total Consolidado
-            </span>
-            <TrendingUp className="size-5 text-emerald-600 dark:text-emerald-400" />
-          </div>
-          <p className="mt-2 text-3xl font-black text-emerald-900 dark:text-emerald-100">
-            ${consolidado.totalEquivalenteUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </p>
-          <span className="mt-1 block text-xs text-emerald-700/80 dark:text-emerald-400/80">
-            USD equivalente (USD + Bs a tasa)
-          </span>
-        </div>
+        <KpiCard
+          title="Total Consolidado"
+          value={`$${consolidado.totalEquivalenteUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          subtitle="USD equivalente (USD + Bs a tasa)"
+          icon={TrendingUp}
+          variant="success"
+        />
 
         {/* Ingresos en USD */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Recaudado en USD
-            </span>
-            <DollarSign className="size-5 text-[#7aa2f7] dark:text-[#7aa2f7]" />
-          </div>
-          <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50">
-            ${consolidado.totalUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </p>
-          <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
-            {consolidado.conteoPagosUsd} cobros en efectivo / Zelle
-          </span>
-        </div>
+        <KpiCard
+          title="Recaudado en USD"
+          value={`$${consolidado.totalUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          subtitle={`${consolidado.conteoPagosUsd} cobros en efectivo / Zelle`}
+          icon={DollarSign}
+          variant="info"
+        />
 
         {/* Ingresos en Bolívares */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Recaudado en Bs.
-            </span>
-            <CreditCard className="size-5 text-[#e0af68] dark:text-[#e0af68]" />
-          </div>
-          <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50">
-            Bs. {consolidado.totalBs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          </p>
-          <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
-            {consolidado.conteoPagosBs} cobros en Pago Móvil / Punto
-          </span>
-        </div>
+        <KpiCard
+          title="Recaudado en Bs."
+          value={`Bs. ${consolidado.totalBs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          subtitle={`${consolidado.conteoPagosBs} cobros en Pago Móvil / Punto`}
+          icon={CreditCard}
+          variant="warning"
+        />
 
         {/* Transacciones */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Total Cobros
-            </span>
-            <Layers className="size-5 text-[#bb9af7] dark:text-[#bb9af7]" />
-          </div>
-          <p className="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-50">
-            {consolidado.totalPagosCount}
-          </p>
-          <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
-            operaciones registradas en el período
-          </span>
-        </div>
+        <KpiCard
+          title="Total Cobros"
+          value={consolidado.totalPagosCount}
+          subtitle="operaciones registradas en el período"
+          icon={Layers}
+        />
       </div>
 
       {/* Tabla de Detalle de Pagos */}
-      <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden dark:border-[#24283b] dark:bg-[#1a1b26]">
+      <Card className="overflow-hidden">
         <div className="border-b border-zinc-200 p-4 dark:border-[#24283b]">
           <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
             Detalle de Pagos y Abonos Registrados ({pagos.length})
@@ -400,7 +372,7 @@ export function DashboardView({
             </table>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";
 import { CursorPagination } from "@/components/ui/cursor-pagination";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { procesarPaginacionCursor } from "@/lib/paginacion/cursor";
 import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
 import { ClientesBuscador } from "./clientes-buscador";
@@ -80,13 +83,13 @@ export default async function ClientesPage({
             </span>
           }
           actions={
-            <Link
+            <Button
               href="/clientes/nuevo"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 text-xs sm:text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
+              variant="primary"
             >
               <Plus className="size-4" />
               Nuevo Cliente
-            </Link>
+            </Button>
           }
         />
 
@@ -98,15 +101,15 @@ export default async function ClientesPage({
               const rawPedidos = (cliente.pedidos as unknown as Array<{ total_usd: number | string; anulado: boolean | null }>) ?? [];
               const pedidosActivos = rawPedidos.filter((p) => !p.anulado);
               const totalGastado = pedidosActivos.reduce(
-                (acc, p) => acc + Number(p.total_usd || 0),
+                 (acc, p) => acc + Number(p.total_usd || 0),
                 0,
               );
 
               return (
                 <li key={cliente.id}>
-                  <Link
+                  <Card
                     href={`/clientes/${cliente.id}`}
-                    className="block rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm transition-colors hover:border-zinc-300 hover:bg-zinc-50 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:outline-none dark:border-[#24283b] dark:bg-[#1a1b26] dark:hover:border-[#2f3654] dark:hover:bg-[#1f202c]/50"
+                    className="p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -123,10 +126,10 @@ export default async function ClientesPage({
                       <div className="text-right">
                         {pedidosActivos.length > 0 ? (
                           <>
-                            <span className="inline-flex rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-bold text-zinc-800 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300">
+                            <Badge variant="neutral">
                               {pedidosActivos.length} {pedidosActivos.length === 1 ? "orden" : "órdenes"}
-                            </span>
-                            <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            </Badge>
+                            <p className="mt-1 text-xs font-semibold text-emerald-600 dark:text-[#9ece6a]">
                               ${totalGastado.toFixed(2)}
                             </p>
                           </>
@@ -143,7 +146,7 @@ export default async function ClientesPage({
                         {cliente.notas}
                       </p>
                     ) : null}
-                  </Link>
+                  </Card>
                 </li>
               );
             })}

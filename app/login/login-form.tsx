@@ -2,8 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { CircleAlert, LoaderCircle, LogIn } from "lucide-react";
+import { Lock, LogIn, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
 import { mensajeDeErrorAuth } from "./errores";
 
 /**
@@ -15,12 +18,6 @@ import { mensajeDeErrorAuth } from "./errores";
  * reenvía el texto de Supabase ni se revela si la cuenta existe.
  */
 const MENSAJE_CAMPOS_VACIOS = "Ingresá tu correo y tu contraseña.";
-
-const CLASES_INPUT =
-  "h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 transition-colors placeholder:text-zinc-400 focus-visible:border-zinc-500 focus-visible:ring-2 focus-visible:ring-zinc-900/10 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus-visible:border-[#7aa2f7] dark:focus-visible:ring-[#7aa2f7]/20";
-
-const CLASES_BOTON =
-  "inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 text-base font-medium text-white transition-colors hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42] dark:focus-visible:ring-[#7aa2f7] dark:focus-visible:ring-offset-[#1a1b26]";
 
 export function LoginForm() {
   const router = useRouter();
@@ -66,67 +63,68 @@ export function LoginForm() {
 
   return (
     <form onSubmit={manejarEnvio} noValidate className="space-y-5">
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <label
           htmlFor="correo"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
         >
           Correo electrónico
         </label>
-        <input
+        <Input
           id="correo"
           name="correo"
           type="email"
+          icon={Mail}
+          sizeVariant="lg"
           autoComplete="email"
           autoCapitalize="none"
           spellCheck={false}
           autoFocus
           disabled={enviando}
-          aria-invalid={mensajeError ? true : undefined}
+          error={Boolean(mensajeError)}
           value={correo}
           onChange={(evento) => setCorreo(evento.target.value)}
-          className={CLASES_INPUT}
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         <label
           htmlFor="contrasena"
-          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300"
         >
           Contraseña
         </label>
-        <input
+        <Input
           id="contrasena"
           name="contrasena"
           type="password"
+          icon={Lock}
+          sizeVariant="lg"
           autoComplete="current-password"
           disabled={enviando}
-          aria-invalid={mensajeError ? true : undefined}
+          error={Boolean(mensajeError)}
           value={contrasena}
           onChange={(evento) => setContrasena(evento.target.value)}
-          className={CLASES_INPUT}
         />
       </div>
 
       {mensajeError ? (
-        <p
-          role="alert"
-          className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
-        >
-          <CircleAlert aria-hidden className="mt-0.5 size-4 shrink-0" />
-          <span>{mensajeError}</span>
-        </p>
+        <Alert variant="danger">
+          {mensajeError}
+        </Alert>
       ) : null}
 
-      <button type="submit" disabled={enviando} className={CLASES_BOTON}>
-        {enviando ? (
-          <LoaderCircle aria-hidden className="size-4 animate-spin" />
-        ) : (
-          <LogIn aria-hidden className="size-4" />
-        )}
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        icon={LogIn}
+        isLoading={enviando}
+        disabled={enviando}
+        className="w-full"
+      >
         Iniciar sesión
-      </button>
+      </Button>
     </form>
   );
 }

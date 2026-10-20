@@ -1,9 +1,7 @@
 "use client";
 
 import {
-  AlertCircle,
   Bell,
-  CheckCircle2,
   Lock,
   MessageCircle,
   RotateCcw,
@@ -19,12 +17,30 @@ import {
   VARIABLES_PERMITIDAS,
 } from "@/lib/notificaciones/plantillas";
 import { PageHeader } from "@/components/shell/page-header";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Alert } from "@/components/ui/alert";
+import { Tabs } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { guardarPlantilla } from "./actions";
 
 type Props = {
   plantillasIniciales: Record<TipoPlantilla, string>;
   rolUsuario: string;
 };
+
+const TAB_PLANTILLAS = [
+  {
+    key: "aviso_retiro",
+    label: "Aviso de Retiro (T-015)",
+    icon: MessageCircle,
+  },
+  {
+    key: "recordatorio",
+    label: "Recordatorio de 48–72 h (T-016)",
+    icon: Bell,
+  },
+];
 
 export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
   const [tipoActivo, setTipoActivo] = useState<TipoPlantilla>("aviso_retiro");
@@ -103,69 +119,36 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
         }
         actions={
           !esGerencial ? (
-            <div className="flex items-center gap-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-medium text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-300">
-              <Lock className="size-3.5" />
+            <Badge variant="warning" icon={Lock}>
               Solo lectura (Gerencial requerido para guardar)
-            </div>
+            </Badge>
           ) : undefined
         }
       />
 
       {mensajeExito && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
-          <CheckCircle2 className="size-4 shrink-0" />
-          {mensajeExito}
-        </div>
+        <Alert variant="success">{mensajeExito}</Alert>
       )}
 
       {mensajeError && (
-        <div className="flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300">
-          <AlertCircle className="size-4 shrink-0" />
-          {mensajeError}
-        </div>
+        <Alert variant="danger">{mensajeError}</Alert>
       )}
 
-      {/* Selector de plantilla */}
-      <div className="flex gap-2 border-b border-zinc-200 dark:border-[#24283b]">
-        <button
-          type="button"
-          onClick={() => {
-            setTipoActivo("aviso_retiro");
-            setMensajeExito(null);
-            setMensajeError(null);
-          }}
-          className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tipoActivo === "aviso_retiro"
-              ? "border-[#7aa2f7] text-[#7aa2f7] dark:border-[#7aa2f7] dark:text-[#7aa2f7]"
-              : "border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
-          }`}
-        >
-          <MessageCircle className="size-4" />
-          Aviso de Retiro (T-015)
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            setTipoActivo("recordatorio");
-            setMensajeExito(null);
-            setMensajeError(null);
-          }}
-          className={`flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-semibold transition ${
-            tipoActivo === "recordatorio"
-              ? "border-[#7aa2f7] text-[#7aa2f7] dark:border-[#7aa2f7] dark:text-[#7aa2f7]"
-              : "border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
-          }`}
-        >
-          <Bell className="size-4" />
-          Recordatorio de 48–72 h (T-016)
-        </button>
-      </div>
+      {/* Selector de plantilla canónico */}
+      <Tabs
+        items={TAB_PLANTILLAS}
+        activeKey={tipoActivo}
+        onChange={(key) => {
+          setTipoActivo(key as TipoPlantilla);
+          setMensajeExito(null);
+          setMensajeError(null);
+        }}
+      />
 
       {/* Contenedor en 2 Columnas: Editor a la izquierda, Preview a la derecha */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Editor */}
-        <div className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+        <Card className="space-y-4 p-5">
           <div>
             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
               Contenido de la Plantilla
@@ -177,7 +160,7 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
 
           {/* Selector rápido de variables */}
           <div>
-            <span className="block text-xs font-semibold text-zinc-600 dark:text-zinc-300 mb-1.5">
+            <span className="mb-1.5 block text-xs font-semibold text-zinc-600 dark:text-zinc-300">
               Insertar variable disponible:
             </span>
             <div className="flex flex-wrap gap-1.5">
@@ -187,7 +170,7 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
                   type="button"
                   onClick={() => handleInsertarVariable(variable)}
                   title={DESCRIPCION_VARIABLES[variable]}
-                  className="rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1 font-mono text-xs font-medium text-zinc-700 transition hover:bg-zinc-100 hover:border-zinc-300 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42]"
+                  className="rounded-lg border border-zinc-200 bg-zinc-50 px-2.5 py-1 font-mono text-xs font-medium text-zinc-700 transition hover:border-zinc-300 hover:bg-zinc-100 active:scale-[0.97] touch-manipulation dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300 dark:hover:bg-[#252b42]"
                 >
                   {variable}
                 </button>
@@ -211,7 +194,7 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
             />
 
             {!validacionActual.valido && (
-              <p className="text-xs text-red-600 dark:text-red-400">
+              <p className="text-xs text-rose-600 dark:text-[#f7768e]">
                 Variables no permitidas detectadas:{" "}
                 {validacionActual.variablesDesconocidas.join(", ")}
               </p>
@@ -220,29 +203,31 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
 
           {/* Botonera de acciones */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="sm"
+              icon={RotateCcw}
               onClick={handleRestablecerDefecto}
-              className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300"
             >
-              <RotateCcw className="size-3.5" />
               Restablecer por defecto
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant="primary"
+              icon={Save}
               disabled={!esGerencial || isPending || !validacionActual.valido}
+              isLoading={isPending}
               onClick={handleGuardar}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-zinc-700 disabled:opacity-50 dark:border dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-100 dark:hover:bg-[#252b42]"
             >
-              <Save className="size-4" />
               {isPending ? "Guardando..." : "Guardar Plantilla"}
-            </button>
+            </Button>
           </div>
-        </div>
+        </Card>
 
         {/* Preview en vivo */}
-        <div className="space-y-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
+        <Card className="space-y-4 p-5">
           <div>
             <h2 className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
               Vista Previa en Vivo (Simulador WhatsApp)
@@ -253,12 +238,12 @@ export function PlantillaEditor({ plantillasIniciales, rolUsuario }: Props) {
           </div>
 
           {/* Burbuja estilo WhatsApp */}
-          <div className="rounded-2xl bg-[#EFEAE2] p-4 dark:bg-[#16161e] border border-zinc-200 dark:border-[#24283b] min-h-[300px]">
-            <div className="max-w-[85%] rounded-2xl bg-white p-4 text-xs leading-relaxed text-zinc-900 shadow-sm dark:bg-[#005c4b]/30 dark:text-zinc-100 whitespace-pre-wrap font-sans">
+          <div className="min-h-[300px] rounded-2xl border border-zinc-200 bg-[#EFEAE2] p-4 dark:border-[#24283b] dark:bg-[#16161e]">
+            <div className="max-w-[85%] rounded-2xl bg-white p-4 font-sans text-xs leading-relaxed text-zinc-900 shadow-sm whitespace-pre-wrap dark:bg-[#005c4b]/30 dark:text-zinc-100">
               {previewSimulado}
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
