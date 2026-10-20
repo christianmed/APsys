@@ -113,13 +113,13 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
           <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center">
             <Link
               href="/recordatorios"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-amber-300 bg-amber-50 px-3 text-xs font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200 truncate"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc] truncate"
             >
               <span className="truncate">Recordatorios</span>
             </Link>
             <Link
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc] truncate"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-800 shadow-sm transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc] truncate"
             >
               <span className="truncate">Ver Pedidos</span>
             </Link>
@@ -130,19 +130,19 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
       {/* Tarjetas KPI de resumen */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total por Cobrar USD */}
-        <div className="rounded-2xl border border-rose-200 bg-rose-50/50 p-5 shadow-sm dark:border-rose-900/60 dark:bg-rose-950/20">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-rose-800 dark:text-rose-300">
+            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Total por Cobrar (USD)
             </span>
-            <span className="rounded-lg bg-rose-100 p-2 text-rose-700 dark:bg-rose-900/50 dark:text-rose-200">
+            <span className="rounded-lg bg-zinc-100 p-2 text-rose-600 dark:bg-[#1f202c] dark:text-[#f7768e]">
               <Wallet className="size-5" />
             </span>
           </div>
-          <p className="mt-3 text-3xl font-extrabold tracking-tight text-rose-950 dark:text-rose-100">
+          <p className="mt-3 text-3xl font-extrabold tracking-tight text-rose-600 dark:text-[#f7768e]">
             {formatearMonedaUSD(resumenInicial.total_por_cobrar_usd)}
           </p>
-          <p className="mt-1 text-xs text-rose-800/80 dark:text-rose-300/80">
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             En {resumenInicial.total_pedidos_con_deuda} orden{resumenInicial.total_pedidos_con_deuda === 1 ? "" : "es"} activas
           </p>
         </div>
@@ -184,19 +184,19 @@ export function CuentasCobrarView({ cuentasIniciales, resumenInicial }: Props) {
         </div>
 
         {/* Tramo Crítico (> 30 días) */}
-        <div className="rounded-2xl border border-amber-200 bg-amber-50/50 p-5 shadow-sm dark:border-amber-900/60 dark:bg-amber-950/20">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Cartera Morosa (&gt; 30 días)
             </span>
-            <span className="rounded-lg bg-amber-100 p-2 text-amber-700 dark:bg-amber-900/50 dark:text-amber-200">
+            <span className="rounded-lg bg-zinc-100 p-2 text-amber-600 dark:bg-[#1f202c] dark:text-[#e0af68]">
               <AlertTriangle className="size-5" />
             </span>
           </div>
-          <p className="mt-3 text-2xl font-bold tracking-tight text-amber-950 dark:text-amber-100">
+          <p className="mt-3 text-2xl font-bold tracking-tight text-amber-600 dark:text-[#e0af68]">
             {formatearMonedaUSD(resumenInicial.tramos.mas_de_30.monto_usd)}
           </p>
-          <p className="mt-1 text-xs text-amber-800/80 dark:text-amber-300/80">
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             {resumenInicial.tramos.mas_de_30.porcentaje_del_total}% del total ({resumenInicial.tramos.mas_de_30.cantidad} pedidos)
           </p>
         </div>

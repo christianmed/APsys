@@ -665,3 +665,36 @@ Para erradicar de raíz la inconsistencia, se implementó una estrategia en dos 
    - **Tasas y Finanzas:** Tarjeta hero en gradiente `#1a1b26`, panel BCV y tabla histórica inmutable sincronizados.
    - **Clientes y Servicios:** Directorio, formularios de alta/edición y fichas de historial consolidados en Tokyo Night.
 
+---
+
+## 15. Integración Metodológica de Diseño Impeccable, Taste Skill y Emil Kowalski (Fase 37)
+
+Para elevar la experiencia de usuario a estándares profesionales de clase mundial y erradicar cualquier artefacto de diseño genérico o "AI slop", el sistema integra cuatro marcos metodológicos de referencia:
+
+### 15.1 Semántica Determinista de Estados Operativos (TB-UI-01)
+- **Alineación con GLOSSARY.md:** El estado inicial de una orden es canónicamente **`Recibido`** (no "Por Iniciar"), unificado en `lib/pedidos/estados.ts`, `app/page.tsx` y `app/taller/taller-tablero.tsx`.
+- **Contrato Cromático Inmutable:**
+  - `recibido`: Azul Zafiro Tokyo Night (`#7aa2f7`).
+  - `en_produccion`: Ámbar Noche (`#e0af68`).
+  - `listo`: Esmeralda Bosque (`#73daca` / `#9ece6a`).
+  - `entregado`: Neutro / Púrpura suave.
+  - `cancelado`: Rojo Coral (`#f7768e`).
+- **Verificación TDD:** Test automatizado en `test/estados-badges.test.ts` que previene regresiones en la asignación cromática de badges y controles de estado.
+
+### 15.2 Erradicación de Rainbow Slop & Cromo Neutro Estricto (TB-UI-02)
+Siguiendo las reglas de **Taste Skill** para *App Screens* (pantallas de trabajo continuo vs. marketing):
+1. **Regla del 3–5% de Color:** El color está estrictamente reservado para datos cuantitativos, métricas clave (KPIs) y badges de estado semántico.
+2. **Cromo Neutro en Tarjetas de Métricas:**
+   - En `app/page.tsx`, `app/dashboard/dashboard-view.tsx`, `app/cuentas-por-cobrar/cuentas-view.tsx` y `app/recordatorios/recordatorios-panel.tsx`, los contenedores de tarjetas eliminan fondos tintados (pasteles deslavados) y bordes de colores artificiales.
+   - Las tarjetas utilizan superficie neutra estándar (`bg-white dark:bg-[#1a1b26]`) con bordes homogéneos (`border-zinc-200 dark:border-[#24283b]`), destacando exclusivamente las cifras y los iconos de acento.
+
+### 15.3 Desanidado de Cajas y Densidad Visual (TB-UI-03)
+- **Eliminación de *Card-in-a-card*:** En el formulario de registro de órdenes (`app/pedidos/pedido-form.tsx`), los renglones de trabajo anteriormente encapsulados en cajas con bordes internos fueron transformados en una lista desanidada con divisores horizontales limpios (`divide-y divide-zinc-200 dark:divide-[#24283b]`).
+- Esto elimina el "efecto Bento saturado", incrementando la densidad de datos y mejorando la jerarquía tipográfica sin cajas redundantes.
+
+### 15.4 Micro-interacciones Físicas y Sensación Táctil (TB-UI-04)
+Siguiendo los principios de **Emil Kowalski**:
+1. **Feedback Inmediato en `:active`:** Estandarización de `active:scale-[0.97]` en todos los botones operativos, enlaces interactivos y disparadores de avance (reemplazando saltos inconsistentes de escala o ausencia de compresión).
+2. **Supresión del Tap-Delay Móvil:** Incorporación sistemática de `touch-action: manipulation` en botones de taller y formularios para anular el retardo de 300ms en navegadores táctiles de tablets Android/iPad.
+
+

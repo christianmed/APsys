@@ -23,7 +23,7 @@ type Props = {
   modo?: "completo" | "solo_badge" | "solo_boton";
 };
 
-const ESTADO_CONFIG: Record<
+export const ESTADO_CONFIG: Record<
   EstadoPedido,
   {
     label: string;
@@ -36,7 +36,7 @@ const ESTADO_CONFIG: Record<
   recibido: {
     label: "Recibido",
     clasesBadge:
-      "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+      "border border-blue-200/90 bg-blue-50 text-blue-800 dark:border-blue-900/60 dark:bg-blue-950/50 dark:text-[#7aa2f7]",
     siguienteLabel: "Iniciar producción",
     IconoSiguiente: Play,
     iconoColor: "text-[#7aa2f7]",
@@ -44,7 +44,7 @@ const ESTADO_CONFIG: Record<
   en_produccion: {
     label: "En Producción",
     clasesBadge:
-      "bg-blue-100 text-blue-800 dark:bg-blue-500/15 dark:text-blue-300",
+      "border border-amber-200/90 bg-amber-50 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/50 dark:text-[#e0af68]",
     siguienteLabel: "Listo para Retiro",
     IconoSiguiente: CheckCircle2,
     iconoColor: "text-[#9ece6a]",
@@ -52,7 +52,7 @@ const ESTADO_CONFIG: Record<
   listo: {
     label: "Listo para Retiro",
     clasesBadge:
-      "bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300",
+      "border border-emerald-200/90 bg-emerald-50 text-emerald-800 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-[#9ece6a]",
     siguienteLabel: "Entregar pedido",
     IconoSiguiente: PackageCheck,
     iconoColor: "text-[#9ece6a]",
@@ -60,11 +60,12 @@ const ESTADO_CONFIG: Record<
   entregado: {
     label: "Entregado",
     clasesBadge:
-      "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
+      "border border-zinc-200 bg-zinc-100 text-zinc-700 dark:border-[#24283b] dark:bg-[#1f202c] dark:text-zinc-300",
   },
   cancelado: {
     label: "Cancelado",
-    clasesBadge: "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
+    clasesBadge:
+      "border border-red-200 bg-red-50 text-red-800 dark:border-red-900/60 dark:bg-red-950/50 dark:text-[#f7768e]",
   },
 };
 
@@ -143,7 +144,7 @@ export function EstadoControl({
           type="button"
           disabled={pendiente}
           onClick={() => handleAvanzar(siguienteEstado)}
-          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-900 bg-zinc-900 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-zinc-800 hover:border-zinc-800 active:scale-98 disabled:opacity-60 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f8fafc] dark:hover:bg-[#252b42] dark:hover:border-[#7aa2f7]/50"
+          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-900 bg-zinc-900 px-3 text-xs font-semibold text-white shadow-xs transition hover:bg-zinc-800 hover:border-zinc-800 touch-manipulation active:scale-[0.97] disabled:opacity-60 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f8fafc] dark:hover:bg-[#252b42] dark:hover:border-[#7aa2f7]/50"
         >
           {pendiente ? (
             <LoaderCircle className="size-3.5 animate-spin" />

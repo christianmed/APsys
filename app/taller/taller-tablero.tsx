@@ -354,7 +354,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
           </span>
         </div>
         <div className="flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
-          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-sky-500" />Por Iniciar</span>
+          <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-blue-500" />Recibido</span>
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-amber-500" />En Producción</span>
           <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-full bg-emerald-500" />Listos</span>
         </div>
@@ -365,7 +365,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("activos")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("activos")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("activos")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Activos en Taller</span>
           <span className="text-lg font-bold leading-tight">{conteoActivos}</span>
@@ -374,16 +374,16 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("recibido")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("recibido")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("recibido")}`}
         >
-          <span className="text-xs font-semibold uppercase tracking-wider">Por Iniciar</span>
+          <span className="text-xs font-semibold uppercase tracking-wider">Recibido</span>
           <span className="text-lg font-bold leading-tight">{conteoRecibido}</span>
         </button>
 
         <button
           type="button"
           onClick={() => setTabActual("en_produccion")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("en_produccion")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("en_produccion")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">En Producción</span>
           <span className="text-lg font-bold leading-tight">{conteoProduccion}</span>
@@ -392,7 +392,7 @@ export function TallerTablero({ pedidosIniciales, rolUsuario }: Props) {
         <button
           type="button"
           onClick={() => setTabActual("listo")}
-          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition active:scale-98 ${getTabClass("listo")}`}
+          className={`flex h-14 flex-col items-center justify-center rounded-xl border px-3 transition touch-manipulation active:scale-[0.97] ${getTabClass("listo")}`}
         >
           <span className="text-xs font-semibold uppercase tracking-wider">Listos para Retiro</span>
           <span className="text-lg font-bold leading-tight">{conteoListo}</span>

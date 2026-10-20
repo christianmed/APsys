@@ -388,4 +388,26 @@
     - [x] Linter ESLint con 0 errores y 0 advertencias.
     - [x] Inspección visual con Browser Subagent en `http://localhost:3000/pedidos` tanto en Modo Oscuro como en Modo Claro confirmando hover palpable y cero errores de consola.
 
+- [x] **Fase 37: Implementación de Balas Trazadoras de Diseño Impeccable, Taste Skill y Emil Kowalski**
+  - [x] **TB-UI-01: Semántica Unificada de Estados y Badges Operativos**
+    - [x] Escribir tests unitarios en `test/estados-badges.test.ts` que validen la asignación determinista de colores y textos canónicos por estado (`recibido` -> azul `#7aa2f7`, `en_produccion` -> ámbar `#e0af68`, `listo` -> verde `#73daca`, `entregado` -> púrpura `#bb9af7`, `anulado` -> rojo `#f7768e`).
+    - [x] Corregir inversión en `app/pedidos/estado-control.tsx` (donde `recibido` figuraba con estilos de alerta ámbar y `en_produccion` figuraba en azul).
+    - [x] Homologar léxico y badges en `app/page.tsx` (Home) y `app/taller/taller-tablero.tsx` al término canónico de `GLOSSARY.md`.
+    - [x] Validar con Vitest (302/302 tests en verde).
+  - [x] **TB-UI-02: Erradicación de Rainbow Slop & Cromo Neutro Estricto**
+    - [x] En `app/page.tsx`, reemplazar las 6 cajitas de íconos pastel multicolores por superficies neutras Tokyo Night (`#16161e` / `#1f202c`) con bordes `#24283b`.
+    - [x] En `app/dashboard/dashboard-view.tsx`, homologar los botones de acción (`Tasa del Día`, `Rotación`, `Cuentas por Cobrar`) a cromo neutro consistente y remover el borde/fondo verde forzado de la tarjeta de `TOTAL CONSOLIDADO`.
+    - [x] En `app/cuentas-por-cobrar/cuentas-view.tsx`, remover bordes tintados de color en las tarjetas de KPI (`TOTAL POR COBRAR` y `CARTERA MOROSA`), manteniendo cromo neutro con acento al 3-5% en los datos.
+    - [x] En `app/recordatorios/recordatorios-panel.tsx`, neutralizar bordes teñidos de tarjetas para respetar el cromo neutro de App Screens.
+  - [x] **TB-UI-03: Desanidado de Cajas (Card-in-a-card) y Densidad Visual**
+    - [x] En `app/pedidos/pedido-form.tsx`, eliminar el sub-contenedor con borde en "Renglón #1" y sustituirlo por divisores horizontales limpios (`divide-y divide-zinc-200 dark:divide-[#24283b]`).
+    - [x] En `app/page.tsx`, homogeneizar el grid de accesos y tarjetas operativas sin solapamientos.
+  - [x] **TB-UI-04: Micro-interacciones Emil Kowalski y Touch Optimization**
+    - [x] Implementar `active:scale-[0.97]` en los botones de acción operativa y de formulario (`Iniciar producción`, `Listo para Retiro`, `Entregar`, `Guardar`, `Agregar otro ítem`).
+    - [x] Aplicar `touch-action: manipulation` en los tableros táctiles de taller y pedidos para eliminar el retardo de 300ms en tablets de producción.
+  - [x] **TB-DOCS: Sincronización Mandatoria de Documentación**
+    - [x] Actualizar `docs/capacitacion/guia-rapida-usuarios.md`.
+    - [x] Actualizar `docs/arquitectura/manual-tecnico-sistema.md`.
+    - [x] Verificación DoD completa (`npm test`, `npm run typecheck`).
+
 

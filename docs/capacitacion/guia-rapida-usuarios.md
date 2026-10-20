@@ -13,11 +13,12 @@
 - **Reactiva a Medianoche:** El reloj de fecha cambia automáticamente a las 12:00 a. m. sin necesidad de recargar la página. Es totalmente independiente de la ubicación del servidor en la nube y de la tasa BCV que se encuentre activa o programada.
 
 ### Estado de Producción en Vivo (Sincronización 1:1 con Taller)
-- Las tarjetas de métricas en la pantalla principal reflejan en tiempo real el estado exacto del taller:
-  - **Por Iniciar:** Órdenes recibidas que esperan inicio de trabajo (`recibido`). Coincide con la primera columna del taller.
-  - **En Producción:** Órdenes en máquinas de impresión, ploteo o mesa de corte (`en_produccion`). Coincide con la segunda columna del taller.
-  - **Listos para Retiro:** Órdenes terminadas y empaquetadas que esperan ser retiradas por el cliente (`listo`).
+- Las tarjetas de métricas en la pantalla principal reflejan en tiempo real el estado exacto del taller bajo cromo neutro estricto y acento al 3-5%:
+  - **Recibido (Azul Zafiro `#7aa2f7`):** Órdenes recibidas en mostrador que esperan inicio de trabajo (`recibido`). Coincide con la primera columna de taller.
+  - **En Producción (Ámbar `#e0af68`):** Órdenes en máquinas de impresión, ploteo o mesa de corte (`en_produccion`). Coincide con la segunda columna de taller.
+  - **Listos para Retiro (Esmeralda `#73daca`):** Órdenes terminadas y empaquetadas que esperan ser retiradas por el cliente (`listo`).
   - **Total de Trabajos Activos:** Suma exacta de los tres estados en proceso.
+- **Sensación Táctil Nativa (Micro-interacciones Emil Kowalski):** Todas las tarjetas y botones del sistema cuentan con compresión táctil física instantánea (`scale(0.97)` en `:active`) y optimización `touch-action: manipulation`, eliminando el retardo de 300ms en tablets operativas.
 
 ---
 
@@ -29,10 +30,12 @@
 2. **Selecciona o crea el cliente (Selector Inteligente):**
    - Escribe en el buscador predictivo para filtrar al instante por nombre o número de teléfono.
    - Si es nuevo, pulsa el botón integrado "Registrar Nuevo Cliente", ingresa sus datos y queda seleccionado automáticamente.
-3. **Agrega los trabajos a realizar:**
+3. **Agrega los trabajos a realizar (Desanidado Limpio con Divisores Horizontales):**
+   - El desglose de renglones prescinde de recuadros o tarjetas anidadas (*no card-in-a-card*), presentando los ítems delimitados por separadores sutiles de alta legibilidad.
    - Selecciona el servicio desde el selector interactivo (ej. Vinil Adhesivo, Pendón, Talonarios).
    - Ingresa dimensiones (ancho × alto en metros o cm) y acabados (ojetes, laminado, corte).
    - Coloca la cantidad y el precio unitario pactado en USD.
+   - Presiona `+ Agregar otro ítem` para incorporar trabajos adicionales con feedback táctil inmediato.
 4. **Registra el abono inicial y selecciona la tasa adecuada:**
    - Puedes cobrar en **USD efectivo** o **Bolívares (Pago Móvil / Transferencia)**.
    - Si el cobro es en Bs, el sistema aplica la tasa oficial del día automáticamente.

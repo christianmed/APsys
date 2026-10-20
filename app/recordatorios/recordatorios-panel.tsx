@@ -246,13 +246,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
               <article
                 key={pedido.id}
                 data-testid={`recordatorio-item-${pedido.numeroOrden}`}
-                className={`flex flex-col justify-between gap-4 rounded-2xl border p-5 shadow-sm sm:flex-row sm:items-center ${
-                  umbral === "urgente_72h"
-                    ? "border-red-200 bg-red-50/30 dark:border-red-900/60 dark:bg-red-950/20"
-                    : umbral === "atencion_48h"
-                      ? "border-amber-200 bg-amber-50/30 dark:border-amber-900/60 dark:bg-amber-950/20"
-                      : "border-zinc-200 bg-white dark:border-[#24283b] dark:bg-[#1a1b26]"
-                }`}
+                className="flex flex-col justify-between gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center dark:border-[#24283b] dark:bg-[#1a1b26]"
               >
                 {/* Datos del Pedido */}
                 <div className="space-y-1.5">
@@ -337,7 +331,7 @@ export function RecordatoriosPanel({ pedidosIniciales }: Props) {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-testid={`btn-recordatorio-${pedido.numeroOrden}`}
-                      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-emerald-300/80 bg-emerald-50 px-4 text-xs font-semibold text-emerald-950 shadow-xs transition hover:bg-emerald-100 active:scale-98 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:border-emerald-700/60 dark:hover:bg-[#252b42]"
+                      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-4 text-xs font-semibold text-zinc-800 shadow-xs transition hover:bg-zinc-50 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:border-emerald-700/60 dark:hover:bg-[#252b42]"
                     >
                       <MessageCircle className="size-4 text-emerald-600 dark:text-[#9ece6a]" />
                       <span>Enviar Recordatorio</span>

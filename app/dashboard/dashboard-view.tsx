@@ -90,7 +90,7 @@ export function DashboardView({
           <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:flex-wrap sm:items-center">
             <Link
               href="/tasas"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 text-xs font-semibold text-emerald-900 transition hover:bg-emerald-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#9ece6a] dark:hover:bg-[#252b42]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               <Banknote className="size-3.5 text-emerald-600 dark:text-emerald-400" />
               Tasa del Día
@@ -98,23 +98,23 @@ export function DashboardView({
 
             <Link
               href="/dashboard/rotacion"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-indigo-300 bg-indigo-50 px-3 text-xs font-semibold text-indigo-900 transition hover:bg-indigo-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#7aa2f7] dark:hover:bg-[#252b42]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
-              <BarChart3 className="size-3.5 text-indigo-600 dark:text-[#7aa2f7]" />
+              <BarChart3 className="size-3.5 text-[#7aa2f7] dark:text-[#7aa2f7]" />
               Rotación
             </Link>
 
             <Link
               href="/cuentas-por-cobrar"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-rose-300 bg-rose-50 px-3 text-xs font-semibold text-rose-900 transition hover:bg-rose-100 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-[#f7768e] dark:hover:bg-[#252b42]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
-              <Wallet className="size-3.5 text-rose-600 dark:text-rose-400" />
+              <Wallet className="size-3.5 text-rose-500 dark:text-rose-400" />
               Cuentas por Cobrar
             </Link>
 
             <Link
               href="/pedidos"
-              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
+              className="inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-zinc-200 bg-white px-3 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-[#f8fafc]"
             >
               <Receipt className="size-3.5" />
               Ver Pedidos
@@ -248,17 +248,17 @@ export function DashboardView({
       {/* Tarjetas de Métricas Financieras Consolidadas */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Consolidado */}
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-5 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-950/20">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-[#24283b] dark:bg-[#1a1b26]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+            <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
               Total Consolidado
             </span>
-            <TrendingUp className="size-5 text-emerald-600 dark:text-emerald-400" />
+            <TrendingUp className="size-5 text-emerald-600 dark:text-[#9ece6a]" />
           </div>
-          <p className="mt-2 text-3xl font-black text-emerald-900 dark:text-emerald-100">
+          <p className="mt-2 text-3xl font-black text-emerald-600 dark:text-[#9ece6a]">
             ${consolidado.totalEquivalenteUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </p>
-          <span className="mt-1 block text-xs text-emerald-700/80 dark:text-emerald-400/80">
+          <span className="mt-1 block text-xs text-zinc-500 dark:text-zinc-400">
             USD equivalente (USD + Bs a tasa)
           </span>
         </div>

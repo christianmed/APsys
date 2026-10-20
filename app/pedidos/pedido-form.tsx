@@ -54,10 +54,10 @@ const CLASES_INPUT =
   "h-11 w-full rounded-xl border border-zinc-300 bg-white px-3.5 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:ring-2 focus:ring-[#7aa2f7]/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25";
 
 const CLASES_BOTON =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-6 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 active:scale-98 disabled:opacity-50 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42]";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-6 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 touch-manipulation active:scale-[0.97] disabled:opacity-50 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42]";
 
 const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900 active:scale-98 disabled:opacity-50 dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-300 dark:hover:border-[#7aa2f7]/50 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900 touch-manipulation active:scale-[0.97] disabled:opacity-50 dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-300 dark:hover:border-[#7aa2f7]/50 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]";
 
 /**
  * Formulario interactivo de registro de pedidos y cobranza inicial (RF-01 / RF-02 / T-008 / T-009).
@@ -257,7 +257,7 @@ export function PedidoForm({
           </label>
           <Link
             href="/clientes/nuevo"
-            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-zinc-200 bg-zinc-50 px-3 text-xs font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:text-white"
           >
             <UserPlus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
             Nuevo Cliente
@@ -301,7 +301,7 @@ export function PedidoForm({
           </span>
         </div>
 
-        <div className="space-y-4">
+        <div className="divide-y divide-zinc-200 dark:divide-[#24283b]">
           {items.map((item, idx) => {
             const subtotal =
               (Number(item.cantidad) || 0) * (Number(item.precio_usd) || 0);
@@ -313,7 +313,7 @@ export function PedidoForm({
             return (
               <div
                 key={item.localId}
-                className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50/70 p-4 dark:border-[#24283b] dark:bg-[#1f202c]"
+                className="space-y-3 py-5 first:pt-0 last:pb-2"
               >
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-zinc-500 dark:text-zinc-400">
@@ -499,7 +499,7 @@ export function PedidoForm({
         <button
           type="button"
           onClick={agregarItem}
-          className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 text-xs font-semibold text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:border-[#7aa2f7]/50 dark:hover:text-white"
+          className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-4 text-xs font-semibold text-zinc-700 transition hover:border-zinc-400 hover:bg-zinc-100 hover:text-zinc-900 touch-manipulation active:scale-[0.97] dark:border-[#2f3654] dark:bg-[#1f202c] dark:text-zinc-200 dark:hover:bg-[#252b42] dark:hover:border-[#7aa2f7]/50 dark:hover:text-white"
         >
           <Plus className="size-3.5 text-zinc-500 dark:text-zinc-400" />
           Agregar otro ítem
