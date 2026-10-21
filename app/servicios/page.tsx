@@ -13,6 +13,8 @@ import { obtenerUsuarioSesion } from "@/lib/supabase/auth-cache";
  * y nombre, con badge de estado. Solo el perfil gerencial administra: ve el
  * alta y abre cada fila para editar (incluida la baja lógica vía `activo`).
  */
+export const instant = false;
+
 export default async function ServiciosPage() {
   const { user, perfil, supabase } = await obtenerUsuarioSesion();
 
