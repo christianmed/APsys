@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Herramientas locales de agentes y skills:
+    ".agents/**",
+    "agent/**",
+    ".impeccable/**",
+    ".zwork/**",
+    "skills-lock.json",
   ]),
 ]);
 
