@@ -1,5 +1,4 @@
 import { Layers, Plus } from "lucide-react";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AuthenticatedShell } from "@/components/shell/authenticated-shell";
 import { PageHeader } from "@/components/shell/page-header";

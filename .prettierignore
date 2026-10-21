@@ -6,5 +6,9 @@ coverage
 playwright-report
 test-results
 .zwork
+.agents
+agent
+.impeccable
+skills-lock.json
 package-lock.json
 next-env.d.ts

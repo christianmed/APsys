@@ -44,12 +44,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# herramientas locales del agente (AutoClaw/ZWork)
+# herramientas locales del agente y habilidades (no requeridas en el repositorio)
 .zwork/
 *.code-workspace
+.agents/
+agent/
+.impeccable/
+skills-lock.json
 
 certificates
-
-# impeccable live runtime sessions
-.impeccable/live/sessions/
-.impeccable/live/annotations/

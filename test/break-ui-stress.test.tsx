@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { KpiCard, Card } from "@/components/ui/card";
+import { KpiCard } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert } from "@/components/ui/alert";
 import { Modal } from "@/components/ui/modal";

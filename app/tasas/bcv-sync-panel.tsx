@@ -2,7 +2,6 @@
 
 import {
   CheckCircle2,
-  CircleAlert,
   Clock,
   Euro,
   Loader2,

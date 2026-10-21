@@ -3,7 +3,6 @@
 import {
   Banknote,
   CheckCircle2,
-  CircleAlert,
   CreditCard,
   DollarSign,
   LoaderCircle,
@@ -18,7 +17,6 @@ import { useActionState, useId, useMemo, useState } from "react";
 import { CustomSelect } from "@/components/ui/custom-select";
 import { Button } from "@/components/ui/button";
 import { Alert } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
 import { crearPedido, type EstadoFormularioPedido } from "./actions";
 import {
   calcularCobranzaInicial,
@@ -55,12 +53,6 @@ type ItemLocal = ItemPedidoEntrada & { localId: string };
 
 const CLASES_INPUT =
   "h-11 w-full rounded-xl border border-zinc-300 bg-white px-3.5 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus:border-[#7aa2f7] focus:ring-2 focus:ring-[#7aa2f7]/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#24283b] dark:bg-[#16161e] dark:text-[#f8fafc] dark:placeholder:text-zinc-500 dark:focus:border-[#7aa2f7] dark:focus:ring-[#7aa2f7]/25";
-
-const CLASES_BOTON =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-zinc-900 px-6 text-sm font-semibold text-white shadow-xs transition hover:bg-zinc-800 touch-manipulation active:scale-[0.97] disabled:opacity-50 dark:bg-[#1f202c] dark:border dark:border-[#2f3654] dark:text-zinc-100 dark:hover:bg-[#252b42]";
-
-const CLASES_BOTON_SECUNDARIO =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white px-6 text-sm font-semibold text-zinc-700 shadow-xs transition hover:bg-zinc-50 hover:text-zinc-900 touch-manipulation active:scale-[0.97] disabled:opacity-50 dark:border-[#2f3654] dark:bg-[#1a1b26] dark:text-zinc-300 dark:hover:border-[#7aa2f7]/50 dark:hover:bg-[#1f202c] dark:hover:text-[#f8fafc]";
 
 /**
  * Formulario interactivo de registro de pedidos y cobranza inicial (RF-01 / RF-02 / T-008 / T-009).
